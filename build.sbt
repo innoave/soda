@@ -21,21 +21,22 @@ import sbtrelease._
 // JAR_BUILT_BY      - Name to be added to Jar metadata field "Built-By" (defaults to System.getProperty("user.name"))
 //
 
-name := "build-basal"
-description := "Build definitions for Innoave Basal project"
+name := "build-soda"
+description := "Soda for Scala"
 
-val buildVersion = "0.1.0-SNAPSHOT"
+crossScalaVersions := Seq("2.11.8", "2.12.0")
+scalaVersion := crossScalaVersions.value.head
 
 //
 // Project Modules
 //
 
 // l10n module
-lazy val basalL10n = Project(
-  id = "basal-l10n",
+lazy val sodaL10n = Project(
+  id = "soda-l10n",
   base = file("l10n"),
   settings = commonSettings ++ ghpages.settings ++ publishSettings ++ Seq(
-    description := "Innoave Basal Localization lib",
+    description := "Scala Soda Localization",
     libraryDependencies ++= Seq(
       scalatest % "test"
     )
@@ -45,11 +46,11 @@ lazy val basalL10n = Project(
 )
 
 // logging module
-lazy val basalLogging = Project(
-  id = "basal-logging",
+lazy val sodaLogging = Project(
+  id = "soda-logging",
   base = file("logging"),
   settings = commonSettings ++ ghpages.settings ++ publishSettings ++ Seq(
-    description := "Innoave Basal Logging API",
+    description := "Soda Logging",
     libraryDependencies ++= Seq(
       scalatest % "test"
     )
@@ -63,10 +64,6 @@ lazy val basalLogging = Project(
 //
 lazy val scalatest = "org.scalatest" %% "scalatest" % "3.0.0"
 
-// Root project is never published
-publishArtifact := false
-sourcesInBase := false
-
 //
 // Plugins
 //
@@ -75,6 +72,10 @@ enablePlugins(
   GitVersioning
 //  JekyllPlugin
 )
+
+// Root project is never published
+publishArtifact := false
+sourcesInBase := false
 
 //
 // Common Settings
@@ -85,17 +86,15 @@ lazy val commonSettings = projectSettings ++ buildSettings
 // Project Settings
 //
 lazy val projectSettings = Seq(
-  organization := "com.innoave.basal",
+  organization := "com.innoave.soda",
   startYear := Some(2016),
-  git.remoteRepo := "git@github.com:innoave/basal.git"
+  git.remoteRepo := "git@github.com:innoave/soda.git"
 )
 
 //
 // Build Settings
 //
 lazy val buildSettings = Seq(
-  crossScalaVersions := Seq("2.11.8", "2.12.0"),
-  scalaVersion := crossScalaVersions.value.head,
   scalacOptions ++= Seq(
     "-target:jvm-1.8",
     "-encoding", "utf8",
@@ -191,11 +190,11 @@ lazy val publishSettings = bintraySettings ++ Seq(
   publishArtifact in Test := false,
   // Metadata needed by Maven Central
   // See also http://maven.apache.org/pom.html#Developers
-  homepage := Some(url("https://github.com/innoave/basal")),
+  homepage := Some(url("https://github.com/innoave/soda")),
   licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html")),
   scmInfo := Some(ScmInfo(
-    url("https://github.com/innoave/basal"),
-    "scm:git:git@github.com:innoave/basal.git")
+    url("https://github.com/innoave/soda"),
+    "scm:git:git@github.com:innoave/soda.git")
   ),
   pomExtra := (
     <developers>
