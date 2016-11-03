@@ -1,5 +1,7 @@
 # Soda for Scala &nbsp;&nbsp;&nbsp; [![Bintray JCenter](https://img.shields.io/bintray/v/innoave/maven/soda.svg?label=release&style=flat-square)](https://bintray.com/innoave/maven/soda)
 
+[![Join the chat at https://gitter.im/scala-soda/Lobby](https://badges.gitter.im/scala-soda/Lobby.svg)](https://gitter.im/scala-soda/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://img.shields.io/travis/innoave/soda/master.svg?style=flat-square)](https://travis-ci.org/innoave/soda) [![License](http://img.shields.io/:license-Apache%202.0-red.svg?style=flat-square)](http://www.apache.org/licenses/LICENSE-2.0.txt) [![Scaladoc](https://img.shields.io/badge/scaladoc-latest-blue.svg?style=flat-square)](https://innoave.github.io/soda/latest/api) [![Join the chat at https://gitter.im/innoave/soda](https://img.shields.io/gitter/room/nwjs/nw.js.svg?style=flat-square)](https://gitter.im/innoave/soda?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Soda for Scala is a like soda for drinks. It provides a set of (small) individual libs that speed up development of reald world applications in Scala.
