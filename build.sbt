@@ -89,6 +89,7 @@ enablePlugins(
 // Root project is never published
 publishArtifact := false
 sourcesInBase := false
+commonSettings
 
 //
 // Common Settings
@@ -100,6 +101,7 @@ lazy val commonSettings = projectSettings ++ buildSettings
 //
 lazy val projectSettings = Seq(
   organization := "com.innoave.soda",
+  homepage := Some(url("https://github.com/innoave/soda")),
   startYear := Some(2016),
   git.remoteRepo := "git@github.com:innoave/soda.git"
 )
@@ -110,7 +112,7 @@ lazy val projectSettings = Seq(
 lazy val buildSettings = Seq(
   crossScalaVersions := Seq("2.11.8", "2.12.0"),
   scalaVersion := crossScalaVersions.value.head,
-  scalacOptions ++= Seq(
+  scalacOptions in Compile ++= Seq(
     "-target:jvm-1.8",
     "-encoding", "utf8",
     "-unchecked",
@@ -121,7 +123,7 @@ lazy val buildSettings = Seq(
     "-Xfatal-warnings",
     "-Xlint:_",
     "-Yno-adapted-args",
-  "-Yinline-warnings",
+    "-Yinline-warnings",
     "-Ywarn-dead-code",        // N.B. doesn't work well with the ??? hole
     "-Ywarn-numeric-widen",
 //    "-Ywarn-value-discard",
@@ -139,10 +141,13 @@ lazy val buildSettings = Seq(
 //  unmanagedSourceDirectories in Test := List((scalaSource in Test).value),
 //  libraryDependencies <+= scalaVersion("org.scala-lang" % "scala-reflect" % _),
 //  libraryDependencies <+= scalaVersion("org.scala-lang" % "scalap" % _),
-//  scalacOptions in(Compile, doc) ++= Opts.doc.title("Soda for Scala API"),
-//  scalacOptions in(Compile, doc) ++= Opts.doc.version(buildVersion),
-//  scalacOptions in(Compile, doc) += s"-doc-external-doc:${scalaInstance.value.libraryJar}#http://www.scala-lang.org/api/${scalaVersion.value}/",
-//  scalacOptions in(Compile, doc) ++= Seq("-doc-footer", s"Soda for Scala API v.$buildVersion"),
+  scalacOptions in (Compile, doc) := 
+    Opts.doc.title(description.value) ++
+    Opts.doc.version(version.value) ++
+    Seq(
+      "-doc-footer", s"${description.value} v.${version.value}, ${homepage.value.get}",
+      s"-doc-external-doc:${scalaInstance.value.libraryJar}#http://www.scala-lang.org/api/${scalaVersion.value}/"
+    ),
   autoAPIMappings := true,
   resolvers ++= Seq(
     Resolver.sonatypeRepo("snapshots"),
@@ -184,7 +189,7 @@ git.useGitDescribe := true
 // Release Settings
 //
 releaseCrossBuild := true
-releaseProcess := ReleaseProcess.steps 
+//releaseProcess := ReleaseProcess.steps 
 releasePublishArtifactsAction := PgpKeys.publishSigned.value
 // use next version instead of current developer version
 releaseVersion := {
@@ -205,7 +210,6 @@ lazy val publishSettings = bintraySettings ++ Seq(
   publishArtifact in Test := false,
   // Metadata needed by Maven Central
   // See also http://maven.apache.org/pom.html#Developers
-  homepage := Some(url("https://github.com/innoave/soda")),
   licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html")),
   scmInfo := Some(ScmInfo(
     url("https://github.com/innoave/soda"),
