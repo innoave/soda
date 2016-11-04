@@ -15,7 +15,7 @@ addSbtPlugin("com.github.gseitz" % "sbt-release" % "1.0.3")
 addSbtPlugin("me.lessis" % "bintray-sbt" % "0.3.0")
 
 // [https://github.com/sbt/sbt-site]
-addSbtPlugin("com.typesafe.sbt" % "sbt-site" % "1.0.0")
+addSbtPlugin("com.typesafe.sbt" % "sbt-site" % "1.1.0")
 
 // [https://github.com/sbt/sbt-ghpages]
 resolvers += "jgit-repo" at "http://download.eclipse.org/jgit/maven"
