@@ -20,3 +20,6 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-site" % "1.0.0")
 // [https://github.com/sbt/sbt-ghpages]
 resolvers += "jgit-repo" at "http://download.eclipse.org/jgit/maven"
 addSbtPlugin("com.typesafe.sbt" % "sbt-ghpages" % "0.5.4")
+
+// [https://github.com/scoverage/sbt-scoverage]
+addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.4.0")
