@@ -14,8 +14,8 @@ This is a new project. It started with the localization lib l10n.
 
 ## The Soda
 
-+ `l10n` : a typesafe localization API - no boilerplate, no magic
-+ `logging` : a logging API - Scala wrapper API for SLF4J
+- `soda-l10n` : a typesafe localization API - no boilerplate, no magic
+- `soda-logging` : a logging API - Scala wrapper API for SLF4J
 
 
 
