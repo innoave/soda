@@ -1,0 +1,6 @@
+#
+# Test Messages in British English
+#
+hello.world=Good day World!
+greeting=Dear {0}
+products.in.shopping.cart={0} has {1,choice,0#no products|1#one product|1<{1,number,integer} products} in the shopping cart.

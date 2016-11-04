@@ -1,0 +1,6 @@
+#
+# Test Messages in English
+#
+hello.world=Hello World!
+greeting=Greetings to {0}
+products.in.shopping.cart={0} has {1,choice,0#no items|1#one item|1<{1,number,integer} items} in the cart.
