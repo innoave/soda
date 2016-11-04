@@ -24,9 +24,6 @@ import sbtrelease._
 name := "build-soda"
 description := "Soda for Scala"
 
-crossScalaVersions := Seq("2.11.8", "2.12.0")
-scalaVersion := crossScalaVersions.value.head
-
 //
 // Project Modules
 //
@@ -36,7 +33,7 @@ lazy val sodaL10n = Project(
   id = "soda-l10n",
   base = file("l10n"),
   settings = commonSettings ++ ghpages.settings ++ publishSettings ++ Seq(
-    description := "Scala Soda Localization",
+    description := "Soda Localization",
     libraryDependencies ++= Seq(
       scalatest % "test"
     )
@@ -52,7 +49,9 @@ lazy val sodaLogging = Project(
   settings = commonSettings ++ ghpages.settings ++ publishSettings ++ Seq(
     description := "Soda Logging",
     libraryDependencies ++= Seq(
-      scalatest % "test"
+      scalatest % "test",
+      logback % "test",
+      slf4jApi
     )
   )
 ).enablePlugins(
@@ -63,6 +62,8 @@ lazy val sodaLogging = Project(
 // Dependencies
 //
 lazy val scalatest = "org.scalatest" %% "scalatest" % "3.0.0"
+lazy val slf4jApi = "org.slf4j" % "slf4j-api" % "1.7.21"
+lazy val logback = "ch.qos.logback" % "logback-classic" % "1.1.7"
 
 //
 // Plugins
@@ -95,6 +96,8 @@ lazy val projectSettings = Seq(
 // Build Settings
 //
 lazy val buildSettings = Seq(
+  crossScalaVersions := Seq("2.11.8", "2.12.0"),
+  scalaVersion := crossScalaVersions.value.head,
   scalacOptions ++= Seq(
     "-target:jvm-1.8",
     "-encoding", "utf8",
@@ -124,10 +127,10 @@ lazy val buildSettings = Seq(
 //  unmanagedSourceDirectories in Test := List((scalaSource in Test).value),
 //  libraryDependencies <+= scalaVersion("org.scala-lang" % "scala-reflect" % _),
 //  libraryDependencies <+= scalaVersion("org.scala-lang" % "scalap" % _),
-//  scalacOptions in(Compile, doc) ++= Opts.doc.title("Innoave Scala Basal API"),
+//  scalacOptions in(Compile, doc) ++= Opts.doc.title("Soda for Scala API"),
 //  scalacOptions in(Compile, doc) ++= Opts.doc.version(buildVersion),
 //  scalacOptions in(Compile, doc) += s"-doc-external-doc:${scalaInstance.value.libraryJar}#http://www.scala-lang.org/api/${scalaVersion.value}/",
-//  scalacOptions in(Compile, doc) ++= Seq("-doc-footer", s"Innoave Scala Basal API v.$buildVersion"),
+//  scalacOptions in(Compile, doc) ++= Seq("-doc-footer", s"Soda for Scala API v.$buildVersion"),
   autoAPIMappings := true,
   resolvers ++= Seq(
     Resolver.sonatypeRepo("snapshots"),
