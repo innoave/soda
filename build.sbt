@@ -58,6 +58,18 @@ lazy val sodaLogging = Project(
   SiteScaladocPlugin
 )
 
+// desktop module
+lazy val sodaDesktop = Project(
+  id = "soda-desktop",
+  base = file("desktop"),
+  settings = commonSettings ++ ghpages.settings ++ publishSettings ++ Seq(
+    description := "Soda Desktop",
+    libraryDependencies ++= Seq(
+      scalatest % "test"
+    )
+  )
+)
+
 //
 // Dependencies
 //
