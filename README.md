@@ -8,7 +8,7 @@ Soda for Scala is a like soda for drinks. It provides a set of (small) individua
 
 Soda is an umbrella project of small libs to speed up development of applications in Scala. Each lib is provided as its own artifact.
 
-It is not another application framework. Frameworks usually tie up application developers to use the (pre-)integrated libs of one version. Instead you can pick an choose from what best fits both, your needs and your taste.
+It is not another application framework. Frameworks tend to tie up application developers to use the (pre-)integrated libs of one version. Instead you can pick an choose from what best fits both, your needs and your taste.
 
 This is a new project. It started with the localization lib l10n.
 
