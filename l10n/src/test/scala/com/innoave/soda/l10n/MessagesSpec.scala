@@ -29,7 +29,7 @@ private object DemoMessages extends Messages {
 
 private object MessagesWithCustomBundleName extends Messages {
 
-  override val BundleName = "custom_messages"
+  override val bundleName = BundleName("custom_messages")
 
   val Message1, Message2, Message3 = Message0
 
@@ -45,13 +45,13 @@ class MessagesSpec extends FlatSpec with Matchers {
 
   "Messages with default BundleName" should "return the simple object name" in {
 
-    DemoMessages.BundleName shouldBe "DemoMessages"
+    DemoMessages.bundleName.value shouldBe "DemoMessages"
 
   }
 
   "Messages with custom BundleName" should "return the specified bundle base name" in {
 
-    MessagesWithCustomBundleName.BundleName shouldBe "custom_messages"
+    MessagesWithCustomBundleName.bundleName.value shouldBe "custom_messages"
 
   }
 

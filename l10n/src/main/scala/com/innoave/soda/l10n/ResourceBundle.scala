@@ -15,26 +15,18 @@
  */
 package com.innoave.soda.l10n
 
-import java.text.MessageFormat
-import java.util.ResourceBundle
-
+import java.util.{ResourceBundle => JResourceBundle}
 import scala.util.control.NonFatal
 
-class MessageBundle(delegate: ResourceBundle) {
+class ResourceBundle(delegate: JResourceBundle) {
 
-  def raw(key: String): String =
-    _pattern(key)
+  def stringFor(key: String): String =
+    _stringFor(key)
 
-  def raw(message: Message): String =
-    _pattern(message.key())
+  def stringFor(message: Message): String =
+    _stringFor(message.key)
 
-  def formatted[T](message: Message, args: Any*)(implicit locale: Locale = Locale.default): String =
-    new MessageFormat(_pattern(message.key()), locale.asJava).format(
-        args.map(_.asInstanceOf[java.lang.Object]).toArray,
-        new StringBuffer(), null
-        ).toString
-
-  private def _pattern(key: String): String =
+  private def _stringFor(key: String): String =
     try {
       delegate.getString(key)
     } catch {
@@ -44,13 +36,7 @@ class MessageBundle(delegate: ResourceBundle) {
 
 }
 
-object MessageBundle {
-
-  def read(bundleName: String): MessageBundle =
-    new MessageBundle(ResourceBundle.getBundle(bundleName, Utf8ResourceBundleControl))
-
-  def read(bundleName: String, locale: Locale): MessageBundle =
-    new MessageBundle(ResourceBundle.getBundle(bundleName, locale.asJava, Utf8ResourceBundleControl))
+object ResourceBundle {
 
   def stubFor(messages: Messages): String =
     messages.values.map(_.key).mkString("=\n")

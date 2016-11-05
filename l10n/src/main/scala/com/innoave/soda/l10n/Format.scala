@@ -15,10 +15,8 @@
  */
 package com.innoave.soda.l10n
 
-trait Localized[T] {
+trait Format[T] {
 
-  def bundleName(): BundleName
-
-  def key(): String
+  def format(value: T): String
 
 }

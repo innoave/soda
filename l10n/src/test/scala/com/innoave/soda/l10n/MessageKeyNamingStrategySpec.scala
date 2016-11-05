@@ -22,7 +22,7 @@ class MessageKeyNamingStrategySpec extends FlatSpec with Matchers {
 
   "MessageKeyNamingStrategy" should "be DotSeparatedKeyNames by default" in {
 
-    MessageKeyNamingStrategy.default shouldBe DotSeparatedKeyNames
+    KeyNamingStrategy.default shouldBe DotSeparatedKeyNames
 
   }
 

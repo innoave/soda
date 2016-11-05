@@ -17,7 +17,7 @@ package com.innoave.soda.l10n
 
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
-import RenderMessage.render
+import ResourceBundleRenderMessage.render
 
 class RenderMessageSpec extends FlatSpec with Matchers {
 
@@ -26,13 +26,13 @@ class RenderMessageSpec extends FlatSpec with Matchers {
     import Locale._
     import TestMessages._
 
-    render(helloWorld)(EN) shouldBe "Hello World!"
+    render(helloWorld)(EN) shouldBe LocaleText("Hello World!")
 
-    render(helloWorld)(EN_GB) shouldBe "Good day World!"
+    render(helloWorld)(EN_GB) shouldBe LocaleText("Good day World!")
 
-    render(helloWorld)(DE) shouldBe "Hallo Welt!"
+    render(helloWorld)(DE) shouldBe LocaleText("Hallo Welt!")
 
-    render(helloWorld)(DE_AT) shouldBe "Servus Welt!"
+    render(helloWorld)(DE_AT) shouldBe LocaleText("Servus Welt!")
 
   }
 
@@ -41,13 +41,13 @@ class RenderMessageSpec extends FlatSpec with Matchers {
     import Locale._
     import TestMessages._
 
-    render(greeting, "Frank")(EN) shouldBe "Greetings to Frank"
+    render(greeting, "Frank")(EN) shouldBe LocaleText("Greetings to Frank")
 
-    render(greeting, "Frank")(EN_GB) shouldBe "Dear Frank"
+    render(greeting, "Frank")(EN_GB) shouldBe LocaleText("Dear Frank")
 
-    render(greeting, "Frank")(DE) shouldBe "Guten Tag Frank"
+    render(greeting, "Frank")(DE) shouldBe LocaleText("Guten Tag Frank")
 
-    render(greeting, "Frank")(DE_AT) shouldBe "Grüß Gott Frank"
+    render(greeting, "Frank")(DE_AT) shouldBe LocaleText("Grüß Gott Frank")
 
   }
 
@@ -56,13 +56,13 @@ class RenderMessageSpec extends FlatSpec with Matchers {
     import Locale._
     import TestMessages._
 
-    render(productsInShoppingCart, "Paul", 0)(EN) shouldBe "Paul has no items in the cart."
+    render(productsInShoppingCart, "Paul", 0)(EN) shouldBe LocaleText("Paul has no items in the cart.")
 
-    render(productsInShoppingCart, "Paul", 0)(EN_GB) shouldBe "Paul has no products in the shopping cart."
+    render(productsInShoppingCart, "Paul", 0)(EN_GB) shouldBe LocaleText("Paul has no products in the shopping cart.")
 
-    render(productsInShoppingCart, "Paul", 0)(DE) shouldBe "Paul hat keine Produkte im Einkaufskorb."
+    render(productsInShoppingCart, "Paul", 0)(DE) shouldBe LocaleText("Paul hat keine Produkte im Einkaufskorb.")
 
-    render(productsInShoppingCart, "Paul", 0)(DE_AT) shouldBe "Paul hat keine Produkte im Einkaufskörberl."
+    render(productsInShoppingCart, "Paul", 0)(DE_AT) shouldBe LocaleText("Paul hat keine Produkte im Einkaufskörberl.")
 
   }
 
@@ -71,13 +71,13 @@ class RenderMessageSpec extends FlatSpec with Matchers {
     import TestMessages._
     implicit val locale = Locale.EN
 
-    render(productsInShoppingCart, "Paul", 0) shouldBe "Paul has no items in the cart."
+    render(productsInShoppingCart, "Paul", 0) shouldBe LocaleText("Paul has no items in the cart.")
 
-    render(productsInShoppingCart, "Paul", 1) shouldBe "Paul has one item in the cart."
+    render(productsInShoppingCart, "Paul", 1) shouldBe LocaleText("Paul has one item in the cart.")
 
-    render(productsInShoppingCart, "Paul", 2) shouldBe "Paul has 2 items in the cart."
+    render(productsInShoppingCart, "Paul", 2) shouldBe LocaleText("Paul has 2 items in the cart.")
 
-    render(productsInShoppingCart, "Paul", 3) shouldBe "Paul has 3 items in the cart."
+    render(productsInShoppingCart, "Paul", 3) shouldBe LocaleText("Paul has 3 items in the cart.")
 
   }
 

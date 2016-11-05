@@ -15,28 +15,29 @@
  */
 package com.innoave.soda.l10n
 
-import java.{util => ju}
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.security.AccessController
 import java.security.PrivilegedExceptionAction
 import java.security.PrivilegedActionException
-import java.util.Arrays
-import java.util.PropertyResourceBundle
-import java.util.ResourceBundle
+import java.util.{Arrays => JArrays}
+import java.util.{List => JList}
+import java.util.{Locale => JLocale}
+import java.util.{PropertyResourceBundle => JPropertyResourceBundle}
+import java.util.{ResourceBundle => JResourceBundle}
 
-private[l10n] object Utf8ResourceBundleControl extends ResourceBundle.Control {
+private[l10n] object Utf8ResourceBundleControl extends JResourceBundle.Control {
 
   val Utf8Properties = "utf8.properties"
 
   val FileExtension = "txt"
 
-  override def getFormats(baseName: String): ju.List[String] =
-    Arrays.asList(Utf8Properties)
+  override def getFormats(baseName: String): JList[String] =
+    JArrays.asList(Utf8Properties)
 
   override def newBundle(
-      baseName: String, locale: ju.Locale, format: String, loader: ClassLoader, reload: Boolean
-      ): ResourceBundle = {
+      baseName: String, locale: JLocale, format: String, loader: ClassLoader, reload: Boolean
+      ): JResourceBundle = {
     val bundleName = toBundleName(baseName, locale)
     val resourceName = toResourceName(bundleName, FileExtension)
 
@@ -73,7 +74,7 @@ private[l10n] object Utf8ResourceBundleControl extends ResourceBundle.Control {
         } yield {
           val isr = new InputStreamReader(is, "UTF-8")
           try {
-            new PropertyResourceBundle(isr)
+            new JPropertyResourceBundle(isr)
           } finally {
             isr.close()
           }

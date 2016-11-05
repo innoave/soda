@@ -15,22 +15,20 @@
  */
 package com.innoave.soda.l10n
 
-trait RenderMessage {
+trait DefineLocalized {
+  type Type
 
-  final def render(message: Message0)(implicit locale: Locale): LocaleText =
-    LocaleText(patternFor(message.key, locale, message.bundleName))
+  val bundleName: BundleName = new BundleName("localized")
+  val keyNamingStrategy: KeyNamingStrategy = KeyNamingStrategy.default
 
-  final def render[T1](message: Message1[T1], arg1: T1)(implicit locale: Locale): LocaleText =
-    LocaleText(messageFormatFor(patternFor(message.key, locale, message.bundleName), locale).format(arg1))
+  def apply(): Localized[Type]
 
-  final def render[T1, T2](message: Message2[T1, T2], arg1: T1, arg2: T2)(implicit locale: Locale): LocaleText =
-    LocaleText(messageFormatFor(patternFor(message.key, locale, message.bundleName), locale).format(arg1, arg2))
+}
 
-  final def render[T1, T2, T3](message: Message3[T1, T2, T3], arg1: T1, arg2: T2, arg3: T3)(implicit locale: Locale): LocaleText =
-    LocaleText(messageFormatFor(patternFor(message.key, locale, message.bundleName), locale).format(arg1, arg2, arg3))
+trait RenderLocalized {
 
-  protected def messageFormatFor(pattern: String, locale: Locale): MessageFormat =
-    new MessageFormat(pattern, locale)
+  final def render[T](localized: Localized[T])(implicit locale: Locale): LocaleText =
+    LocaleText(patternFor(localized.key, locale, localized.bundleName))
 
   protected def patternFor(key: String, locale: Locale, bundleName: BundleName): String
 

@@ -15,21 +15,20 @@
  */
 package com.innoave.soda.l10n
 
-import java.lang.{ reflect => jr }
+import java.lang.reflect.{Method => JMethod}
 import scala.collection.immutable
 import scala.collection.mutable
 import scala.collection.AbstractSet
 import scala.collection.SortedSetLike
 import scala.reflect.NameTransformer._
-import scala.util.matching.Regex
 
 abstract class Messages(
-    keyNamingStrategy: MessageKeyNamingStrategy = MessageKeyNamingStrategy.default,
+    keyNamingStrategy: KeyNamingStrategy = KeyNamingStrategy.default,
     initial: Int = 0
     ) {
   thisMessages =>
 
-  val BundleName = toString
+  val bundleName = new BundleName(toString)
 
   /* Note that `readResolve` cannot be private, since otherwise
      the JVM does not invoke it when deserializing subclasses. */
@@ -38,11 +37,7 @@ abstract class Messages(
 
   /** The name of this messages enumeration.
    */
-  override def toString = simpleClassName(getClass)
-
-  private def simpleClassName[T](atype: Class[T]): String =
-    ((atype.getName stripSuffix MODULE_SUFFIX_STRING split '.').last split
-       Regex.quote(NAME_JOIN_STRING)).last
+  override def toString: String = KeyNamingStrategy.simpleTypeName(getClass)
 
   private val valueMap: mutable.Map[Int, Msg] = new mutable.HashMap
   private val nameMap: mutable.Map[Int, String] = new mutable.HashMap
@@ -126,7 +121,7 @@ abstract class Messages(
   private def populateNameMap(): Unit = {
     val fields = getClass.getDeclaredFields
 
-    def isValueDefinition(m: jr.Method) =
+    def isValueDefinition(m: JMethod) =
       fields exists (fd => fd.getName == m.getName && fd.getType == m.getReturnType)
 
     // The list of possible Value methods: 0-args which return a conforming type
@@ -162,7 +157,7 @@ abstract class Messages(
     if (nextId > topId) topId = nextId
     if (id < bottomId) bottomId = id
 
-    override val bundleName: String = BundleName
+    override val bundleName: BundleName = thisMessages.bundleName
 
     def id: Int
     protected def _name: String

@@ -15,17 +15,33 @@
  */
 package com.innoave.soda.l10n
 
+import scala.reflect.NameTransformer._
+import scala.util.matching.Regex
+
 /**
- * Defines how the key names are determined, if no explicit key
+ * Defines how the keys are determined, if no explicit key
  * is given at construction time of values.
+ * Keys are used to lookup the localized pattern
+ * in the localization implementation.
+ * E.g. to lookup a resource in a resource bundle.
  */
-trait MessageKeyNamingStrategy {
+trait KeyNamingStrategy {
 
   def keyFor(id: Int, name: String): String
 
 }
 
-object NamesAsKeys extends MessageKeyNamingStrategy {
+object KeyNamingStrategy {
+
+  val default: KeyNamingStrategy = DotSeparatedKeyNames
+
+  def simpleTypeName(clazz: Class[_]): String =
+    ((clazz.getName stripSuffix MODULE_SUFFIX_STRING split '.').last split
+      Regex.quote(NAME_JOIN_STRING)).last
+
+}
+
+object NamesAsKeys extends KeyNamingStrategy {
 
   override def keyFor(id: Int, name: String): String = {
     if (name.isEmpty()) {
@@ -36,7 +52,7 @@ object NamesAsKeys extends MessageKeyNamingStrategy {
 
 }
 
-class CharacterSeparatedKeyNames(separatorChar: Char) extends MessageKeyNamingStrategy {
+class CharacterSeparatedKeyNames(separatorChar: Char) extends KeyNamingStrategy {
 
   override def keyFor(id: Int, name: String): String = {
     if (name.isEmpty()) {
@@ -59,9 +75,3 @@ class CharacterSeparatedKeyNames(separatorChar: Char) extends MessageKeyNamingSt
 }
 
 object DotSeparatedKeyNames extends CharacterSeparatedKeyNames('.')
-
-object MessageKeyNamingStrategy {
-
-  val default: MessageKeyNamingStrategy = DotSeparatedKeyNames
-
-}

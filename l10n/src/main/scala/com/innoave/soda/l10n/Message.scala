@@ -17,7 +17,7 @@ package com.innoave.soda.l10n
 
 trait Message {
 
-  def bundleName: String
+  def bundleName: BundleName
 
   def key(): String
 

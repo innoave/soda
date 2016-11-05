@@ -15,10 +15,19 @@
  */
 package com.innoave.soda.l10n
 
-trait Localized[T] {
+import java.text.{MessageFormat => JMessageFormat}
 
-  def bundleName(): BundleName
+class MessageFormat(
+    val pattern: String,
+    val locale: Locale
+    ) extends Format[Array[_]] {
 
-  def key(): String
+  private val delegate: JMessageFormat = new JMessageFormat(pattern, locale.asJava)
+
+  def format(args: Any*): String =
+    delegate.format(args.map(_.asInstanceOf[java.lang.Object]).toArray, new StringBuffer(), null).toString
+
+  override def format(args: Array[_]): String =
+    delegate.format(args.map(_.asInstanceOf[java.lang.Object]), new StringBuffer(), null).toString
 
 }
