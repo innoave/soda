@@ -38,8 +38,10 @@ abstract class Messages(
 
   /** The name of this messages enumeration.
    */
-  override def toString =
-    ((getClass.getName stripSuffix MODULE_SUFFIX_STRING split '.').last split
+  override def toString = simpleClassName(getClass)
+
+  private def simpleClassName[T](atype: Class[T]): String =
+    ((atype.getName stripSuffix MODULE_SUFFIX_STRING split '.').last split
        Regex.quote(NAME_JOIN_STRING)).last
 
   private val valueMap: mutable.Map[Int, Msg] = new mutable.HashMap
@@ -193,13 +195,13 @@ abstract class Messages(
         case _: NoSuchElementException => "!!! Invalid Messages: no field for #" + id + " !!!"
       }
 
-    final def name(): String =
+    final override def name(): String =
       if (_name != null)
         _name
       else
         thisMessages.nameOf(id)
 
-    final def key(): String =
+    final override def key(): String =
       if (_key != null)
         _key
       else

@@ -28,7 +28,6 @@ description := "Soda for Scala"
 // Project Modules
 //
 
-// l10n module
 lazy val sodaL10n = Project(
   id = "soda-l10n",
   base = file("l10n"),
@@ -42,7 +41,6 @@ lazy val sodaL10n = Project(
   SiteScaladocPlugin
 )
 
-// logging module
 lazy val sodaLogging = Project(
   id = "soda-logging",
   base = file("logging"),
@@ -58,12 +56,22 @@ lazy val sodaLogging = Project(
   SiteScaladocPlugin
 )
 
-// desktop module
 lazy val sodaDesktop = Project(
   id = "soda-desktop",
   base = file("desktop"),
   settings = commonSettings ++ ghpages.settings ++ publishSettings ++ Seq(
     description := "Soda Desktop",
+    libraryDependencies ++= Seq(
+      scalatest % "test"
+    )
+  )
+)
+
+lazy val sodaMvvm = Project(
+  id ="soda-mvvm",
+  base = file("mvvm"),
+  settings = commonSettings ++ ghpages.settings ++ publishSettings ++ Seq(
+    description := "Soda MVVM",
     libraryDependencies ++= Seq(
       scalatest % "test"
     )
@@ -81,15 +89,13 @@ lazy val logback = "ch.qos.logback" % "logback-classic" % "1.1.7"
 // Plugins
 //
 enablePlugins(
-  GitBranchPrompt,
-  GitVersioning
+  GitBranchPrompt
 //  JekyllPlugin
 )
 
-// Root project is never published
+commonSettings
 publishArtifact := false
 sourcesInBase := false
-commonSettings
 
 //
 // Common Settings
@@ -112,24 +118,46 @@ lazy val projectSettings = Seq(
 lazy val buildSettings = Seq(
   crossScalaVersions := Seq("2.11.8", "2.12.0"),
   scalaVersion := crossScalaVersions.value.head,
-  scalacOptions in Compile ++= Seq(
-    "-target:jvm-1.8",
-    "-encoding", "utf8",
-    "-unchecked",
-    "-deprecation",
-//    "-optimise",
-    "-feature",
-    "-language:_",
-    "-Xfatal-warnings",
-    "-Xlint:_",
-    "-Yno-adapted-args",
-    "-Yinline-warnings",
-    "-Ywarn-dead-code",        // N.B. doesn't work well with the ??? hole
-    "-Ywarn-numeric-widen",
-//    "-Ywarn-value-discard",
-//    "-Ywarn-unused",
-    "-Ywarn-unused-import"     // 2.11 only      
-  ),
+  scalacOptions ++= (scalaVersion.value.substring(0, scalaVersion.value.lastIndexOf(".")) match {
+    case "2.11" =>
+      Seq(
+        "-target:jvm-1.8",
+        "-encoding", "utf8",
+        "-unchecked",
+        "-deprecation",
+    //    "-optimise",
+        "-feature",
+        "-language:_",
+        "-Xfatal-warnings",
+        "-Xlint:_",
+        "-Yno-adapted-args",
+        "-Yinline-warnings",
+        "-Ywarn-dead-code",        // N.B. doesn't work well with the ??? hole
+        "-Ywarn-numeric-widen",
+    //    "-Ywarn-value-discard",
+    //    "-Ywarn-unused",
+        "-Ywarn-unused-import"     // 2.11 only      
+      )
+    case "2.12" =>
+      Seq(
+        "-target:jvm-1.8",
+        "-encoding", "utf8",
+        "-unchecked",
+        "-deprecation",
+    //    "-optimise",
+        "-feature",
+        "-language:_",
+        "-Xfatal-warnings",
+        "-Xlint:_",
+        "-Yno-adapted-args",
+//        "-Yinline-warnings",
+        "-Ywarn-dead-code",        // N.B. doesn't work well with the ??? hole
+        "-Ywarn-numeric-widen",
+    //    "-Ywarn-value-discard",
+    //    "-Ywarn-unused",
+        "-Ywarn-unused-import"     // 2.11 only      
+      )
+    }),
   javacOptions ++= Seq(
     "-target", "1.8",
     "-source", "1.8",
@@ -170,20 +198,6 @@ lazy val manifestSetting = packageOptions += {
       "Implementation-Vendor" -> organization.value
     )
 }
-
-//
-// Git Versioning
-//
-lazy val gitRev = sys.process.Process("git rev-parse HEAD").lines_!.head
-
-git.baseVersion := "0.0.0"
-val VersionTagRegex = "^v([0-9]+.[0-9]+.[0-9]+)(-.*)?$".r
-git.gitTagToVersionNumber := {
-  case VersionTagRegex(v,"") => Some(v)
-  case VersionTagRegex(v,s) => Some(s"$v$s")  
-  case _ => None
-}
-git.useGitDescribe := true
 
 //
 // Release Settings

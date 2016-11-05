@@ -4,7 +4,7 @@
 
 ## About
 
-Soda for Scala is a like soda for drinks. It provides a set of (small) individual libs that speed up development of reald world applications in Scala.
+Soda for Scala is a like soda for drinks. It provides a set of (small) individual libraries that speed up development of reald world applications in Scala.
 
 Soda is an umbrella project of small libs to speed up development of applications in Scala. Each lib is provided as its own artifact.
 
@@ -17,7 +17,7 @@ This is a new project. It started with the localization lib l10n.
 - `soda-l10n` : a typesafe localization API - no boilerplate, no magic
 - `soda-logging` : a logging API - Scala wrapper API for SLF4J
 - `soda-desktop` : supporting functions for desktop applications
-
+- `soda-mvvm` :  an API for user interfaces based on the MVVM pattern
 
 
 ## License

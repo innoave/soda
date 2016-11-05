@@ -21,13 +21,13 @@ import org.scalatest.Matchers
 private object DemoMessages extends Messages {
 
   val MessageWithDefaultNameAndKey = Message0
-  val Message1, Message2, Message3 = Message0
+  val MyMessage1, MyMessage2, MyMessage3 = Message0
   val MessageWithCustomKey = Message0("MESSAGE_WITH_CUSTOM_KEY")
   val MessageWithCustomNameAndKey = Message0("CustomName", "custom_key")
 
 }
 
-private object MessagesWithCustomBundleBaseName extends Messages {
+private object MessagesWithCustomBundleName extends Messages {
 
   override val BundleName = "custom_messages"
 
@@ -43,15 +43,15 @@ class MessagesSpec extends FlatSpec with Matchers {
 
   }
 
-  "Messages with default BundleBaseName" should "return the simple object name" in {
+  "Messages with default BundleName" should "return the simple object name" in {
 
     DemoMessages.BundleName shouldBe "DemoMessages"
 
   }
 
-  "Messages with custom BundleBaseName" should "return the specified bundle base name" in {
+  "Messages with custom BundleName" should "return the specified bundle base name" in {
 
-    MessagesWithCustomBundleBaseName.BundleName shouldBe "custom_messages"
+    MessagesWithCustomBundleName.BundleName shouldBe "custom_messages"
 
   }
 
@@ -65,26 +65,26 @@ class MessagesSpec extends FlatSpec with Matchers {
 
   "Messages with multiple values defined at once" should "be separat values" in {
 
-    DemoMessages.Message1.id shouldBe 1
-    DemoMessages.Message2.id shouldBe 2
-    DemoMessages.Message3.id shouldBe 3
+    DemoMessages.MyMessage1.id shouldBe 1
+    DemoMessages.MyMessage2.id shouldBe 2
+    DemoMessages.MyMessage3.id shouldBe 3
 
-    DemoMessages.Message1.name shouldBe "Message1"
-    DemoMessages.Message2.name shouldBe "Message2"
-    DemoMessages.Message3.name shouldBe "Message3"
+    DemoMessages.MyMessage1.name shouldBe "MyMessage1"
+    DemoMessages.MyMessage2.name shouldBe "MyMessage2"
+    DemoMessages.MyMessage3.name shouldBe "MyMessage3"
 
-    DemoMessages.Message1.key shouldBe "message1"
-    DemoMessages.Message2.key shouldBe "message2"
-    DemoMessages.Message3.key shouldBe "message3"
+    DemoMessages.MyMessage1.key shouldBe "my.message1"
+    DemoMessages.MyMessage2.key shouldBe "my.message2"
+    DemoMessages.MyMessage3.key shouldBe "my.message3"
 
   }
 
   "Messages values toString method" should "return the appropriate string" in {
 
     DemoMessages.MessageWithDefaultNameAndKey.toString shouldBe "DemoMessages#MessageWithDefaultNameAndKey(message.with.default.name.and.key)"
-    DemoMessages.Message1.toString shouldBe "DemoMessages#Message1(message1)"
-    DemoMessages.Message2.toString shouldBe "DemoMessages#Message2(message2)"
-    DemoMessages.Message3.toString shouldBe "DemoMessages#Message3(message3)"
+    DemoMessages.MyMessage1.toString shouldBe "DemoMessages#MyMessage1(my.message1)"
+    DemoMessages.MyMessage2.toString shouldBe "DemoMessages#MyMessage2(my.message2)"
+    DemoMessages.MyMessage3.toString shouldBe "DemoMessages#MyMessage3(my.message3)"
 
   }
 
@@ -107,9 +107,9 @@ class MessagesSpec extends FlatSpec with Matchers {
   "Messages values method" should "return a ValueSet containing all of its values" in {
 
     DemoMessages.values should contain (DemoMessages.MessageWithDefaultNameAndKey)
-    DemoMessages.values should contain (DemoMessages.Message1)
-    DemoMessages.values should contain (DemoMessages.Message2)
-    DemoMessages.values should contain (DemoMessages.Message3)
+    DemoMessages.values should contain (DemoMessages.MyMessage1)
+    DemoMessages.values should contain (DemoMessages.MyMessage2)
+    DemoMessages.values should contain (DemoMessages.MyMessage3)
     DemoMessages.values should contain (DemoMessages.MessageWithCustomKey)
     DemoMessages.values should contain (DemoMessages.MessageWithCustomNameAndKey)
 
@@ -122,9 +122,9 @@ class MessagesSpec extends FlatSpec with Matchers {
     DemoMessages.values.toString should be ("""|
         |DemoMessages.ValueSet(
         |DemoMessages#MessageWithDefaultNameAndKey(message.with.default.name.and.key)
-        |, DemoMessages#Message1(message1)
-        |, DemoMessages#Message2(message2)
-        |, DemoMessages#Message3(message3)
+        |, DemoMessages#MyMessage1(my.message1)
+        |, DemoMessages#MyMessage2(my.message2)
+        |, DemoMessages#MyMessage3(my.message3)
         |, DemoMessages#MessageWithCustomKey(MESSAGE_WITH_CUSTOM_KEY)
         |, DemoMessages#CustomName(custom_key)
         |)""".stripMargin.replace("\n", ""))
@@ -133,11 +133,11 @@ class MessagesSpec extends FlatSpec with Matchers {
 
   "Messages range of value set" should "return a value set of the specified range" in {
 
-    val valueSetRange = DemoMessages.values.range(DemoMessages.Message1, DemoMessages.Message3)
+    val valueSetRange = DemoMessages.values.range(DemoMessages.MyMessage1, DemoMessages.MyMessage3)
 
-    valueSetRange should contain (DemoMessages.Message1)
-    valueSetRange should contain (DemoMessages.Message2)
-    valueSetRange should not contain (DemoMessages.Message3)
+    valueSetRange should contain (DemoMessages.MyMessage1)
+    valueSetRange should contain (DemoMessages.MyMessage2)
+    valueSetRange should not contain (DemoMessages.MyMessage3)
 
     valueSetRange.size shouldBe 2
 
@@ -151,9 +151,9 @@ class MessagesSpec extends FlatSpec with Matchers {
 
     valueSet should contain (DemoMessages.MessageWithDefaultNameAndKey)
     valueSet should contain (DemoMessages.MessageWithCustomNameAndKey)
-    valueSet should not contain (DemoMessages.Message1)
-    valueSet should not contain (DemoMessages.Message2)
-    valueSet should not contain (DemoMessages.Message3)
+    valueSet should not contain (DemoMessages.MyMessage1)
+    valueSet should not contain (DemoMessages.MyMessage2)
+    valueSet should not contain (DemoMessages.MyMessage3)
     valueSet should not contain (DemoMessages.MessageWithCustomKey)
 
     valueSet.size shouldBe 2
@@ -170,10 +170,10 @@ class MessagesSpec extends FlatSpec with Matchers {
 
   "Messages ValueSet apply method" should "construct a value set with given values" in {
 
-    val valueSet = DemoMessages.MessageSet(DemoMessages.Message1, DemoMessages.Message3, DemoMessages.MessageWithCustomKey)
+    val valueSet = DemoMessages.MessageSet(DemoMessages.MyMessage1, DemoMessages.MyMessage3, DemoMessages.MessageWithCustomKey)
 
-    valueSet should contain (DemoMessages.Message1)
-    valueSet should contain (DemoMessages.Message3)
+    valueSet should contain (DemoMessages.MyMessage1)
+    valueSet should contain (DemoMessages.MyMessage3)
     valueSet should contain (DemoMessages.MessageWithCustomKey)
 
     valueSet.size shouldBe 3
@@ -184,30 +184,30 @@ class MessagesSpec extends FlatSpec with Matchers {
 
     val set0 = DemoMessages.MessageSet.empty
     val set1 = set0 + DemoMessages.MessageWithDefaultNameAndKey + DemoMessages.MessageWithCustomNameAndKey
-    val set2 = set1 + DemoMessages.Message1
+    val set2 = set1 + DemoMessages.MyMessage1
     val set3 = set2 + DemoMessages.MessageWithCustomKey
 
     set1 should contain (DemoMessages.MessageWithDefaultNameAndKey)
     set1 should contain (DemoMessages.MessageWithCustomNameAndKey)
-    set1 should not contain (DemoMessages.Message1)
-    set1 should not contain (DemoMessages.Message2)
-    set1 should not contain (DemoMessages.Message3)
+    set1 should not contain (DemoMessages.MyMessage1)
+    set1 should not contain (DemoMessages.MyMessage2)
+    set1 should not contain (DemoMessages.MyMessage3)
     set1 should not contain (DemoMessages.MessageWithCustomKey)
     set1.size shouldBe 2
 
     set2 should contain (DemoMessages.MessageWithDefaultNameAndKey)
     set2 should contain (DemoMessages.MessageWithCustomNameAndKey)
-    set2 should contain (DemoMessages.Message1)
-    set2 should not contain (DemoMessages.Message2)
-    set2 should not contain (DemoMessages.Message3)
+    set2 should contain (DemoMessages.MyMessage1)
+    set2 should not contain (DemoMessages.MyMessage2)
+    set2 should not contain (DemoMessages.MyMessage3)
     set2 should not contain (DemoMessages.MessageWithCustomKey)
     set2.size shouldBe 3
 
     set3 should contain (DemoMessages.MessageWithDefaultNameAndKey)
     set3 should contain (DemoMessages.MessageWithCustomNameAndKey)
-    set3 should contain (DemoMessages.Message1)
-    set3 should not contain (DemoMessages.Message2)
-    set3 should not contain (DemoMessages.Message3)
+    set3 should contain (DemoMessages.MyMessage1)
+    set3 should not contain (DemoMessages.MyMessage2)
+    set3 should not contain (DemoMessages.MyMessage3)
     set3 should contain (DemoMessages.MessageWithCustomKey)
     set3.size shouldBe 4
 
@@ -217,38 +217,38 @@ class MessagesSpec extends FlatSpec with Matchers {
 
     val set1 = DemoMessages.values
     val set2 = set1 - DemoMessages.MessageWithDefaultNameAndKey
-    val set3 = set2 - DemoMessages.Message2
+    val set3 = set2 - DemoMessages.MyMessage2
     val set4 = set3 - DemoMessages.MessageWithCustomNameAndKey
 
     set1 should contain (DemoMessages.MessageWithDefaultNameAndKey)
     set1 should contain (DemoMessages.MessageWithCustomNameAndKey)
-    set1 should contain (DemoMessages.Message1)
-    set1 should contain (DemoMessages.Message2)
-    set1 should contain (DemoMessages.Message3)
+    set1 should contain (DemoMessages.MyMessage1)
+    set1 should contain (DemoMessages.MyMessage2)
+    set1 should contain (DemoMessages.MyMessage3)
     set1 should contain (DemoMessages.MessageWithCustomKey)
     set1.size shouldBe 6
 
     set2 should not contain (DemoMessages.MessageWithDefaultNameAndKey)
     set2 should contain (DemoMessages.MessageWithCustomNameAndKey)
-    set2 should contain (DemoMessages.Message1)
-    set2 should contain (DemoMessages.Message2)
-    set2 should contain (DemoMessages.Message3)
+    set2 should contain (DemoMessages.MyMessage1)
+    set2 should contain (DemoMessages.MyMessage2)
+    set2 should contain (DemoMessages.MyMessage3)
     set2 should contain (DemoMessages.MessageWithCustomKey)
     set2.size shouldBe 5
 
     set3 should not contain (DemoMessages.MessageWithDefaultNameAndKey)
     set3 should contain (DemoMessages.MessageWithCustomNameAndKey)
-    set3 should contain (DemoMessages.Message1)
-    set3 should not contain (DemoMessages.Message2)
-    set3 should contain (DemoMessages.Message3)
+    set3 should contain (DemoMessages.MyMessage1)
+    set3 should not contain (DemoMessages.MyMessage2)
+    set3 should contain (DemoMessages.MyMessage3)
     set3 should contain (DemoMessages.MessageWithCustomKey)
     set3.size shouldBe 4
 
     set4 should not contain (DemoMessages.MessageWithDefaultNameAndKey)
     set4 should not contain (DemoMessages.MessageWithCustomNameAndKey)
-    set4 should contain (DemoMessages.Message1)
-    set4 should not contain (DemoMessages.Message2)
-    set4 should contain (DemoMessages.Message3)
+    set4 should contain (DemoMessages.MyMessage1)
+    set4 should not contain (DemoMessages.MyMessage2)
+    set4 should contain (DemoMessages.MyMessage3)
     set4 should contain (DemoMessages.MessageWithCustomKey)
     set4.size shouldBe 3
 
@@ -259,9 +259,9 @@ class MessagesSpec extends FlatSpec with Matchers {
     val iterator = DemoMessages.values.iterator
 
     iterator.next shouldBe DemoMessages.MessageWithDefaultNameAndKey
-    iterator.next shouldBe DemoMessages.Message1
-    iterator.next shouldBe DemoMessages.Message2
-    iterator.next shouldBe DemoMessages.Message3
+    iterator.next shouldBe DemoMessages.MyMessage1
+    iterator.next shouldBe DemoMessages.MyMessage2
+    iterator.next shouldBe DemoMessages.MyMessage3
     iterator.next shouldBe DemoMessages.MessageWithCustomKey
     iterator.next shouldBe DemoMessages.MessageWithCustomNameAndKey
 

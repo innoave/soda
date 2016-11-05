@@ -22,6 +22,9 @@ import scala.util.control.NonFatal
 
 class MessageBundle(delegate: ResourceBundle) {
 
+  def raw(key: String): String =
+    _pattern(key)
+
   def raw(message: Message): String =
     _pattern(message.key())
 
