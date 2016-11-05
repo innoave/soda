@@ -15,11 +15,31 @@
  */
 package com.innoave.soda.l10n
 
-trait RenderLocalized {
+object DemoTypes {
 
-  final def render[T](localized: Localized[T])(implicit locale: Locale): LocaleText =
-    LocaleText(patternFor(localized.key, locale, localized.bundleName))
+  sealed trait Suit
+  case object Spades extends Suit
+  case object Clubs extends Suit
+  case object Diamonds extends Suit
+  case object Hearts extends Suit
 
-  protected def patternFor(key: String, locale: Locale, bundleName: BundleName): String
+  sealed trait Face
+  case object Ten extends Face
+  case object Jack extends Face
+  case object Queen extends Face
+  case object King extends Face
+
+  case class Card(suit: Suit, face: Face)
+
+}
+
+object DemoTypesLocalizer extends DefineLocalized {
+  import DemoTypes._
+
+  override type Type = Card
+  override val bundleName = BundleName("l10n.cards")
+  override val keyNamingStrategy = NamesAsKeys
+
+  implicit def card2localized(card: Card): Localized[Card] = localized(card)
 
 }

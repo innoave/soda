@@ -15,11 +15,11 @@
  */
 package com.innoave.soda.l10n
 
-trait RenderLocalized {
+import org.scalatest.FlatSpec
+import org.scalatest.Matchers
 
-  final def render[T](localized: Localized[T])(implicit locale: Locale): LocaleText =
-    LocaleText(patternFor(localized.key, locale, localized.bundleName))
+class RenderLocalizedSpec extends FlatSpec with Matchers {
 
-  protected def patternFor(key: String, locale: Locale, bundleName: BundleName): String
+
 
 }

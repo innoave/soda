@@ -15,11 +15,25 @@
  */
 package com.innoave.soda.l10n
 
-trait RenderLocalized {
+import scala.reflect.ClassTag
 
-  final def render[T](localized: Localized[T])(implicit locale: Locale): LocaleText =
-    LocaleText(patternFor(localized.key, locale, localized.bundleName))
+abstract class DefineLocalized { thisdefine =>
+  type Type
 
-  protected def patternFor(key: String, locale: Locale, bundleName: BundleName): String
+  val bundleName: BundleName = new BundleName("localized")
+  val keyNamingStrategy: KeyNamingStrategy = KeyNamingStrategy.default
+
+  def localized[T](value: T)(implicit tag: ClassTag[T]): Localized[T] = new LocalizedWrapper(value)
+
+  private def keyFor[T](value: T)(implicit tag: ClassTag[T]): String =
+    keyNamingStrategy.keyFor(0, KeyNamingStrategy.simpleTypeName(tag.runtimeClass))
+
+  final class LocalizedWrapper[T](value: T)(implicit tag: ClassTag[T]) extends Localized[T] {
+
+    override def bundleName = thisdefine.bundleName
+
+    override def key(): String = keyFor(value)
+
+  }
 
 }
