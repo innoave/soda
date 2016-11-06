@@ -1,0 +1,12 @@
+#
+# Locale names for DemoTypes in English
+#
+Spades=Spades
+Clubs=Clubs
+Diamonds=Diamonds
+Hearts=Hearts
+Ten=Ten
+Jack=Jack
+Queen=Queen
+King=King
+Card={2} of {1}

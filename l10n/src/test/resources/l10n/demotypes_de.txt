@@ -1,0 +1,12 @@
+#
+# Locale names for DemoTypes in German
+#
+Spades=Kreuz
+Clubs=Pik
+Diamonds=Karo
+Hearts=Herz
+Ten=Zehn
+Jack=Bube
+Queen=Dame
+King=König
+Card={1} {2}

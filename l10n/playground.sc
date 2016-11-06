@@ -1,22 +1,9 @@
 import com.innoave.soda.l10n.TestMessages
 import com.innoave.soda.l10n.ResourceBundle
+import scala.reflect.NameTransformer._
+import scala.util.matching.Regex
 
 object playground {
-
-  sealed trait Suit
-  case object Spades extends Suit
-  case object Clubs extends Suit
-  case object Diamonds extends Suit
-  case object Hearts extends Suit
-  
-  sealed trait Face
-  case object Ten extends Face
-  case object Jack extends Face
-  case object Queen extends Face
-  case object King extends Face
-
-  case class Card(suit: Suit, face: Face)
-
 
   java.util.Locale.getAvailableLocales.filter(_.getLanguage == "en")
                                                   //> res0: Array[java.util.Locale] = Array(en_US, en_SG, en_MT, en, en_PH, en_NZ,
@@ -38,29 +25,35 @@ object playground {
                                                   //| hello.world=
                                                   //| products.in.shopping.cart
 
+  import com.innoave.soda.l10n.ResourceBundleRenderLocalized._
   import com.innoave.soda.l10n.Locale._
-  import com.innoave.soda.l10n.ResourceBundleRenderMessage._
   
-  render(TestMessages.helloWorld)(EN)             //> java.util.MissingResourceException: Can't find bundle for base name i18n.te
-                                                  //| st_messages, locale en
-                                                  //| 	at java.util.ResourceBundle.throwMissingResourceException(ResourceBundle
-                                                  //| .java:1564)
-                                                  //| 	at java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1387)
-                                                  //| 	at java.util.ResourceBundle.getBundle(ResourceBundle.java:845)
-                                                  //| 	at com.innoave.soda.l10n.ResourceBundleRenderMessage$.patternFor(Resourc
-                                                  //| eBundleRenderMessage.scala:23)
-                                                  //| 	at com.innoave.soda.l10n.RenderMessage$class.render(RenderMessage.scala:
-                                                  //| 21)
-                                                  //| 	at com.innoave.soda.l10n.ResourceBundleRenderMessage$.render(ResourceBun
-                                                  //| dleRenderMessage.scala:20)
-                                                  //| 	at playground$$anonfun$main$1.apply$mcV$sp(playground.scala:32)
-                                                  //| 	at org.scalaide.worksheet.runtime.library.WorksheetSupport$$anonfun$$exe
-                                                  //| cute$1.apply$mcV$sp(WorksheetSupport.scala:76)
-                                                  //| 	at org.scalaide.worksheet.runtime.library.WorksheetSupport$.redirected(W
-                                                  //| orksheetSupport.scala:65)
-                                                  //| 	at org.scal
-                                                  //| Output exceeds cutoff limit.
+  import com.innoave.soda.l10n.TestMessages._
+
+  renderLocalized(helloWorld)(EN)                 //> res6: com.innoave.soda.l10n.LocaleText = LocaleText(Hello World!)
+
+  import com.innoave.soda.l10n.DemoTypes._
+  import com.innoave.soda.l10n.DemoTypesLocalizer._
+
+  val queenOfHearts = Card(Hearts, Queen)         //> queenOfHearts  : com.innoave.soda.l10n.DemoTypes.Card = Card(Hearts,Queen)
+  renderLocalized(queenOfHearts)(EN)              //> res7: com.innoave.soda.l10n.LocaleText = LocaleText(Herz Dame)
+  renderLocalized(queenOfHearts)(DE)              //> res8: com.innoave.soda.l10n.LocaleText = LocaleText(Herz Dame)
+
+  (1, "2").productIterator.map({case x: Int => x.toString case a => a}).toArray
+                                                  //> res9: Array[Any] = Array(1, 2)
+
+
+  def simpleTypeName(clazz: Class[_]): String =
+    ((clazz.getName stripSuffix MODULE_SUFFIX_STRING split '.').last split
+      Regex.quote(NAME_JOIN_STRING)).last         //> simpleTypeName: (clazz: Class[_])String
+      
+  queenOfHearts.getClass.getName                  //> res10: String = com.innoave.soda.l10n.DemoTypes$Card
+  Hearts.getClass.getName                         //> res11: String = com.innoave.soda.l10n.DemoTypes$Hearts$
   
-//  render Card(Hearts, Queen) EN text()
+  val suit: Suit = Hearts                         //> suit  : com.innoave.soda.l10n.DemoTypes.Suit = Hearts
+
+  simpleTypeName(queenOfHearts.getClass)          //> res12: String = Card
+  simpleTypeName(Hearts.getClass)                 //> res13: String = Hearts
+  simpleTypeName(suit.getClass)                   //> res14: String = Hearts
 
 }

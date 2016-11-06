@@ -36,10 +36,13 @@ object DemoTypes {
 object DemoTypesLocalizer extends DefineLocalized {
   import DemoTypes._
 
-  override type Type = Card
-  override val bundleName = BundleName("l10n.cards")
+  override val bundleName = BundleName("l10n.demotypes")
   override val keyNamingStrategy = NamesAsKeys
 
-  implicit def card2localized(card: Card): Localized[Card] = localized(card)
+  implicit def localizedSuit(suit: Suit) = localized(suit)
+
+  implicit def localizedFace(face: Face) = localized(face)
+
+  implicit def localizedCard(card: Card) = localized[Card, (Localized[Suit], Localized[Face])](card, (card.suit, card.face))
 
 }

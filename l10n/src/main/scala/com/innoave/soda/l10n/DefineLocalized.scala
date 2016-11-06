@@ -15,25 +15,32 @@
  */
 package com.innoave.soda.l10n
 
-import scala.reflect.ClassTag
-
-abstract class DefineLocalized { thisdefine =>
-  type Type
+trait DefineLocalized { thisdefine =>
 
   val bundleName: BundleName = new BundleName("localized")
   val keyNamingStrategy: KeyNamingStrategy = KeyNamingStrategy.default
 
-  def localized[T](value: T)(implicit tag: ClassTag[T]): Localized[T] = new LocalizedWrapper(value)
+  private def keyFor[T](value: T): String =
+    keyNamingStrategy.keyFor(0, KeyNamingStrategy.simpleTypeName(value.getClass))
 
-  private def keyFor[T](value: T)(implicit tag: ClassTag[T]): String =
-    keyNamingStrategy.keyFor(0, KeyNamingStrategy.simpleTypeName(tag.runtimeClass))
+  protected def localized[T](value: T): Localized[T] = new LocalizedWrapper(value)
 
-  final class LocalizedWrapper[T](value: T)(implicit tag: ClassTag[T]) extends Localized[T] {
+  protected def localized[T, A <: Product](value: T, args: A): LocalizedP[T, A] =
+    new LocalizedPWrapper(value, args)
 
-    override def bundleName = thisdefine.bundleName
+  final class LocalizedWrapper[T](
+      override val value: T
+      ) extends Localized[T] {
+    override val bundleName = thisdefine.bundleName
+    override val key = keyFor(value)
+  }
 
-    override def key(): String = keyFor(value)
-
+  final class LocalizedPWrapper[T, A <: Product](
+      override val value: T,
+      override val args: A
+      ) extends LocalizedP[T, A] {
+    override val bundleName = thisdefine.bundleName
+    override val key = keyFor(value)
   }
 
 }

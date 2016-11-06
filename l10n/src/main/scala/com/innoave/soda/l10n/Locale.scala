@@ -15,7 +15,7 @@
  */
 package com.innoave.soda.l10n
 
-class Locale(
+class Locale private[Locale](
     val language: Language,
     val country: Country,
     val variant: Variant
@@ -48,7 +48,7 @@ class Locale(
 
 }
 
-class Language(val code: String) extends Equals {
+class Language private[Language](val code: String) extends Equals {
 
   override def canEqual(other: Any): Boolean =
     other.isInstanceOf[Language]
@@ -64,7 +64,7 @@ class Language(val code: String) extends Equals {
 
 }
 
-class Country(val code: String) extends Equals {
+class Country private[Country](val code: String) extends Equals {
 
   override def canEqual(other: Any): Boolean =
     other.isInstanceOf[Country]
@@ -79,7 +79,7 @@ class Country(val code: String) extends Equals {
     s"Country($code)"
 }
 
-class Variant(val code: String) extends Equals {
+class Variant private[Variant](val code: String) extends Equals {
 
   override def canEqual(other: Any): Boolean =
     other.isInstanceOf[Variant]
@@ -96,6 +96,18 @@ class Variant(val code: String) extends Equals {
 
 object Language {
 
+  def apply(code: String): Language =
+    code match {
+      case "en" => Language.EN
+      case "de" => Language.DE
+      case "fr" => Language.FR
+      case "it" => Language.IT
+      case "es" => Language.ES
+      case "" => Language.Any
+      case _ => new Language(code)
+    }
+
+  case object Any extends Language("")
   case object EN extends Language("en")
   case object DE extends Language("de")
   case object FR extends Language("fr")
@@ -105,6 +117,18 @@ object Language {
 }
 
 object Country {
+
+  def apply(code: String): Country =
+    code match {
+      case "US" => Country.US
+      case "GB" => Country.GB
+      case "AU" => Country.AU
+      case "DE" => Country.DE
+      case "AT" => Country.AT
+      case "CH" => Country.CH
+      case "" => Country.Any
+      case _ => new Country(code)
+    }
 
   case object Any extends Country("")
   case object US extends Country("US")
@@ -118,17 +142,35 @@ object Country {
 
 object Variant {
 
+  def apply(code: String): Variant =
+    code match {
+      case "" => Any
+      case _ => new Variant(code)
+    }
+
   case object Any extends Variant("")
 
 }
 
 object Locale {
-  import java.{util => ju}
+  import java.util.{Locale => JLocale}
 
   def default: Locale =
-    fromJava(ju.Locale.getDefault)
+    fromJava(JLocale.getDefault)
 
-  def fromJava(jLocale: ju.Locale): Locale =
+  def default_=(locale: Locale) =
+    JLocale.setDefault(locale.asJava)
+
+  def apply(language: String): Locale =
+    new Locale(Language(language), Country.Any, Variant.Any)
+
+  def apply(language: String, country: String): Locale =
+    new Locale(Language(language), Country(country), Variant.Any)
+
+  def apply(language: String, country: String, variant: String): Locale =
+    new Locale(Language(language), Country(country), Variant(variant))
+
+  def fromJava(jLocale: JLocale): Locale =
     (jLocale.getLanguage, jLocale.getCountry, jLocale.getVariant) match {
       case ("en", "US", _) => EN_US
       case ("en", "GB", _) => EN_GB
@@ -141,9 +183,7 @@ object Locale {
       case ("fr", _, _) => FR
       case ("it", _, _) => IT
       case ("es", _, _) => ES
-      case (l, "", "") => new Locale(new Language(l), Country.Any, Variant.Any)
-      case (l, c, "") => new Locale(new Language(l), new Country(c), Variant.Any)
-      case (l, c, v) => new Locale(new Language(l), new Country(c), new Variant(v))
+      case (l, c, v) => Locale(l, c, v)
     }
 
   case object EN extends Locale(Language.EN, Country.Any, Variant.Any)

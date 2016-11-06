@@ -17,22 +17,31 @@ package com.innoave.soda.l10n
 
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
-import ResourceBundleRenderMessage.render
+import ResourceBundleRenderLocalized.renderLocalized
+import org.scalatest.BeforeAndAfterAll
 
-class RenderMessageSpec extends FlatSpec with Matchers {
+class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
 
-  "RenderMessage" should "render the test message with no parameters in different languages" in {
+  override def beforeAll(): Unit = {
+    //set default Locale to language for which there is no resource file available
+    //only needed for tests!!!
+    Locale.default = Locale("XX")
+  }
+
+  "RenderLocalized" should "render the test message with no parameters in different languages" in {
 
     import Locale._
     import TestMessages._
 
-    render(helloWorld)(EN) shouldBe LocaleText("Hello World!")
+    renderLocalized(helloWorld)(EN) shouldBe LocaleText("Hello World!")
 
-    render(helloWorld)(EN_GB) shouldBe LocaleText("Good day World!")
+    renderLocalized(helloWorld)(EN_GB) shouldBe LocaleText("Good day World!")
 
-    render(helloWorld)(DE) shouldBe LocaleText("Hallo Welt!")
+    renderLocalized(helloWorld)(DE) shouldBe LocaleText("Hallo Welt!")
 
-    render(helloWorld)(DE_AT) shouldBe LocaleText("Servus Welt!")
+    renderLocalized(helloWorld)(DE_AT) shouldBe LocaleText("Servus Welt!")
+
+    renderLocalized(helloWorld)(Locale("MM")) shouldBe LocaleText("Hello World!")
 
   }
 
@@ -41,13 +50,15 @@ class RenderMessageSpec extends FlatSpec with Matchers {
     import Locale._
     import TestMessages._
 
-    render(greeting, "Frank")(EN) shouldBe LocaleText("Greetings to Frank")
+    renderLocalized(greeting, "Frank")(EN) shouldBe LocaleText("Greetings to Frank")
 
-    render(greeting, "Frank")(EN_GB) shouldBe LocaleText("Dear Frank")
+    renderLocalized(greeting, "Frank")(EN_GB) shouldBe LocaleText("Dear Frank")
 
-    render(greeting, "Frank")(DE) shouldBe LocaleText("Guten Tag Frank")
+    renderLocalized(greeting, "Frank")(DE) shouldBe LocaleText("Guten Tag Frank")
 
-    render(greeting, "Frank")(DE_AT) shouldBe LocaleText("Grüß Gott Frank")
+    renderLocalized(greeting, "Frank")(DE_AT) shouldBe LocaleText("Grüß Gott Frank")
+
+    renderLocalized(greeting, "Frank")(Locale("MM")) shouldBe LocaleText("Hello Frank")
 
   }
 
@@ -56,13 +67,15 @@ class RenderMessageSpec extends FlatSpec with Matchers {
     import Locale._
     import TestMessages._
 
-    render(productsInShoppingCart, "Paul", 0)(EN) shouldBe LocaleText("Paul has no items in the cart.")
+    renderLocalized(productsInShoppingCart, "Paul", 0)(EN) shouldBe LocaleText("Paul has no items in the cart.")
 
-    render(productsInShoppingCart, "Paul", 0)(EN_GB) shouldBe LocaleText("Paul has no products in the shopping cart.")
+    renderLocalized(productsInShoppingCart, "Paul", 0)(EN_GB) shouldBe LocaleText("Paul has no products in the shopping cart.")
 
-    render(productsInShoppingCart, "Paul", 0)(DE) shouldBe LocaleText("Paul hat keine Produkte im Einkaufskorb.")
+    renderLocalized(productsInShoppingCart, "Paul", 0)(DE) shouldBe LocaleText("Paul hat keine Produkte im Einkaufskorb.")
 
-    render(productsInShoppingCart, "Paul", 0)(DE_AT) shouldBe LocaleText("Paul hat keine Produkte im Einkaufskörberl.")
+    renderLocalized(productsInShoppingCart, "Paul", 0)(DE_AT) shouldBe LocaleText("Paul hat keine Produkte im Einkaufskörberl.")
+
+    renderLocalized(productsInShoppingCart, "Paul", 0)(Locale("MM")) shouldBe LocaleText("Paul has no products in the cart.")
 
   }
 
@@ -71,13 +84,13 @@ class RenderMessageSpec extends FlatSpec with Matchers {
     import TestMessages._
     implicit val locale = Locale.EN
 
-    render(productsInShoppingCart, "Paul", 0) shouldBe LocaleText("Paul has no items in the cart.")
+    renderLocalized(productsInShoppingCart, "Paul", 0) shouldBe LocaleText("Paul has no items in the cart.")
 
-    render(productsInShoppingCart, "Paul", 1) shouldBe LocaleText("Paul has one item in the cart.")
+    renderLocalized(productsInShoppingCart, "Paul", 1) shouldBe LocaleText("Paul has one item in the cart.")
 
-    render(productsInShoppingCart, "Paul", 2) shouldBe LocaleText("Paul has 2 items in the cart.")
+    renderLocalized(productsInShoppingCart, "Paul", 2) shouldBe LocaleText("Paul has 2 items in the cart.")
 
-    render(productsInShoppingCart, "Paul", 3) shouldBe LocaleText("Paul has 3 items in the cart.")
+    renderLocalized(productsInShoppingCart, "Paul", 3) shouldBe LocaleText("Paul has 3 items in the cart.")
 
   }
 
