@@ -44,13 +44,31 @@ package object syntax {
   final def rl(message: Message0)(implicit locale: Locale): LocaleText =
     renderLocalized(message)
 
-  final def rl[A1](message: MessageP[Tuple1[A1]], arg1: A1)(implicit locale: Locale): LocaleText =
-    renderLocalized(message, Tuple1(arg1))
+  final def rl[A1](message: MessageP[Tuple1[A1]], arg1: A1)
+      (implicit locale: Locale): LocaleText = renderLocalized(message, Tuple1(arg1))
 
-  final def rl[A1, A2](message: MessageP[Tuple2[A1, A2]], arg1: A1, arg2: A2)(implicit locale: Locale): LocaleText =
-    renderLocalized(message, (arg1, arg2))
+  final def rl[A1, A2](message: MessageP[Tuple2[A1, A2]], arg1: A1, arg2: A2)
+      (implicit locale: Locale): LocaleText = renderLocalized(message, (arg1, arg2))
 
-  final def rl[A1, A2, A3](message: MessageP[Tuple3[A1, A2, A3]], arg1: A1, arg2: A2, arg3: A3)(implicit locale: Locale): LocaleText =
-    renderLocalized(message, (arg1, arg2, arg3))
+  final def rl[A1, A2, A3](message: MessageP[Tuple3[A1, A2, A3]], arg1: A1, arg2: A2, arg3: A3)
+      (implicit locale: Locale): LocaleText = renderLocalized(message, (arg1, arg2, arg3))
+
+  final def rl[A1, A2, A3, A4](message: MessageP[Tuple4[A1, A2, A3, A4]], arg1: A1, arg2: A2, arg3: A3, arg4: A4)
+      (implicit locale: Locale): LocaleText = renderLocalized(message, (arg1, arg2, arg3, arg4))
+
+  final def rl[A1, A2, A3, A4, A5](message: MessageP[Tuple5[A1, A2, A3, A4, A5]], arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5)
+      (implicit locale: Locale): LocaleText = renderLocalized(message, (arg1, arg2, arg3, arg4, arg5))
+
+  final def rl[A1, A2, A3, A4, A5, A6](message: MessageP[Tuple6[A1, A2, A3, A4, A5, A6]], arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6)
+      (implicit locale: Locale): LocaleText = renderLocalized(message, (arg1, arg2, arg3, arg4, arg5, arg6))
+
+  final def rl[A1, A2, A3, A4, A5, A6, A7](message: MessageP[Tuple7[A1, A2, A3, A4, A5, A6, A7]], arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7)
+      (implicit locale: Locale): LocaleText = renderLocalized(message, (arg1, arg2, arg3, arg4, arg5, arg6, arg7))
+
+  final def rl[A1, A2, A3, A4, A5, A6, A7, A8](message: MessageP[Tuple8[A1, A2, A3, A4, A5, A6, A7, A8]], arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8)
+      (implicit locale: Locale): LocaleText = renderLocalized(message, (arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8))
+
+  final def rl[A1, A2, A3, A4, A5, A6, A7, A8, A9](message: MessageP[Tuple9[A1, A2, A3, A4, A5, A6, A7, A8, A9]], arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8, arg9: A9)
+      (implicit locale: Locale): LocaleText = renderLocalized(message, (arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9))
 
 }
