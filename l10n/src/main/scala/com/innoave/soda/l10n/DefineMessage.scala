@@ -22,18 +22,18 @@ import scala.collection.AbstractSet
 import scala.collection.SortedSetLike
 import scala.reflect.NameTransformer._
 
-abstract class Messages(
+abstract class DefineMessage(
     keyNamingStrategy: KeyNamingStrategy = KeyNamingStrategy.default,
     initial: Int = 0
     ) {
-  thisMessages =>
+  thisDefineMessage =>
 
   val bundleName = new BundleName(toString)
 
   /* Note that `readResolve` cannot be private, since otherwise
      the JVM does not invoke it when deserializing subclasses. */
   protected def readResolve(): AnyRef =
-    thisMessages.getClass.getField(MODULE_INSTANCE_NAME).get(null)
+    thisDefineMessage.getClass.getField(MODULE_INSTANCE_NAME).get(null)
 
   /** The name of this messages enumeration.
    */
@@ -84,9 +84,9 @@ abstract class Messages(
    */
   protected final def Message0: Msg0 = new Msg0(nextId, null, null)
 
-  protected final def Message1[T1]: Msg1[T1] = new Msg1(nextId, null, null)
-  protected final def Message2[T1, T2]: Msg2[T1, T2] = new Msg2(nextId, null, null)
-  protected final def Message3[T1, T2, T3]: Msg3[T1, T2, T3] = new Msg3(nextId, null, null)
+  protected final def Message1[A1]: MsgP[Tuple1[A1]] = new MsgP(nextId, null, null)
+  protected final def Message2[A1, A2]: MsgP[Tuple2[A1, A2]] = new MsgP(nextId, null, null)
+  protected final def Message3[A1, A2, A3]: MsgP[Tuple3[A1, A2, A3]] = new MsgP(nextId, null, null)
 
   /**
    * Creates a fresh message, part of this Messages
@@ -94,9 +94,9 @@ abstract class Messages(
    */
   protected final def Message0(key: String): Msg0 = new Msg0(nextId, null, key)
 
-  protected final def Message1[T1](key: String): Msg1[T1] = new Msg1(nextId, null, key)
-  protected final def Message2[T1, T2](key: String): Msg2[T1, T2] = new Msg2(nextId, null, key)
-  protected final def Message3[T1, T2, T3](key: String): Msg3[T1, T2, T3] = new Msg3(nextId, null, key)
+  protected final def Message1[A1](key: String): MsgP[Tuple1[A1]] = new MsgP(nextId, null, key)
+  protected final def Message2[A1, A2](key: String): MsgP[Tuple2[A1, A2]] = new MsgP(nextId, null, key)
+  protected final def Message3[A1, A2, A3](key: String): MsgP[Tuple3[A1, A2, A3]] = new MsgP(nextId, null, key)
 
   /**
    * Creates a fresh message, part of this Messages
@@ -104,9 +104,9 @@ abstract class Messages(
    */
   protected final def Message0(name: String, key: String): Msg0 = new Msg0(nextId, name, key)
 
-  protected final def Message1[T1](name: String, key: String): Msg1[T1] = new Msg1(nextId, name, key)
-  protected final def Message2[T1, T2](name: String, key: String): Msg2[T1, T2] = new Msg2(nextId, name, key)
-  protected final def Message3[T1, T2, T3](name: String, key: String): Msg3[T1, T2, T3] = new Msg3(nextId, name, key)
+  protected final def Message1[A1](name: String, key: String): MsgP[Tuple1[A1]] = new MsgP(nextId, name, key)
+  protected final def Message2[A1, A2](name: String, key: String): MsgP[Tuple2[A1, A2]] = new MsgP(nextId, name, key)
+  protected final def Message3[A1, A2, A3](name: String, key: String): MsgP[Tuple3[A1, A2, A3]] = new MsgP(nextId, name, key)
 
   private def nameOf(id: Int): String =
     synchronized {
@@ -128,7 +128,7 @@ abstract class Messages(
     val methods = getClass.getMethods filter { m =>
         m.getParameterTypes.isEmpty &&
         classOf[Msg].isAssignableFrom(m.getReturnType) &&
-        m.getDeclaringClass != classOf[Messages] &&
+        m.getDeclaringClass != classOf[DefineMessage] &&
         isValueDefinition(m)
       }
 
@@ -137,7 +137,7 @@ abstract class Messages(
       // invoke method to obtain actual `Value` instance
       val value = m.invoke(this).asInstanceOf[Msg]
       // verify that outer points to the correct Enumeration
-      if (value.outerMessages eq thisMessages) {
+      if (value.outerDefineMessage eq thisDefineMessage) {
         val id = Int.unbox(classOf[Msg] getMethod "id" invoke value)
         nameMap += ((id, name))
       }
@@ -157,7 +157,7 @@ abstract class Messages(
     if (nextId > topId) topId = nextId
     if (id < bottomId) bottomId = id
 
-    override val bundleName: BundleName = thisMessages.bundleName
+    override val bundleName: BundleName = thisDefineMessage.bundleName
 
     def id: Int
     protected def _name: String
@@ -166,15 +166,15 @@ abstract class Messages(
     /**
      * a marker so we can tell whose values belong to whom come reflective-naming time
      */
-    private[Messages] val outerMessages = thisMessages
+    private[DefineMessage] val outerDefineMessage = thisDefineMessage
 
     override def compare(that: Msg): Int =
       this.id.compareTo(that.id)
 
     override def equals(other: Any): Boolean =
       other match {
-        case that: Messages#Msg =>
-          (this.outerMessages eq that.outerMessages) &&
+        case that: DefineMessage#Msg =>
+          (this.outerDefineMessage eq that.outerDefineMessage) &&
           (this.id == that.id)
         case _ =>
           false
@@ -185,7 +185,7 @@ abstract class Messages(
 
     override def toString(): String =
       try {
-        thisMessages.toString + "#" + name() + "(" + key() + ")"
+        thisDefineMessage.toString + "#" + name() + "(" + key() + ")"
       } catch {
         case _: NoSuchElementException => "!!! Invalid Messages: no field for #" + id + " !!!"
       }
@@ -194,13 +194,13 @@ abstract class Messages(
       if (_name != null)
         _name
       else
-        thisMessages.nameOf(id)
+        thisDefineMessage.nameOf(id)
 
     final override def key(): String =
       if (_key != null)
         _key
       else
-        thisMessages.keyOf(id, name())
+        thisDefineMessage.keyOf(id, name())
 
     /**
      * Create a MessageSet which contains this message and another one.
@@ -210,29 +210,17 @@ abstract class Messages(
 
   }
 
-  final class Msg0 private[Messages](
+  final class Msg0 private[DefineMessage](
       override val id: Int,
       override protected val _name: String,
       override protected val _key: String
       ) extends Message0 with Msg
 
-  final class Msg1[T] private[Messages](
+  final class MsgP[A <: Product] private[DefineMessage](
       override val id: Int,
       override protected val _name: String,
       override protected val _key: String
-      ) extends Message1[T] with Msg
-
-  final class Msg2[T1, T2] private[Messages](
-      override val id: Int,
-      override protected val _name: String,
-      override protected val _key: String
-      ) extends Message2[T1, T2] with Msg
-
-  final class Msg3[T1, T2, T3] private[Messages](
-      override val id: Int,
-      override protected val _name: String,
-      override protected val _key: String
-      ) extends Message3[T1, T2, T3] with Msg
+      ) extends MessageP[A] with Msg
 
   /**
    * An ordering by key for messages of this set.
@@ -264,15 +252,15 @@ abstract class Messages(
 
     override def -(value: Msg) = new MessageSet(nnIds - (value.id - bottomId))
 
-    override def iterator = nnIds.iterator map { id => thisMessages.apply(bottomId + id) }
+    override def iterator = nnIds.iterator map { id => thisDefineMessage.apply(bottomId + id) }
 
     override def keysIteratorFrom(start: Msg) =
-      nnIds.keysIteratorFrom(start.id) map { id => thisMessages.apply(bottomId + id) }
+      nnIds.keysIteratorFrom(start.id) map { id => thisDefineMessage.apply(bottomId + id) }
 
     override def rangeImpl(from: Option[Msg], until: Option[Msg]): MessageSet =
       new MessageSet(nnIds.rangeImpl(from.map(_.id - bottomId), until.map(_.id - bottomId)))
 
-    override def stringPrefix = thisMessages + ".ValueSet"
+    override def stringPrefix = thisDefineMessage + ".ValueSet"
 
   }
 

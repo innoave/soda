@@ -21,12 +21,12 @@ trait Localized[T] {
 
   def key(): String
 
-  def value: T
+  def value(): T
 
 }
 
 trait LocalizedP[T, A <: Product] extends Localized[T] {
 
-  def args: A
+  def args(): A
 
 }

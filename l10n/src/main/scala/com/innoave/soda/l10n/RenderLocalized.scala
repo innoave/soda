@@ -15,6 +15,8 @@
  */
 package com.innoave.soda.l10n
 
+import com.innoave.soda.l10n.format.MessageFormat
+
 trait RenderLocalized {
 
   protected def messageFormatFor(pattern: String, locale: Locale): MessageFormat =
@@ -56,13 +58,9 @@ trait RenderLocalized {
   final def renderLocalized(message: Message0)(implicit locale: Locale): LocaleText =
     LocaleText(patternFor(message.key, locale, message.bundleName))
 
-  final def renderLocalized[T1](message: Message1[T1], arg1: T1)(implicit locale: Locale): LocaleText =
-    LocaleText(messageFormatFor(patternFor(message.key, locale, message.bundleName), locale).format(arg1))
-
-  final def renderLocalized[T1, T2](message: Message2[T1, T2], arg1: T1, arg2: T2)(implicit locale: Locale): LocaleText =
-    LocaleText(messageFormatFor(patternFor(message.key, locale, message.bundleName), locale).format(arg1, arg2))
-
-  final def renderLocalized[T1, T2, T3](message: Message3[T1, T2, T3], arg1: T1, arg2: T2, arg3: T3)(implicit locale: Locale): LocaleText =
-    LocaleText(messageFormatFor(patternFor(message.key, locale, message.bundleName), locale).format(arg1, arg2, arg3))
+  final def renderLocalized[A <: Product](message: MessageP[A], args: A)(implicit locale: Locale): LocaleText = {
+    val msgargs = args.productIterator
+    LocaleText(messageFormatFor(patternFor(message.key, locale, message.bundleName), locale).format(msgargs.toArray))
+  }
 
 }

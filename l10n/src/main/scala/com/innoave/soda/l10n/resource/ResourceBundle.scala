@@ -13,10 +13,13 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.innoave.soda.l10n
+package com.innoave.soda.l10n.resource
 
 import java.util.{ResourceBundle => JResourceBundle}
 import scala.util.control.NonFatal
+import com.innoave.soda.l10n.Message
+import com.innoave.soda.l10n.DefineMessage
+import java.util.{ResourceBundle => JResourceBundle}
 
 class ResourceBundle(delegate: JResourceBundle) {
 
@@ -38,7 +41,7 @@ class ResourceBundle(delegate: JResourceBundle) {
 
 object ResourceBundle {
 
-  def stubFor(messages: Messages): String =
+  def stubFor(messages: DefineMessage): String =
     messages.values.map(_.key).mkString("=\n")
 
 }

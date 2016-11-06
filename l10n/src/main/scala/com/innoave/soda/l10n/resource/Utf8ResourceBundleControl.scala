@@ -13,13 +13,18 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.innoave.soda.l10n
+package com.innoave.soda.l10n.resource
 
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.security.AccessController
 import java.security.PrivilegedExceptionAction
 import java.security.PrivilegedActionException
+import java.util.{Arrays => JArrays}
+import java.util.{List => JList}
+import java.util.{Locale => JLocale}
+import java.util.{PropertyResourceBundle => JPropertyResourceBundle}
+import java.util.{ResourceBundle => JResourceBundle}
 import java.util.{Arrays => JArrays}
 import java.util.{List => JList}
 import java.util.{Locale => JLocale}

@@ -17,7 +17,7 @@ package com.innoave.soda.l10n
 
 trait Message {
 
-  def bundleName: BundleName
+  def bundleName(): BundleName
 
   def key(): String
 
@@ -28,6 +28,4 @@ trait Message {
 }
 
 trait Message0 extends Message
-trait Message1[T] extends Message
-trait Message2[T1, T2] extends Message
-trait Message3[T1, T2, T3] extends Message
+trait MessageP[A <: Product] extends Message

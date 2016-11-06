@@ -28,14 +28,14 @@ trait DefineLocalized { thisdefine =>
   protected def localized[T, A <: Product](value: T, args: A): LocalizedP[T, A] =
     new LocalizedPWrapper(value, args)
 
-  final class LocalizedWrapper[T](
+  final class LocalizedWrapper[T] private[DefineLocalized](
       override val value: T
       ) extends Localized[T] {
     override val bundleName = thisdefine.bundleName
     override val key = keyFor(value)
   }
 
-  final class LocalizedPWrapper[T, A <: Product](
+  final class LocalizedPWrapper[T, A <: Product] private[DefineLocalized](
       override val value: T,
       override val args: A
       ) extends LocalizedP[T, A] {

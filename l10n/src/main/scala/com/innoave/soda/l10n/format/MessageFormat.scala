@@ -13,8 +13,11 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.innoave.soda.l10n
+package com.innoave.soda.l10n.format
 
+import java.text.{MessageFormat => JMessageFormat}
+import com.innoave.soda.l10n.Format
+import com.innoave.soda.l10n.Locale
 import java.text.{MessageFormat => JMessageFormat}
 
 class MessageFormat(

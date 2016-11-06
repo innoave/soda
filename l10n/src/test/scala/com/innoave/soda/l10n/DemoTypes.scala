@@ -43,6 +43,6 @@ object DemoTypesLocalizer extends DefineLocalized {
 
   implicit def localizedFace(face: Face) = localized(face)
 
-  implicit def localizedCard(card: Card) = localized[Card, (Localized[Suit], Localized[Face])](card, (card.suit, card.face))
+  implicit def localizedCard(card: Card) = localized(card, (localized(card.suit), localized(card.face)))
 
 }

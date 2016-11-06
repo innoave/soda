@@ -18,9 +18,9 @@ package com.innoave.soda.l10n
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
 
-class MessageKeyNamingStrategySpec extends FlatSpec with Matchers {
+class KeyNamingStrategySpec extends FlatSpec with Matchers {
 
-  "MessageKeyNamingStrategy" should "be DotSeparatedKeyNames by default" in {
+  "KeyNamingStrategy" should "be DotSeparatedKeyNames by default" in {
 
     KeyNamingStrategy.default shouldBe DotSeparatedKeyNames
 

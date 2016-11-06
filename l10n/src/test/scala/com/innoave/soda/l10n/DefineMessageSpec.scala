@@ -18,7 +18,7 @@ package com.innoave.soda.l10n
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
 
-private object DemoMessages extends Messages {
+private object DemoMessages extends DefineMessage {
 
   val MessageWithDefaultNameAndKey = Message0
   val MyMessage1, MyMessage2, MyMessage3 = Message0
@@ -27,7 +27,7 @@ private object DemoMessages extends Messages {
 
 }
 
-private object MessagesWithCustomBundleName extends Messages {
+private object MessagesWithCustomBundleName extends DefineMessage {
 
   override val bundleName = BundleName("custom_messages")
 
@@ -35,27 +35,27 @@ private object MessagesWithCustomBundleName extends Messages {
 
 }
 
-class MessagesSpec extends FlatSpec with Matchers {
+class DefineMessageSpec extends FlatSpec with Matchers {
 
-  "Messages#toString" should "return an appropriate string" in {
+  "DefineMessage#toString" should "return an appropriate string" in {
 
     DemoMessages.toString() shouldBe "DemoMessages"
 
   }
 
-  "Messages with default BundleName" should "return the simple object name" in {
+  "DefineMessage with default BundleName" should "return the simple object name" in {
 
     DemoMessages.bundleName.value shouldBe "DemoMessages"
 
   }
 
-  "Messages with custom BundleName" should "return the specified bundle base name" in {
+  "DefineMessage with custom BundleName" should "return the specified bundle base name" in {
 
     MessagesWithCustomBundleName.bundleName.value shouldBe "custom_messages"
 
   }
 
-  "Messages values with no given name nor key" should "have default name and key" in {
+  "DefineMessage values with no given name nor key" should "have default name and key" in {
 
     DemoMessages.MessageWithDefaultNameAndKey.id shouldBe 0
     DemoMessages.MessageWithDefaultNameAndKey.name() shouldBe "MessageWithDefaultNameAndKey"
@@ -63,7 +63,7 @@ class MessagesSpec extends FlatSpec with Matchers {
 
   }
 
-  "Messages with multiple values defined at once" should "be separat values" in {
+  "DefineMessage with multiple values defined at once" should "be separat values" in {
 
     DemoMessages.MyMessage1.id shouldBe 1
     DemoMessages.MyMessage2.id shouldBe 2
@@ -79,7 +79,7 @@ class MessagesSpec extends FlatSpec with Matchers {
 
   }
 
-  "Messages values toString method" should "return the appropriate string" in {
+  "DefineMessage values toString method" should "return the appropriate string" in {
 
     DemoMessages.MessageWithDefaultNameAndKey.toString shouldBe "DemoMessages#MessageWithDefaultNameAndKey(message.with.default.name.and.key)"
     DemoMessages.MyMessage1.toString shouldBe "DemoMessages#MyMessage1(my.message1)"
@@ -88,7 +88,7 @@ class MessagesSpec extends FlatSpec with Matchers {
 
   }
 
-  "Messages value with custom key" should "be defined with custom key" in {
+  "DefineMessage value with custom key" should "be defined with custom key" in {
 
     DemoMessages.MessageWithCustomKey.id shouldBe 4
     DemoMessages.MessageWithCustomKey.name shouldBe "MessageWithCustomKey"
@@ -96,7 +96,7 @@ class MessagesSpec extends FlatSpec with Matchers {
 
   }
 
-  "Messages value with custom name and key" should "be defined with custom name and key" in {
+  "DefineMessage value with custom name and key" should "be defined with custom name and key" in {
 
     DemoMessages.MessageWithCustomNameAndKey.id shouldBe 5
     DemoMessages.MessageWithCustomNameAndKey.name shouldBe "CustomName"
@@ -104,7 +104,7 @@ class MessagesSpec extends FlatSpec with Matchers {
 
   }
 
-  "Messages values method" should "return a ValueSet containing all of its values" in {
+  "DefineMessage values method" should "return a ValueSet containing all of its values" in {
 
     DemoMessages.values should contain (DemoMessages.MessageWithDefaultNameAndKey)
     DemoMessages.values should contain (DemoMessages.MyMessage1)
@@ -117,7 +117,7 @@ class MessagesSpec extends FlatSpec with Matchers {
 
   }
 
-  "Messages value set toString method" should "return an appropriate string" in {
+  "DefineMessage value set toString method" should "return an appropriate string" in {
 
     DemoMessages.values.toString should be ("""|
         |DemoMessages.ValueSet(
@@ -131,7 +131,7 @@ class MessagesSpec extends FlatSpec with Matchers {
 
   }
 
-  "Messages range of value set" should "return a value set of the specified range" in {
+  "DefineMessage range of value set" should "return a value set of the specified range" in {
 
     val valueSetRange = DemoMessages.values.range(DemoMessages.MyMessage1, DemoMessages.MyMessage3)
 
@@ -143,7 +143,7 @@ class MessagesSpec extends FlatSpec with Matchers {
 
   }
 
-  "Messages value + method" should "construct a value set of 2 values" in {
+  "DefineMessage value + method" should "construct a value set of 2 values" in {
 
     import DemoMessages._
 
@@ -160,7 +160,7 @@ class MessagesSpec extends FlatSpec with Matchers {
 
   }
 
-  "Messages ValueSet empty method" should "construct an empty value set" in {
+  "DefineMessage ValueSet empty method" should "construct an empty value set" in {
 
     val emptySet = DemoMessages.MessageSet.empty
 
@@ -168,7 +168,7 @@ class MessagesSpec extends FlatSpec with Matchers {
 
   }
 
-  "Messages ValueSet apply method" should "construct a value set with given values" in {
+  "DefineMessage ValueSet apply method" should "construct a value set with given values" in {
 
     val valueSet = DemoMessages.MessageSet(DemoMessages.MyMessage1, DemoMessages.MyMessage3, DemoMessages.MessageWithCustomKey)
 
@@ -180,7 +180,7 @@ class MessagesSpec extends FlatSpec with Matchers {
 
   }
 
-  "Messages value set + method" should "add a value to the value set" in {
+  "DefineMessage value set + method" should "add a value to the value set" in {
 
     val set0 = DemoMessages.MessageSet.empty
     val set1 = set0 + DemoMessages.MessageWithDefaultNameAndKey + DemoMessages.MessageWithCustomNameAndKey
@@ -213,7 +213,7 @@ class MessagesSpec extends FlatSpec with Matchers {
 
   }
 
-  "Messages value set - method" should "remove a value from the value set" in {
+  "DefineMessage value set - method" should "remove a value from the value set" in {
 
     val set1 = DemoMessages.values
     val set2 = set1 - DemoMessages.MessageWithDefaultNameAndKey
@@ -254,7 +254,7 @@ class MessagesSpec extends FlatSpec with Matchers {
 
   }
 
-  "Messages value set iterator" should "iterate in the order of the definition of the values" in {
+  "DefineMessage value set iterator" should "iterate in the order of the definition of the values" in {
 
     val iterator = DemoMessages.values.iterator
 
@@ -267,7 +267,7 @@ class MessagesSpec extends FlatSpec with Matchers {
 
   }
 
-  "Messages value equals method" should "return true for same values" in {
+  "DefineMessage value equals method" should "return true for same values" in {
 
     val value1 = DemoMessages.MessageWithDefaultNameAndKey
     val value2 = DemoMessages.MessageWithCustomKey
@@ -280,7 +280,7 @@ class MessagesSpec extends FlatSpec with Matchers {
 
   }
 
-  "Messages value equals method" should "return false for different values" in {
+  "DefineMessage value equals method" should "return false for different values" in {
 
     val value1 = DemoMessages.MessageWithDefaultNameAndKey
     val value2 = DemoMessages.MessageWithCustomKey
@@ -293,7 +293,7 @@ class MessagesSpec extends FlatSpec with Matchers {
 
   }
 
-  "Messages values" should "all have different hash values" in {
+  "DefineMessage values" should "all have different hash values" in {
 
     DemoMessages.values.map(_.##).toSet.size shouldBe DemoMessages.values.size
 

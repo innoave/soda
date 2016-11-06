@@ -17,7 +17,6 @@ package com.innoave.soda.l10n
 
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
-import DemoTypes._
 import org.scalatest.BeforeAndAfterAll
 
 class RenderLocalizedSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
@@ -30,31 +29,69 @@ class RenderLocalizedSpec extends FlatSpec with Matchers with BeforeAndAfterAll 
 
   "RenderLocalized" should "render a text for a case class in different languages" in {
 
-    import ResourceBundleRenderLocalized._
+    import syntax._
     import Locale._
     import DemoTypesLocalizer._
+    import DemoTypes._
 
     val queenOfHearts = Card(Hearts, Queen)
 
-    renderLocalized(queenOfHearts)(EN) shouldBe LocaleText("Queen of Hearts")
+    implicit val implicitLocale: Locale = EN
+    rl(queenOfHearts) shouldBe LocaleText("Queen of Hearts")
 
-    renderLocalized(queenOfHearts)(DE_AT) shouldBe LocaleText("Herz Dame")
+    rl(queenOfHearts)(DE_AT) shouldBe LocaleText("Herz Dame")
 
-    renderLocalized(queenOfHearts)(Locale("MM")) shouldBe LocaleText("Queen of Hearts")
+    rl(queenOfHearts)(Locale("MM")) shouldBe LocaleText("Queen of Hearts")
 
   }
 
   it should "render a text for a case object in different languages" in {
 
-    import ResourceBundleRenderLocalized._
+    import syntax._
     import Locale._
     import DemoTypesLocalizer._
+    import DemoTypes._
 
-    renderLocalized(King)(EN) shouldBe LocaleText("King")
+    implicit val implicitLocale: Locale = EN
+    rl(King) shouldBe LocaleText("King")
 
-    renderLocalized(King)(DE_AT) shouldBe LocaleText("König")
+    rl(King)(DE_AT) shouldBe LocaleText("König")
 
-    renderLocalized(King)(Locale("MM")) shouldBe LocaleText("King")
+    rl(King)(Locale("MM")) shouldBe LocaleText("King")
+
+  }
+
+  "RenderLocalized using alternative syntax" should "render a text for a case class in different languages" in {
+
+    import syntax._
+    import Locale._
+    import DemoTypesLocalizer._
+    import DemoTypes._
+
+    val jackOfSpades = Card(Spades, Jack)
+
+    implicit val implicitLocale: Locale = EN
+    localized(jackOfSpades).text shouldBe LocaleText("Jack of Spades")
+
+    localized(jackOfSpades).text(DE_AT) shouldBe LocaleText("Kreuz Bube")
+
+    localized(jackOfSpades).text(Locale("MM")) shouldBe LocaleText("Jack of Spades")
+
+  }
+
+  it should "render a text for a case object in different languages" in {
+
+    import syntax._
+    import Locale._
+    import DemoTypesLocalizer._
+    import DemoTypes._
+
+    implicit val implicitLocale: Locale = EN
+    localized(Diamonds).text shouldBe LocaleText("Diamonds")
+
+    localized(Diamonds).text(DE_AT) shouldBe LocaleText("Karo")
+
+    localized(Diamonds).text(Locale("MM")) shouldBe LocaleText("Diamonds")
 
   }
 

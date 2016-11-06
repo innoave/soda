@@ -36,24 +36,24 @@ object playground {
   import com.innoave.soda.l10n.DemoTypesLocalizer._
 
   val queenOfHearts = Card(Hearts, Queen)         //> queenOfHearts  : com.innoave.soda.l10n.DemoTypes.Card = Card(Hearts,Queen)
-  renderLocalized(queenOfHearts)(EN)              //> res7: com.innoave.soda.l10n.LocaleText = LocaleText(Herz Dame)
+  renderLocalized(queenOfHearts)(EN)              //> res7: com.innoave.soda.l10n.LocaleText = LocaleText(Queen of Hearts)
   renderLocalized(queenOfHearts)(DE)              //> res8: com.innoave.soda.l10n.LocaleText = LocaleText(Herz Dame)
 
   (1, "2").productIterator.map({case x: Int => x.toString case a => a}).toArray
                                                   //> res9: Array[Any] = Array(1, 2)
-
+  s"text test $queenOfHearts"                     //> res10: String = text test Card(Hearts,Queen)
 
   def simpleTypeName(clazz: Class[_]): String =
     ((clazz.getName stripSuffix MODULE_SUFFIX_STRING split '.').last split
       Regex.quote(NAME_JOIN_STRING)).last         //> simpleTypeName: (clazz: Class[_])String
       
-  queenOfHearts.getClass.getName                  //> res10: String = com.innoave.soda.l10n.DemoTypes$Card
-  Hearts.getClass.getName                         //> res11: String = com.innoave.soda.l10n.DemoTypes$Hearts$
+  queenOfHearts.getClass.getName                  //> res11: String = com.innoave.soda.l10n.DemoTypes$Card
+  Hearts.getClass.getName                         //> res12: String = com.innoave.soda.l10n.DemoTypes$Hearts$
   
   val suit: Suit = Hearts                         //> suit  : com.innoave.soda.l10n.DemoTypes.Suit = Hearts
 
-  simpleTypeName(queenOfHearts.getClass)          //> res12: String = Card
-  simpleTypeName(Hearts.getClass)                 //> res13: String = Hearts
-  simpleTypeName(suit.getClass)                   //> res14: String = Hearts
+  simpleTypeName(queenOfHearts.getClass)          //> res13: String = Card
+  simpleTypeName(Hearts.getClass)                 //> res14: String = Hearts
+  simpleTypeName(suit.getClass)                   //> res15: String = Hearts
 
 }
