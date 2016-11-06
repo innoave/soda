@@ -15,6 +15,6 @@
  */
 package com.innoave.soda.l10n
 
-final case class LocaleText(val string: String) extends AnyVal
+final case class LocaleText(val text: String) extends AnyVal
 
 final case class BundleName(val value: String) extends AnyVal

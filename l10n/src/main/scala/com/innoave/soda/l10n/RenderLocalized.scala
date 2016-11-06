@@ -25,9 +25,9 @@ trait RenderLocalized {
   final def renderLocalized[T](localized: Localized[T])(implicit locale: Locale): LocaleText =
     localized.value match {
       case v: LocalizedP[_, _]  =>
-        LocaleText(messageFormatFor(patternFor(v.key, locale, v.bundleName), locale).format(renderLocalized(v).string))
+        LocaleText(messageFormatFor(patternFor(v.key, locale, v.bundleName), locale).format(renderLocalized(v).text))
       case v: Localized[_] =>
-        LocaleText(messageFormatFor(patternFor(v.key, locale, v.bundleName), locale).format(renderLocalized(v).string))
+        LocaleText(messageFormatFor(patternFor(v.key, locale, v.bundleName), locale).format(renderLocalized(v).text))
       case v =>
         LocaleText(messageFormatFor(patternFor(localized.key, locale, localized.bundleName), locale).format(v))
     }
@@ -35,17 +35,17 @@ trait RenderLocalized {
   final def renderLocalized[T, A <: Product](localized: LocalizedP[T, A])(implicit locale: Locale): LocaleText = {
     val as = localized.args.productIterator.map({
       case a: LocalizedP[_, _] =>
-        messageFormatFor(patternFor(a.key, locale, a.bundleName), locale).format(renderLocalized(a).string)
+        messageFormatFor(patternFor(a.key, locale, a.bundleName), locale).format(renderLocalized(a).text)
       case a: Localized[_] =>
-        messageFormatFor(patternFor(a.key, locale, a.bundleName), locale).format(renderLocalized(a).string)
+        messageFormatFor(patternFor(a.key, locale, a.bundleName), locale).format(renderLocalized(a).text)
       case a => a
     })
     localized.value match {
       case v: LocalizedP[_, _]  =>
-        val valuePlusArgs = Iterator(renderLocalized(v).string) ++ as
+        val valuePlusArgs = Iterator(renderLocalized(v).text) ++ as
         LocaleText(messageFormatFor(patternFor(v.key, locale, v.bundleName), locale).format(valuePlusArgs.toArray))
       case v: Localized[_]  =>
-        val valuePlusArgs = Iterator(renderLocalized(v).string) ++ as
+        val valuePlusArgs = Iterator(renderLocalized(v).text) ++ as
         LocaleText(messageFormatFor(patternFor(v.key, locale, v.bundleName), locale).format(valuePlusArgs.toArray))
       case v =>
         val valuePlusArgs = Iterator(v) ++ as
