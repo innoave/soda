@@ -1,5 +1,5 @@
 import com.innoave.soda.l10n.TestMessages
-import com.innoave.soda.l10n.ResourceBundle
+import com.innoave.soda.l10n.resource.ResourceBundle
 import scala.reflect.NameTransformer._
 import scala.util.matching.Regex
 
@@ -21,11 +21,15 @@ object playground {
                                                   //| SV, es, es_ES, es_CO, es_PY, es_EC, es_US, es_GT, es_MX, es_HN, es_CL, es_DO
                                                   //| , es_CU, es_UY, es_CR, es_NI, es_PE)
                                                   
-  ResourceBundle.stubFor(TestMessages)            //> res5: String = greeting=
+  ResourceBundle.stubFor(TestMessages)            //> res5: String = "#
+                                                  //| # TestMessages : Message definitions
+                                                  //| #
+                                                  //| greeting=
                                                   //| hello.world=
-                                                  //| products.in.shopping.cart
+                                                  //| products.in.shopping.cart=
+                                                  //| "
 
-  import com.innoave.soda.l10n.ResourceBundleRenderLocalized._
+  import com.innoave.soda.l10n.resource.ResourceBundleRenderLocalized._
   import com.innoave.soda.l10n.Locale._
   
   import com.innoave.soda.l10n.TestMessages._

@@ -17,9 +17,9 @@ package com.innoave.soda.l10n.resource
 
 import java.util.{ResourceBundle => JResourceBundle}
 import scala.util.control.NonFatal
+import com.innoave.soda.l10n.KeyNamingStrategy
 import com.innoave.soda.l10n.Message
 import com.innoave.soda.l10n.DefineMessage
-import java.util.{ResourceBundle => JResourceBundle}
 
 class ResourceBundle(delegate: JResourceBundle) {
 
@@ -42,6 +42,10 @@ class ResourceBundle(delegate: JResourceBundle) {
 object ResourceBundle {
 
   def stubFor(messages: DefineMessage): String =
-    messages.values.map(_.key).mkString("=\n")
+    s"""#
+      |# ${KeyNamingStrategy.simpleTypeName(messages.getClass)} : Message definitions
+      |#
+      |""".stripMargin +
+    messages.values.map(m => m.key + "=\n").mkString
 
 }

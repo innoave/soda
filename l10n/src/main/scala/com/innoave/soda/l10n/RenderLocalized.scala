@@ -35,7 +35,7 @@ trait RenderLocalized {
     }
 
   final def renderLocalized[T, A <: Product](localized: LocalizedP[T, A])(implicit locale: Locale): LocaleText = {
-    val as = localized.args.productIterator.map({
+    val args = localized.args.productIterator.map({
       case a: LocalizedP[_, _] =>
         messageFormatFor(patternFor(a.key, locale, a.bundleName), locale).format(renderLocalized(a).text)
       case a: Localized[_] =>
@@ -44,13 +44,13 @@ trait RenderLocalized {
     })
     localized.value match {
       case v: LocalizedP[_, _]  =>
-        val valuePlusArgs = Iterator(renderLocalized(v).text) ++ as
+        val valuePlusArgs = Iterator(renderLocalized(v).text) ++ args
         LocaleText(messageFormatFor(patternFor(v.key, locale, v.bundleName), locale).format(valuePlusArgs.toArray))
       case v: Localized[_]  =>
-        val valuePlusArgs = Iterator(renderLocalized(v).text) ++ as
+        val valuePlusArgs = Iterator(renderLocalized(v).text) ++ args
         LocaleText(messageFormatFor(patternFor(v.key, locale, v.bundleName), locale).format(valuePlusArgs.toArray))
       case v =>
-        val valuePlusArgs = Iterator(v) ++ as
+        val valuePlusArgs = Iterator(v) ++ args
         LocaleText(messageFormatFor(patternFor(localized.key, locale, localized.bundleName), locale).format(valuePlusArgs.toArray))
     }
   }
