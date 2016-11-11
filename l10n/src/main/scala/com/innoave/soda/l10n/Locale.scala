@@ -15,6 +15,8 @@
  */
 package com.innoave.soda.l10n
 
+import scala.collection.mutable
+
 class Locale private[Locale](
     val language: Language,
     val country: Country,
@@ -96,110 +98,126 @@ class Variant private[Variant](val code: String) extends Equals {
 
 object Language {
 
+  private val valueMap: mutable.Map[String, Language] = mutable.HashMap()
+
+  final private def languageOf(code: String): Language =
+    valueMap.getOrElseUpdate(code, new Language(code))
+
   def apply(code: String): Language =
-    code match {
-      case "en" => Language.EN
-      case "de" => Language.DE
-      case "fr" => Language.FR
-      case "it" => Language.IT
-      case "es" => Language.ES
-      case "" => Language.Any
-      case _ => new Language(code)
+    valueMap.synchronized {
+      languageOf(code)
     }
 
-  case object Any extends Language("")
-  case object EN extends Language("en")
-  case object DE extends Language("de")
-  case object FR extends Language("fr")
-  case object IT extends Language("it")
-  case object ES extends Language("es")
+  val Any = languageOf("")
+  val EN = languageOf("en")
+  val DE = languageOf("de")
+  val FR = languageOf("fr")
+  val IT = languageOf("it")
+  val ES = languageOf("es")
 
 }
 
 object Country {
 
+  private val valueMap: mutable.Map[String, Country] = mutable.HashMap()
+
+  final private def countryOf(code: String): Country =
+    valueMap.getOrElseUpdate(code, new Country(code))
+
   def apply(code: String): Country =
-    code match {
-      case "US" => Country.US
-      case "GB" => Country.GB
-      case "AU" => Country.AU
-      case "DE" => Country.DE
-      case "AT" => Country.AT
-      case "CH" => Country.CH
-      case "" => Country.Any
-      case _ => new Country(code)
+    valueMap.synchronized {
+      countryOf(code)
     }
 
-  case object Any extends Country("")
-  case object US extends Country("US")
-  case object GB extends Country("GB")
-  case object AU extends Country("AU")
-  case object DE extends Country("DE")
-  case object AT extends Country("AT")
-  case object CH extends Country("CH")
+  val Any = countryOf("")
+  val US = countryOf("US")
+  val GB = countryOf("GB")
+  val AU = countryOf("AU")
+  val DE = countryOf("DE")
+  val AT = countryOf("AT")
+  val CH = countryOf("CH")
 
 }
 
 object Variant {
 
+  private val valueMap: mutable.Map[String, Variant] = mutable.HashMap()
+
+  final private def variantOf(code: String): Variant =
+    valueMap.getOrElseUpdate(code, new Variant(code))
+
   def apply(code: String): Variant =
-    code match {
-      case "" => Any
-      case _ => new Variant(code)
+    valueMap.synchronized {
+      variantOf(code)
     }
 
-  case object Any extends Variant("")
+  val Any = variantOf("")
 
 }
 
 object Locale {
   import java.util.{Locale => JLocale}
 
+  private val valueMap: mutable.Map[(String, String, String), Locale] = mutable.Map()
+
+  final private def localeOf(language: String): Locale =
+    valueMap.getOrElseUpdate((language, Country.Any.code, Variant.Any.code),
+        new Locale(Language(language), Country.Any, Variant.Any))
+
+  final private def localeOf(language: String, country: String): Locale =
+    valueMap.getOrElseUpdate((language, country, Variant.Any.code),
+        new Locale(Language(language), Country(country), Variant.Any))
+
+  final private def localeOf(language: String, country: String, variant: String): Locale =
+    valueMap.getOrElseUpdate((language, country, variant),
+        new Locale(Language(language), Country(country), Variant(variant)))
+
+  def apply(language: String): Locale =
+    valueMap.synchronized {
+      localeOf(language)
+    }
+
+  def apply(language: String, country: String): Locale =
+    valueMap.synchronized {
+      localeOf(language, country)
+    }
+
+  def apply(language: String, country: String, variant: String): Locale =
+    valueMap.synchronized {
+      localeOf(language, country, variant)
+    }
+
+  def fromJava(jLocale: JLocale): Locale =
+    valueMap.synchronized {
+      localeOf(jLocale.getLanguage, jLocale.getCountry, jLocale.getVariant)
+    }
+
   def default: Locale =
-    fromJava(JLocale.getDefault)
+    fromJava(JLocale.getDefault);
 
   def default_=(locale: Locale) =
     JLocale.setDefault(locale.asJava)
 
-  def apply(language: String): Locale =
-    new Locale(Language(language), Country.Any, Variant.Any)
+  def getIsoLanguages(): Seq[String] =
+    JLocale.getISOLanguages
 
-  def apply(language: String, country: String): Locale =
-    new Locale(Language(language), Country(country), Variant.Any)
+  def getIsoCountries(): Seq[String] =
+    JLocale.getISOCountries
 
-  def apply(language: String, country: String, variant: String): Locale =
-    new Locale(Language(language), Country(country), Variant(variant))
+  val EN = localeOf("EN")
+  val EN_US = localeOf("EN", "US")
+  val EN_GB = localeOf("EN", "GB")
+  val EN_AU = localeOf("EN", "AU")
 
-  def fromJava(jLocale: JLocale): Locale =
-    (jLocale.getLanguage, jLocale.getCountry, jLocale.getVariant) match {
-      case ("en", "US", _) => EN_US
-      case ("en", "GB", _) => EN_GB
-      case ("en", "AU", _) => EN_AU
-      case ("en", _, _) => EN
-      case ("de", "DE", _) => DE_DE
-      case ("de", "AT", _) => DE_AT
-      case ("de", "CH", _) => DE_CH
-      case ("de", _, _) => DE
-      case ("fr", _, _) => FR
-      case ("it", _, _) => IT
-      case ("es", _, _) => ES
-      case (l, c, v) => Locale(l, c, v)
-    }
+  val DE = localeOf("DE")
+  val DE_DE = localeOf("DE", "DE")
+  val DE_AT = localeOf("DE", "AT")
+  val DE_CH = localeOf("DE", "CH")
 
-  case object EN extends Locale(Language.EN, Country.Any, Variant.Any)
-  case object EN_US extends Locale(Language.EN, Country.US, Variant.Any)
-  case object EN_GB extends Locale(Language.EN, Country.GB, Variant.Any)
-  case object EN_AU extends Locale(Language.EN, Country.AU, Variant.Any)
+  val FR = localeOf("FR")
 
-  case object DE extends Locale(Language.DE, Country.Any, Variant.Any)
-  case object DE_DE extends Locale(Language.DE, Country.DE, Variant.Any)
-  case object DE_AT extends Locale(Language.DE, Country.AT, Variant.Any)
-  case object DE_CH extends Locale(Language.DE, Country.CH, Variant.Any)
+  val IT = localeOf("IT")
 
-  case object FR extends Locale(Language.FR, Country.Any, Variant.Any)
-
-  case object IT extends Locale(Language.IT, Country.Any, Variant.Any)
-
-  case object ES extends Locale(Language.ES, Country.Any, Variant.Any)
+  val ES = localeOf("ES")
 
 }
