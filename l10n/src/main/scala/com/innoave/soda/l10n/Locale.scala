@@ -23,10 +23,9 @@ class Locale private[Locale](
     val country: Country,
     val variant: Variant
     ) extends Equals with Ordered[Locale] {
-  import Locale.locale2JavaLocale
 
   lazy val asJavaLocale: JLocale =
-    locale2JavaLocale(this)
+    new java.util.Locale(language.code, country.code, variant.code)
 
   override def canEqual(other: Any): Boolean =
     other.isInstanceOf[Locale]
@@ -42,7 +41,6 @@ class Locale private[Locale](
     }
 
   override def hashCode(): Int = {
-    super.hashCode()
     val prime = 41
     prime * (prime * (prime + language.hashCode) + country.hashCode) + variant.hashCode
   }
@@ -71,25 +69,25 @@ class Locale private[Locale](
     asJavaLocale.getDisplayName
 
   def displayName(inLocale: Locale): String =
-    asJavaLocale.getDisplayName(locale2JavaLocale(inLocale))
+    asJavaLocale.getDisplayName(inLocale.asJavaLocale)
 
   def displayLanguage(): String =
     asJavaLocale.getDisplayLanguage
 
   def displayLanguage(inLocale: Locale): String =
-    asJavaLocale.getDisplayLanguage(locale2JavaLocale(inLocale))
+    asJavaLocale.getDisplayLanguage(inLocale.asJavaLocale)
 
   def displayCountry(): String =
     asJavaLocale.getDisplayCountry
 
   def displayCountry(inLocale: Locale): String =
-    asJavaLocale.getDisplayCountry(locale2JavaLocale(inLocale))
+    asJavaLocale.getDisplayCountry(inLocale.asJavaLocale)
 
   def displayVariant(): String =
     asJavaLocale.getDisplayVariant
 
   def displayVariant(inLocale: Locale): String =
-    asJavaLocale.getDisplayVariant(locale2JavaLocale(inLocale))
+    asJavaLocale.getDisplayVariant(inLocale.asJavaLocale)
 
   def iso3Language(): String =
     asJavaLocale.getISO3Language
@@ -110,6 +108,11 @@ class Language private[Language](val code: String) extends Equals with Ordered[L
       case _ => false
     }
 
+  override def hashCode(): Int = {
+    val prime = 41
+    prime + code.hashCode
+  }
+
   override def toString(): String =
     s"Language($code)"
 
@@ -129,6 +132,11 @@ class Country private[Country](val code: String) extends Equals with Ordered[Cou
       case _ => false
     }
 
+  override def hashCode(): Int = {
+    val prime = 41
+    prime + code.hashCode
+  }
+
   override def toString(): String =
     s"Country($code)"
 
@@ -147,6 +155,11 @@ class Variant private[Variant](val code: String) extends Equals with Ordered[Var
       case that: Variant => that.canEqual(Variant.this) && this.code == that.code
       case _ => false
     }
+
+  override def hashCode(): Int = {
+    val prime = 41
+    prime + code.hashCode
+  }
 
   override def toString(): String =
     s"Variant($code)"
@@ -238,9 +251,6 @@ object Locale {
 
   final private def javaLocale2Locale(jLocale: JLocale): Locale =
     localeOf(jLocale.getLanguage, jLocale.getCountry, jLocale.getVariant)
-
-  final private def locale2JavaLocale(locale: Locale): JLocale =
-    new java.util.Locale(locale.language.code, locale.country.code, locale.variant.code)
 
   def apply(language: String): Locale =
     localeOf(language)
