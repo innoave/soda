@@ -24,7 +24,7 @@ object ResourceBundleRenderLocalized extends RenderLocalized {
 
   override def patternFor(key: String, locale: Locale, bundleName: BundleName): String =
     new ResourceBundle(JResourceBundle.getBundle(
-        bundleName.value, locale.asJava, Utf8ResourceBundleControl
+        bundleName.value, locale.asJavaLocale, Utf8ResourceBundleControl
         )).stringFor(key)
 
 }

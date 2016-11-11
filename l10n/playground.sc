@@ -24,11 +24,14 @@ object playground {
   JLocale.US                                      //> res5: java.util.Locale = en_US
   JLocale.US.getISO3Language                      //> res6: String = eng
   JLocale.US.getISO3Country                       //> res7: String = USA
-  JLocale.US.getDisplayLanguage                   //> res8: String = Englisch
-  JLocale.US.getDisplayCountry                    //> res9: String = Vereinigte Staaten von Amerika
-                                                  
-                                                  
-  ResourceBundle.stubFor(TestMessages)            //> res10: String = "#
+  JLocale.US.getDisplayName                       //> res8: String = Englisch (Vereinigte Staaten von Amerika)
+  JLocale.US.getDisplayScript                     //> res9: String = ""
+  JLocale.US.getDisplayLanguage                   //> res10: String = Englisch
+  JLocale.US.getDisplayCountry                    //> res11: String = Vereinigte Staaten von Amerika
+ 
+
+                                                    
+  ResourceBundle.stubFor(TestMessages)            //> res12: String = "#
                                                   //| # TestMessages : Message definitions
                                                   //| #
                                                   //| greeting=
@@ -36,36 +39,37 @@ object playground {
                                                   //| products.in.shopping.cart=
                                                   //| "
 
+
   import com.innoave.soda.l10n.resource.ResourceBundleRenderLocalized._
   import com.innoave.soda.l10n.Locale._
   
   import com.innoave.soda.l10n.TestMessages._
 
-  renderLocalized(helloWorld)(EN)                 //> res11: com.innoave.soda.l10n.LocaleText = LocaleText(Hello World!)
+  renderLocalized(helloWorld)(EN)                 //> res13: com.innoave.soda.l10n.LocaleText = LocaleText(Hello World!)
 
   import com.innoave.soda.l10n.DemoTypes._
   import com.innoave.soda.l10n.DemoTypesLocalizer._
 
   val queenOfHearts = Card(Hearts, Queen)         //> queenOfHearts  : com.innoave.soda.l10n.DemoTypes.Card = Card(Hearts,Queen)
                                                   //| 
-  renderLocalized(queenOfHearts)(EN)              //> res12: com.innoave.soda.l10n.LocaleText = LocaleText(Queen of Hearts)
-  renderLocalized(queenOfHearts)(DE)              //> res13: com.innoave.soda.l10n.LocaleText = LocaleText(Herz Dame)
+  renderLocalized(queenOfHearts)(EN)              //> res14: com.innoave.soda.l10n.LocaleText = LocaleText(Queen of Hearts)
+  renderLocalized(queenOfHearts)(DE)              //> res15: com.innoave.soda.l10n.LocaleText = LocaleText(Herz Dame)
 
   (1, "2").productIterator.map({case x: Int => x.toString case a => a}).toArray
-                                                  //> res14: Array[Any] = Array(1, 2)
-  s"text test $queenOfHearts"                     //> res15: String = text test Card(Hearts,Queen)
+                                                  //> res16: Array[Any] = Array(1, 2)
+  s"text test $queenOfHearts"                     //> res17: String = text test Card(Hearts,Queen)
 
   def simpleTypeName(clazz: Class[_]): String =
     ((clazz.getName stripSuffix MODULE_SUFFIX_STRING split '.').last split
       Regex.quote(NAME_JOIN_STRING)).last         //> simpleTypeName: (clazz: Class[_])String
       
-  queenOfHearts.getClass.getName                  //> res16: String = com.innoave.soda.l10n.DemoTypes$Card
-  Hearts.getClass.getName                         //> res17: String = com.innoave.soda.l10n.DemoTypes$Hearts$
+  queenOfHearts.getClass.getName                  //> res18: String = com.innoave.soda.l10n.DemoTypes$Card
+  Hearts.getClass.getName                         //> res19: String = com.innoave.soda.l10n.DemoTypes$Hearts$
   
   val suit: Suit = Hearts                         //> suit  : com.innoave.soda.l10n.DemoTypes.Suit = Hearts
 
-  simpleTypeName(queenOfHearts.getClass)          //> res18: String = Card
-  simpleTypeName(Hearts.getClass)                 //> res19: String = Hearts
-  simpleTypeName(suit.getClass)                   //> res20: String = Hearts
+  simpleTypeName(queenOfHearts.getClass)          //> res20: String = Card
+  simpleTypeName(Hearts.getClass)                 //> res21: String = Hearts
+  simpleTypeName(suit.getClass)                   //> res22: String = Hearts
 
 }
