@@ -15,13 +15,18 @@
  */
 package com.innoave.soda.l10n
 
+import java.util.{Locale => JLocale}
 import scala.collection.mutable
 
 class Locale private[Locale](
     val language: Language,
     val country: Country,
     val variant: Variant
-    ) extends Equals {
+    ) extends Equals with Ordered[Locale] {
+  import Locale.locale2JavaLocale
+
+  lazy val asJavaLocale: JLocale =
+    locale2JavaLocale(this)
 
   override def canEqual(other: Any): Boolean =
     other.isInstanceOf[Locale]
@@ -45,12 +50,56 @@ class Locale private[Locale](
   override def toString(): String =
     s"Locale($language, $country, $variant)"
 
-  def asJava: java.util.Locale =
-    new java.util.Locale(language.code, country.code, variant.code)
+  override def compare(that: Locale): Int = {
+    val languageCompared = this.language.compare(that.language)
+    if (languageCompared == 0) {
+      val countryCompared = this.country.compare(that.country)
+      if (countryCompared == 0) {
+        this.variant.compare(that.variant)
+      } else {
+        countryCompared
+      }
+    } else {
+      languageCompared
+    }
+  }
+
+  def toLanguageTag: String =
+    asJavaLocale.toLanguageTag
+
+  def displayName(): String =
+    asJavaLocale.getDisplayName
+
+  def displayName(inLocale: Locale): String =
+    asJavaLocale.getDisplayName(locale2JavaLocale(inLocale))
+
+  def displayLanguage(): String =
+    asJavaLocale.getDisplayLanguage
+
+  def displayLanguage(inLocale: Locale): String =
+    asJavaLocale.getDisplayLanguage(locale2JavaLocale(inLocale))
+
+  def displayCountry(): String =
+    asJavaLocale.getDisplayCountry
+
+  def displayCountry(inLocale: Locale): String =
+    asJavaLocale.getDisplayCountry(locale2JavaLocale(inLocale))
+
+  def displayVariant(): String =
+    asJavaLocale.getDisplayVariant
+
+  def displayVariant(inLocale: Locale): String =
+    asJavaLocale.getDisplayVariant(locale2JavaLocale(inLocale))
+
+  def iso3Language(): String =
+    asJavaLocale.getISO3Language
+
+  def iso3Country(): String =
+    asJavaLocale.getISO3Country
 
 }
 
-class Language private[Language](val code: String) extends Equals {
+class Language private[Language](val code: String) extends Equals with Ordered[Language] {
 
   override def canEqual(other: Any): Boolean =
     other.isInstanceOf[Language]
@@ -64,9 +113,12 @@ class Language private[Language](val code: String) extends Equals {
   override def toString(): String =
     s"Language($code)"
 
+  override def compare(that: Language): Int =
+    this.code.compare(that.code)
+
 }
 
-class Country private[Country](val code: String) extends Equals {
+class Country private[Country](val code: String) extends Equals with Ordered[Country] {
 
   override def canEqual(other: Any): Boolean =
     other.isInstanceOf[Country]
@@ -79,9 +131,13 @@ class Country private[Country](val code: String) extends Equals {
 
   override def toString(): String =
     s"Country($code)"
+
+  override def compare(that: Country): Int =
+    this.code.compare(that.code)
+
 }
 
-class Variant private[Variant](val code: String) extends Equals {
+class Variant private[Variant](val code: String) extends Equals with Ordered[Variant] {
 
   override def canEqual(other: Any): Boolean =
     other.isInstanceOf[Variant]
@@ -94,130 +150,140 @@ class Variant private[Variant](val code: String) extends Equals {
 
   override def toString(): String =
     s"Variant($code)"
+
+  override def compare(that: Variant): Int =
+    this.code.compare(that.code)
+
+}
+
+final private[l10n] class Cache[K, V] {
+  private[this] val valueMap: mutable.Map[K, V] = new mutable.WeakHashMap()
+  final def getOrElseUpdate(key: K, op: => V): V = {
+    valueMap.synchronized {
+      valueMap.getOrElseUpdate(key, op)
+    }
+  }
 }
 
 object Language {
 
-  private val valueMap: mutable.Map[String, Language] = mutable.HashMap()
+  private[this] val cache: Cache[String, Language] = new Cache()
 
   final private def languageOf(code: String): Language =
-    valueMap.getOrElseUpdate(code, new Language(code))
+    cache.getOrElseUpdate(code, new Language(code))
 
   def apply(code: String): Language =
-    valueMap.synchronized {
-      languageOf(code)
-    }
+    languageOf(code)
 
   val Any = languageOf("")
-  val EN = languageOf("en")
-  val DE = languageOf("de")
-  val FR = languageOf("fr")
-  val IT = languageOf("it")
-  val ES = languageOf("es")
+  def EN = languageOf("en")
+  def DE = languageOf("de")
+  def FR = languageOf("fr")
+  def IT = languageOf("it")
+  def ES = languageOf("es")
 
 }
 
 object Country {
 
-  private val valueMap: mutable.Map[String, Country] = mutable.HashMap()
+  private[this] val cache: Cache[String, Country] = new Cache()
 
   final private def countryOf(code: String): Country =
-    valueMap.getOrElseUpdate(code, new Country(code))
+    cache.getOrElseUpdate(code, new Country(code))
 
   def apply(code: String): Country =
-    valueMap.synchronized {
-      countryOf(code)
-    }
+    countryOf(code)
 
   val Any = countryOf("")
-  val US = countryOf("US")
-  val GB = countryOf("GB")
-  val AU = countryOf("AU")
-  val DE = countryOf("DE")
-  val AT = countryOf("AT")
-  val CH = countryOf("CH")
+  def US = countryOf("US")
+  def GB = countryOf("GB")
+  def AU = countryOf("AU")
+  def DE = countryOf("DE")
+  def AT = countryOf("AT")
+  def CH = countryOf("CH")
 
 }
 
 object Variant {
 
-  private val valueMap: mutable.Map[String, Variant] = mutable.HashMap()
+  private[this] val cache: Cache[String, Variant] = new Cache()
 
   final private def variantOf(code: String): Variant =
-    valueMap.getOrElseUpdate(code, new Variant(code))
+    cache.getOrElseUpdate(code, new Variant(code))
 
   def apply(code: String): Variant =
-    valueMap.synchronized {
-      variantOf(code)
-    }
+    variantOf(code)
 
   val Any = variantOf("")
 
 }
 
 object Locale {
-  import java.util.{Locale => JLocale}
 
-  private val valueMap: mutable.Map[(String, String, String), Locale] = mutable.Map()
+  private[this] val cache: Cache[(String, String, String), Locale] = new Cache()
 
   final private def localeOf(language: String): Locale =
-    valueMap.getOrElseUpdate((language, Country.Any.code, Variant.Any.code),
+    cache.getOrElseUpdate((language, Country.Any.code, Variant.Any.code),
         new Locale(Language(language), Country.Any, Variant.Any))
 
   final private def localeOf(language: String, country: String): Locale =
-    valueMap.getOrElseUpdate((language, country, Variant.Any.code),
+    cache.getOrElseUpdate((language, country, Variant.Any.code),
         new Locale(Language(language), Country(country), Variant.Any))
 
   final private def localeOf(language: String, country: String, variant: String): Locale =
-    valueMap.getOrElseUpdate((language, country, variant),
+    cache.getOrElseUpdate((language, country, variant),
         new Locale(Language(language), Country(country), Variant(variant)))
 
+  final private def javaLocale2Locale(jLocale: JLocale): Locale =
+    localeOf(jLocale.getLanguage, jLocale.getCountry, jLocale.getVariant)
+
+  final private def locale2JavaLocale(locale: Locale): JLocale =
+    new java.util.Locale(locale.language.code, locale.country.code, locale.variant.code)
+
   def apply(language: String): Locale =
-    valueMap.synchronized {
-      localeOf(language)
-    }
+    localeOf(language)
 
   def apply(language: String, country: String): Locale =
-    valueMap.synchronized {
-      localeOf(language, country)
-    }
+    localeOf(language, country)
 
   def apply(language: String, country: String, variant: String): Locale =
-    valueMap.synchronized {
-      localeOf(language, country, variant)
-    }
+    localeOf(language, country, variant)
 
-  def fromJava(jLocale: JLocale): Locale =
-    valueMap.synchronized {
-      localeOf(jLocale.getLanguage, jLocale.getCountry, jLocale.getVariant)
-    }
+  def forLanguageTag(languageTag: String): Locale =
+    javaLocale2Locale(JLocale.forLanguageTag(languageTag))
+
+  def fromJavaLocale(jLocale: JLocale): Locale =
+    javaLocale2Locale(jLocale)
 
   def default: Locale =
-    fromJava(JLocale.getDefault);
+    javaLocale2Locale(JLocale.getDefault);
 
   def default_=(locale: Locale) =
-    JLocale.setDefault(locale.asJava)
+    JLocale.setDefault(locale.asJavaLocale)
 
-  def getIsoLanguages(): Seq[String] =
+  def isoLanguages(): Seq[String] =
     JLocale.getISOLanguages
 
-  def getIsoCountries(): Seq[String] =
+  def isoCountries(): Seq[String] =
     JLocale.getISOCountries
 
-  val EN = localeOf("EN")
-  val EN_US = localeOf("EN", "US")
-  val EN_GB = localeOf("EN", "GB")
-  val EN_AU = localeOf("EN", "AU")
+  def availableLocales(): Seq[Locale] =
+    JLocale.getAvailableLocales.map(javaLocale2Locale(_))
 
-  val DE = localeOf("DE")
-  val DE_DE = localeOf("DE", "DE")
-  val DE_AT = localeOf("DE", "AT")
-  val DE_CH = localeOf("DE", "CH")
+  def EN = localeOf("EN")
+  def EN_US = localeOf("EN", "US")
+  def EN_GB = localeOf("EN", "GB")
+  def EN_AU = localeOf("EN", "AU")
 
-  val FR = localeOf("FR")
+  def DE = localeOf("DE")
+  def DE_DE = localeOf("DE", "DE")
+  def DE_AT = localeOf("DE", "AT")
+  def DE_CH = localeOf("DE", "CH")
 
-  val IT = localeOf("IT")
+  def FR = localeOf("FR")
 
-  val ES = localeOf("ES")
+  def IT = localeOf("IT")
+
+  def ES = localeOf("ES")
 
 }

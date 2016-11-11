@@ -25,7 +25,7 @@ class MessageFormat(
     val locale: Locale
     ) extends Format[Array[_]] {
 
-  private val delegate: JMessageFormat = new JMessageFormat(pattern, locale.asJava)
+  private val delegate: JMessageFormat = new JMessageFormat(pattern, locale.asJavaLocale)
 
   def format(args: Any*): String =
     delegate.format(args.map(_.asInstanceOf[java.lang.Object]).toArray, new StringBuffer(), null).toString
