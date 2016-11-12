@@ -190,11 +190,11 @@ object Language {
 
   val Any = languageOf("")
 
-  def EN = languageOf("en")
   def DE = languageOf("de")
+  def EN = languageOf("en")
+  def ES = languageOf("es")
   def FR = languageOf("fr")
   def IT = languageOf("it")
-  def ES = languageOf("es")
 
 }
 
@@ -210,12 +210,15 @@ object Country {
 
   val Any = countryOf("")
 
-  def US = countryOf("US")
-  def GB = countryOf("GB")
-  def AU = countryOf("AU")
-  def DE = countryOf("DE")
   def AT = countryOf("AT")
+  def AU = countryOf("AU")
   def CH = countryOf("CH")
+  def DE = countryOf("DE")
+  def ES = countryOf("ES")
+  def FR = countryOf("FR")
+  def GB = countryOf("GB")
+  def IT = countryOf("IT")
+  def US = countryOf("US")
 
 }
 
@@ -236,6 +239,18 @@ object Variant {
 object Locale {
 
   private[this] val cache: Cache[(String, String, String), Locale] = new Cache()
+
+  final private def localeOf(language: Language): Locale =
+    cache.getOrElseUpdate((language.code, Country.Any.code, Variant.Any.code),
+        new Locale(language, Country.Any, Variant.Any))
+
+  final private def localeOf(language: Language, country: Country): Locale =
+    cache.getOrElseUpdate((language.code, country.code, Variant.Any.code),
+        new Locale(language, country, Variant.Any))
+
+  final private def localeOf(language: Language, country: Country, variant: Variant): Locale =
+    cache.getOrElseUpdate((language.code, country.code, variant.code),
+        new Locale(language, country, variant))
 
   final private def localeOf(language: String): Locale =
     cache.getOrElseUpdate((language, Country.Any.code, Variant.Any.code),
@@ -279,23 +294,32 @@ object Locale {
   def isoCountries(): Seq[String] =
     JLocale.getISOCountries
 
+  def languages(): Seq[Language] =
+    JLocale.getISOLanguages.map(Language(_))
+
+  def countries(): Seq[Country] =
+    JLocale.getISOCountries.map(Country(_))
+
   def availableLocales(): Seq[Locale] =
     JLocale.getAvailableLocales.map(javaLocale2Locale(_))
 
-  def EN = localeOf("EN")
-  def EN_US = localeOf("EN", "US")
-  def EN_GB = localeOf("EN", "GB")
-  def EN_AU = localeOf("EN", "AU")
+  def EN = localeOf(Language.EN)
+  def EN_US = localeOf(Language.EN, Country.US)
+  def EN_GB = localeOf(Language.EN, Country.GB)
+  def EN_AU = localeOf(Language.EN, Country.AU)
 
-  def DE = localeOf("DE")
-  def DE_DE = localeOf("DE", "DE")
-  def DE_AT = localeOf("DE", "AT")
-  def DE_CH = localeOf("DE", "CH")
+  def DE = localeOf(Language.DE)
+  def DE_DE = localeOf(Language.DE, Country.DE)
+  def DE_AT = localeOf(Language.DE, Country.AT)
+  def DE_CH = localeOf(Language.DE, Country.CH)
 
-  def FR = localeOf("FR")
+  def FR = localeOf(Language.FR)
+  def FR_FR = localeOf(Language.FR, Country.FR)
 
-  def IT = localeOf("IT")
+  def IT = localeOf(Language.IT)
+  def IT_IT = localeOf(Language.IT, Country.IT)
 
-  def ES = localeOf("ES")
+  def ES = localeOf(Language.ES)
+  def ES_ES = localeOf(Language.ES, Country.ES)
 
 }

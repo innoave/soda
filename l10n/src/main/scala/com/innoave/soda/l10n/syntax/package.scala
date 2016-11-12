@@ -18,57 +18,108 @@ package com.innoave.soda.l10n
 import com.innoave.soda.l10n.resource.ResourceBundleRenderLocalized
 
 package object syntax {
-  // default l10n implementation based on `resource.ResourceBundle`
+  // default l10n implementation based on
+  // `resource.JavaUtf8ResourceBundle` and `format.JavaMessageFormat`
   import ResourceBundleRenderLocalized._
 
-  final def rl[T, A <: Product](localized: LocalizedP[T, A])(implicit locale: Locale): LocaleText =
-    renderLocalized(localized)(locale)
+  final def render[T](localized: Localized[T]): Localized[T] = localized
 
-  final def localized[T, A <: Product](localized: LocalizedP[T, A]): LocalizedP[T, A] = localized
-
-  implicit final class RenderLocalizedPOps[T, A <: Product](val wrappedLocalized: LocalizedP[T, A]) extends AnyVal {
-    final def text(implicit locale: Locale): LocaleText =
-      renderLocalized(wrappedLocalized)(locale)
-  }
-
-  final def rl[T](localized: Localized[T])(implicit locale: Locale): LocaleText =
-    renderLocalized(localized)(locale)
-
-  final def localized[T](localized: Localized[T]): Localized[T] = localized
+  final def render[T, A <: Product](localized: LocalizedP[T, A]): LocalizedP[T, A] = localized
 
   implicit final class RenderLocalizedOps[T](val wrappedLocalized: Localized[T]) extends AnyVal {
-    final def text(implicit locale: Locale): LocaleText =
+    final def asLocaleText(implicit locale: Locale): LocaleText =
+      renderLocalized(wrappedLocalized)(locale)
+    final def in(locale: Locale): LocaleText =
       renderLocalized(wrappedLocalized)(locale)
   }
 
-  final def rl(message: Message0)(implicit locale: Locale): LocaleText =
-    renderLocalized(message)
+  implicit final class RenderLocalizedPOps[T, A <: Product](val wrappedLocalized: LocalizedP[T, A]) extends AnyVal {
+    final def asLocaleText(implicit locale: Locale): LocaleText =
+      renderLocalized(wrappedLocalized)(locale)
+    final def in(locale: Locale): LocaleText =
+      renderLocalized(wrappedLocalized)(locale)
+  }
 
-  final def rl[A1](message: MessageP[Tuple1[A1]], arg1: A1)
-      (implicit locale: Locale): LocaleText = renderLocalized(message, Tuple1(arg1))
+  implicit final class Message0Ops(val wrappedMessage: Message) extends AnyVal {
+    final def apply(): Localized[Message] =
+      LocalizedValue(wrappedMessage, wrappedMessage.key(), wrappedMessage.bundleName())
+  }
 
-  final def rl[A1, A2](message: MessageP[Tuple2[A1, A2]], arg1: A1, arg2: A2)
-      (implicit locale: Locale): LocaleText = renderLocalized(message, (arg1, arg2))
+  implicit final class Message1Ops[A1](
+      val wrappedMessage: MessageP[Tuple1[A1]]
+      ) extends AnyVal {
+    final def apply(arg1: A1): LocalizedP[Message, Tuple1[A1]] =
+      LocalizedPValue(wrappedMessage, Tuple1(arg1), wrappedMessage.key(), wrappedMessage.bundleName())
+  }
 
-  final def rl[A1, A2, A3](message: MessageP[Tuple3[A1, A2, A3]], arg1: A1, arg2: A2, arg3: A3)
-      (implicit locale: Locale): LocaleText = renderLocalized(message, (arg1, arg2, arg3))
+  implicit final class Message2Ops[A1, A2](
+      val wrappedMessage: MessageP[Tuple2[A1, A2]]
+      ) extends AnyVal {
+    final def apply(arg1: A1, arg2: A2): LocalizedP[Message, Tuple2[A1, A2]] =
+      LocalizedPValue(wrappedMessage, (arg1, arg2), wrappedMessage.key(), wrappedMessage.bundleName())
+  }
 
-  final def rl[A1, A2, A3, A4](message: MessageP[Tuple4[A1, A2, A3, A4]], arg1: A1, arg2: A2, arg3: A3, arg4: A4)
-      (implicit locale: Locale): LocaleText = renderLocalized(message, (arg1, arg2, arg3, arg4))
+  implicit final class Message3Ops[A1, A2, A3](
+      val wrappedMessage: MessageP[Tuple3[A1, A2, A3]]
+      ) extends AnyVal {
+    final def apply(
+        arg1: A1, arg2: A2, arg3: A3
+        ): LocalizedP[Message, Tuple3[A1, A2, A3]] =
+      LocalizedPValue(wrappedMessage, (arg1, arg2, arg3), wrappedMessage.key(), wrappedMessage.bundleName())
+  }
 
-  final def rl[A1, A2, A3, A4, A5](message: MessageP[Tuple5[A1, A2, A3, A4, A5]], arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5)
-      (implicit locale: Locale): LocaleText = renderLocalized(message, (arg1, arg2, arg3, arg4, arg5))
+  implicit final class Message4Ops[A1, A2, A3, A4](
+      val wrappedMessage: MessageP[Tuple4[A1, A2, A3, A4]]
+      ) extends AnyVal {
+    final def apply(
+        arg1: A1, arg2: A2, arg3: A3, arg4: A4
+        ): LocalizedP[Message, Tuple4[A1, A2, A3, A4]] =
+      LocalizedPValue(wrappedMessage, (arg1, arg2, arg3, arg4), wrappedMessage.key(), wrappedMessage.bundleName())
+  }
 
-  final def rl[A1, A2, A3, A4, A5, A6](message: MessageP[Tuple6[A1, A2, A3, A4, A5, A6]], arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6)
-      (implicit locale: Locale): LocaleText = renderLocalized(message, (arg1, arg2, arg3, arg4, arg5, arg6))
+  implicit final class Message5Ops[A1, A2, A3, A4, A5](
+      val wrappedMessage: MessageP[Tuple5[A1, A2, A3, A4, A5]]
+      ) extends AnyVal {
+    final def apply(
+        arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5
+        ): LocalizedP[Message, Tuple5[A1, A2, A3, A4, A5]] =
+      LocalizedPValue(wrappedMessage, (arg1, arg2, arg3, arg4, arg5), wrappedMessage.key(), wrappedMessage.bundleName())
+  }
 
-  final def rl[A1, A2, A3, A4, A5, A6, A7](message: MessageP[Tuple7[A1, A2, A3, A4, A5, A6, A7]], arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7)
-      (implicit locale: Locale): LocaleText = renderLocalized(message, (arg1, arg2, arg3, arg4, arg5, arg6, arg7))
+  implicit final class Message6Ops[A1, A2, A3, A4, A5, A6](
+      val wrappedMessage: MessageP[Tuple6[A1, A2, A3, A4, A5, A6]]
+      ) extends AnyVal {
+    final def apply(
+        arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6
+        ): LocalizedP[Message, Tuple6[A1, A2, A3, A4, A5, A6]] =
+      LocalizedPValue(wrappedMessage, (arg1, arg2, arg3, arg4, arg5, arg6), wrappedMessage.key(), wrappedMessage.bundleName())
+  }
 
-  final def rl[A1, A2, A3, A4, A5, A6, A7, A8](message: MessageP[Tuple8[A1, A2, A3, A4, A5, A6, A7, A8]], arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8)
-      (implicit locale: Locale): LocaleText = renderLocalized(message, (arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8))
+  implicit final class Message7Ops[A1, A2, A3, A4, A5, A6, A7](
+      val wrappedMessage: MessageP[Tuple7[A1, A2, A3, A4, A5, A6, A7]]
+      ) extends AnyVal {
+    final def apply(
+        arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7
+        ): LocalizedP[Message, Tuple7[A1, A2, A3, A4, A5, A6, A7]] =
+      LocalizedPValue(wrappedMessage, (arg1, arg2, arg3, arg4, arg5, arg6, arg7), wrappedMessage.key(), wrappedMessage.bundleName())
+  }
 
-  final def rl[A1, A2, A3, A4, A5, A6, A7, A8, A9](message: MessageP[Tuple9[A1, A2, A3, A4, A5, A6, A7, A8, A9]], arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8, arg9: A9)
-      (implicit locale: Locale): LocaleText = renderLocalized(message, (arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9))
+  implicit final class Message8Ops[A1, A2, A3, A4, A5, A6, A7, A8](
+      val wrappedMessage: MessageP[Tuple8[A1, A2, A3, A4, A5, A6, A7, A8]]
+      ) extends AnyVal {
+    final def apply(
+        arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8
+        ): LocalizedP[Message, Tuple8[A1, A2, A3, A4, A5, A6, A7, A8]] =
+      LocalizedPValue(wrappedMessage, (arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8), wrappedMessage.key(), wrappedMessage.bundleName())
+  }
+
+  implicit final class Message9Ops[A1, A2, A3, A4, A5, A6, A7, A8, A9](
+      val wrappedMessage: MessageP[Tuple9[A1, A2, A3, A4, A5, A6, A7, A8, A9]]
+      ) extends AnyVal {
+    final def apply(
+        arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8, arg9: A9
+        ): LocalizedP[Message, Tuple9[A1, A2, A3, A4, A5, A6, A7, A8, A9]] =
+      LocalizedPValue(wrappedMessage, (arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9), wrappedMessage.key(), wrappedMessage.bundleName())
+  }
 
 }

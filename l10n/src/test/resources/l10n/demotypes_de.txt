@@ -9,4 +9,4 @@ Ten=Zehn
 Jack=Bube
 Queen=Dame
 King=König
-Card={1} {2}
+Card={0} {1}

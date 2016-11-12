@@ -13,24 +13,16 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.innoave.soda.l10n.format
+package com.innoave.soda.l10n
 
-import java.text.{MessageFormat => JMessageFormat}
-import com.innoave.soda.l10n.Format
-import com.innoave.soda.l10n.Locale
-import java.text.{MessageFormat => JMessageFormat}
+trait MessageFormat {
 
-class MessageFormat(
-    val pattern: String,
-    val locale: Locale
-    ) extends Format[Array[_]] {
+  def pattern: String
 
-  private val delegate: JMessageFormat = new JMessageFormat(pattern, locale.asJavaLocale)
+  def locale: Locale
 
-  def format(args: Any*): String =
-    delegate.format(args.map(_.asInstanceOf[java.lang.Object]).toArray, new StringBuffer(), null).toString
+  def format(args: Any*): String
 
-  override def format(args: Array[_]): String =
-    delegate.format(args.map(_.asInstanceOf[java.lang.Object]), new StringBuffer(), null).toString
+  def format(args: Array[_]): String
 
 }

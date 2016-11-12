@@ -9,4 +9,4 @@ Ten=Ten
 Jack=Jack
 Queen=Queen
 King=King
-Card={2} of {1}
+Card={1} of {0}

@@ -15,16 +15,9 @@
  */
 package com.innoave.soda.l10n.resource
 
-import java.util.{ResourceBundle => JResourceBundle}
-import com.innoave.soda.l10n.BundleName
-import com.innoave.soda.l10n.Locale
 import com.innoave.soda.l10n.RenderLocalized
+import com.innoave.soda.l10n.format.JavaMessageFormatProducer
 
-object ResourceBundleRenderLocalized extends RenderLocalized {
-
-  override def patternFor(key: String, locale: Locale, bundleName: BundleName): String =
-    new ResourceBundle(JResourceBundle.getBundle(
-        bundleName.value, locale.asJavaLocale, Utf8ResourceBundleControl
-        )).stringFor(key)
-
-}
+object ResourceBundleRenderLocalized extends RenderLocalized
+    with JavaUtf8ResourceBundleProducer
+    with JavaMessageFormatProducer

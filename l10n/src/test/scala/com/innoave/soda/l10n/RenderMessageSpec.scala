@@ -33,15 +33,16 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
     import Locale._
     import TestMessages._
 
-    rl(helloWorld)(EN) shouldBe LocaleText("Hello World!")
+    implicit val implicitLocale = EN
+    helloWorld().asLocaleText shouldBe LocaleText("Hello World!")
 
-    rl(helloWorld)(EN_GB) shouldBe LocaleText("Good day World!")
+    helloWorld().asLocaleText(EN_GB) shouldBe LocaleText("Good day World!")
 
-    rl(helloWorld)(DE) shouldBe LocaleText("Hallo Welt!")
+    helloWorld().in(DE) shouldBe LocaleText("Hallo Welt!")
 
-    rl(helloWorld)(DE_AT) shouldBe LocaleText("Servus Welt!")
+    helloWorld() in DE_AT shouldBe LocaleText("Servus Welt!")
 
-    rl(helloWorld)(Locale("MM")) shouldBe LocaleText("Hello World!")
+    helloWorld() in(Locale("MM")) shouldBe LocaleText("Hello World!")
 
   }
 
@@ -51,15 +52,16 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
     import Locale._
     import TestMessages._
 
-    rl(greeting, "Frank")(EN) shouldBe LocaleText("Greetings to Frank")
+    implicit val implicitLocale = EN
+    greeting("Frank").asLocaleText shouldBe LocaleText("Greetings to Frank")
 
-    rl(greeting, "Frank")(EN_GB) shouldBe LocaleText("Dear Frank")
+    greeting("Frank").in(EN_GB) shouldBe LocaleText("Dear Frank")
 
-    rl(greeting, "Frank")(DE) shouldBe LocaleText("Guten Tag Frank")
+    greeting("Frank") in DE shouldBe LocaleText("Guten Tag Frank")
 
-    rl(greeting, "Frank")(DE_AT) shouldBe LocaleText("Grüß Gott Frank")
+    greeting("Frank") in(DE_AT) shouldBe LocaleText("Grüß Gott Frank")
 
-    rl(greeting, "Frank")(Locale("MM")) shouldBe LocaleText("Hello Frank")
+    greeting("Frank").asLocaleText(Locale("MM")) shouldBe LocaleText("Hello Frank")
 
   }
 
@@ -69,15 +71,16 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
     import Locale._
     import TestMessages._
 
-    rl(productsInShoppingCart, "Paul", 0)(EN) shouldBe LocaleText("Paul has no items in the cart.")
+    implicit val implicitLocale = EN
+    productsInShoppingCart("Paul", 0).asLocaleText shouldBe LocaleText("Paul has no items in the cart.")
 
-    rl(productsInShoppingCart, "Paul", 0)(EN_GB) shouldBe LocaleText("Paul has no products in the shopping cart.")
+    productsInShoppingCart("Paul", 0) in EN_GB shouldBe LocaleText("Paul has no products in the shopping cart.")
 
-    rl(productsInShoppingCart, "Paul", 0)(DE) shouldBe LocaleText("Paul hat keine Produkte im Einkaufskorb.")
+    productsInShoppingCart("Paul", 0).in(DE) shouldBe LocaleText("Paul hat keine Produkte im Einkaufskorb.")
 
-    rl(productsInShoppingCart, "Paul", 0)(DE_AT) shouldBe LocaleText("Paul hat keine Produkte im Einkaufskörberl.")
+    productsInShoppingCart("Paul", 0) in(DE_AT) shouldBe LocaleText("Paul hat keine Produkte im Einkaufskörberl.")
 
-    rl(productsInShoppingCart, "Paul", 0)(Locale("MM")) shouldBe LocaleText("Paul has no products in the cart.")
+    productsInShoppingCart("Paul", 0).in(Locale("MM")) shouldBe LocaleText("Paul has no products in the cart.")
 
   }
 
@@ -85,15 +88,15 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
 
     import syntax._
     import TestMessages._
-    implicit val locale = Locale.EN
+    implicit val implicitLocale = Locale.EN
 
-    rl(productsInShoppingCart, "Paul", 0) shouldBe LocaleText("Paul has no items in the cart.")
+    productsInShoppingCart("Paul", 0).asLocaleText shouldBe LocaleText("Paul has no items in the cart.")
 
-    rl(productsInShoppingCart, "Paul", 1) shouldBe LocaleText("Paul has one item in the cart.")
+    productsInShoppingCart("Paul", 1).asLocaleText shouldBe LocaleText("Paul has one item in the cart.")
 
-    rl(productsInShoppingCart, "Paul", 2) shouldBe LocaleText("Paul has 2 items in the cart.")
+    productsInShoppingCart("Paul", 2).asLocaleText shouldBe LocaleText("Paul has 2 items in the cart.")
 
-    rl(productsInShoppingCart, "Paul", 3) shouldBe LocaleText("Paul has 3 items in the cart.")
+    productsInShoppingCart("Paul", 3).asLocaleText shouldBe LocaleText("Paul has 3 items in the cart.")
 
   }
 

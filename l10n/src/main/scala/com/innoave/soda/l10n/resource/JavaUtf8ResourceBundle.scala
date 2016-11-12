@@ -15,31 +15,40 @@
  */
 package com.innoave.soda.l10n.resource
 
+import java.util.{ResourceBundle => JResourceBundle}
+import scala.util.control.NonFatal
 import com.innoave.soda.l10n.BundleName
-import com.innoave.soda.l10n.DefineMessage
-import com.innoave.soda.l10n.KeyNamingStrategy
 import com.innoave.soda.l10n.Locale
 import com.innoave.soda.l10n.Message
 
-trait ResourceBundle {
+trait JavaUtf8ResourceBundleProducer {
 
-  def bundleName: BundleName
-
-  def locale: Locale
-
-  def stringFor(key: String): String
-
-  def stringFor(message: Message): String
+  final def patternFor(key: String, locale: Locale, bundleName: BundleName): String =
+    new JavaUtf8ResourceBundle(bundleName, locale).stringFor(key)
 
 }
 
-object ResourceBundle {
+final class JavaUtf8ResourceBundle(
+    override val bundleName: BundleName,
+    override val locale: Locale
+    ) extends ResourceBundle {
 
-  def stubFor(messages: DefineMessage): String =
-    s"""#
-      |# ${KeyNamingStrategy.simpleTypeName(messages.getClass)} : Message definitions
-      |#
-      |""".stripMargin +
-    messages.values.map(m => m.key + "=\n").mkString
+  val delegate: JResourceBundle = JResourceBundle.getBundle(
+      bundleName.value, locale.asJavaLocale, Utf8ResourceBundleControl
+      )
+
+  override def stringFor(key: String): String =
+    _stringFor(key)
+
+  override def stringFor(message: Message): String =
+    _stringFor(message.key)
+
+  private def _stringFor(key: String): String =
+    try {
+      delegate.getString(key)
+    } catch {
+      case NonFatal(error) =>
+        s"!!!$key!!!"
+    }
 
 }

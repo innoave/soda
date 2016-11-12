@@ -13,33 +13,30 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.innoave.soda.l10n.resource
+package com.innoave.soda.l10n.format
 
-import com.innoave.soda.l10n.BundleName
-import com.innoave.soda.l10n.DefineMessage
-import com.innoave.soda.l10n.KeyNamingStrategy
+import java.text.{MessageFormat => JMessageFormat}
 import com.innoave.soda.l10n.Locale
-import com.innoave.soda.l10n.Message
+import com.innoave.soda.l10n.MessageFormat
 
-trait ResourceBundle {
+trait JavaMessageFormatProducer {
 
-  def bundleName: BundleName
-
-  def locale: Locale
-
-  def stringFor(key: String): String
-
-  def stringFor(message: Message): String
+  final def messageFormatFor(pattern: String, locale: Locale): MessageFormat =
+    new JavaMessageFormat(pattern, locale)
 
 }
 
-object ResourceBundle {
+final class JavaMessageFormat(
+    override val pattern: String,
+    override val locale: Locale
+    ) extends MessageFormat {
 
-  def stubFor(messages: DefineMessage): String =
-    s"""#
-      |# ${KeyNamingStrategy.simpleTypeName(messages.getClass)} : Message definitions
-      |#
-      |""".stripMargin +
-    messages.values.map(m => m.key + "=\n").mkString
+  private val delegate: JMessageFormat = new JMessageFormat(pattern, locale.asJavaLocale)
+
+  def format(args: Any*): String =
+    delegate.format(args.map(_.asInstanceOf[java.lang.Object]).toArray, new StringBuffer(), null).toString
+
+  override def format(args: Array[_]): String =
+    delegate.format(args.map(_.asInstanceOf[java.lang.Object]), new StringBuffer(), null).toString
 
 }

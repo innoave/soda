@@ -36,46 +36,12 @@ class RenderLocalizedSpec extends FlatSpec with Matchers with BeforeAndAfterAll 
 
     val queenOfHearts = Card(Hearts, Queen)
 
-    implicit val implicitLocale: Locale = EN
-    rl(queenOfHearts) shouldBe LocaleText("Queen of Hearts")
+    implicit val implicitLocale = EN
+    render(queenOfHearts).asLocaleText shouldBe LocaleText("Queen of Hearts")
 
-    rl(queenOfHearts)(DE_AT) shouldBe LocaleText("Herz Dame")
+    render(queenOfHearts).in(DE_AT) shouldBe LocaleText("Herz Dame")
 
-    rl(queenOfHearts)(Locale("MM")) shouldBe LocaleText("Queen of Hearts")
-
-  }
-
-  it should "render a text for a case object in different languages" in {
-
-    import syntax._
-    import Locale._
-    import DemoTypesLocalizer._
-    import DemoTypes._
-
-    implicit val implicitLocale: Locale = EN
-    rl(King) shouldBe LocaleText("King")
-
-    rl(King)(DE_AT) shouldBe LocaleText("König")
-
-    rl(King)(Locale("MM")) shouldBe LocaleText("King")
-
-  }
-
-  "RenderLocalized using alternative syntax" should "render a text for a case class in different languages" in {
-
-    import syntax._
-    import Locale._
-    import DemoTypesLocalizer._
-    import DemoTypes._
-
-    val jackOfSpades = Card(Spades, Jack)
-
-    implicit val implicitLocale: Locale = EN
-    localized(jackOfSpades).text shouldBe LocaleText("Jack of Spades")
-
-    localized(jackOfSpades).text(DE_AT) shouldBe LocaleText("Kreuz Bube")
-
-    localized(jackOfSpades).text(Locale("MM")) shouldBe LocaleText("Jack of Spades")
+    render(queenOfHearts) in Locale("MM") shouldBe LocaleText("['Queen' of 'Hearts']")
 
   }
 
@@ -86,12 +52,12 @@ class RenderLocalizedSpec extends FlatSpec with Matchers with BeforeAndAfterAll 
     import DemoTypesLocalizer._
     import DemoTypes._
 
-    implicit val implicitLocale: Locale = EN
-    localized(Diamonds).text shouldBe LocaleText("Diamonds")
+    implicit val implicitLocale = EN
+    render(King).asLocaleText shouldBe LocaleText("King")
 
-    localized(Diamonds).text(DE_AT) shouldBe LocaleText("Karo")
+    render(King) in DE_AT shouldBe LocaleText("König")
 
-    localized(Diamonds).text(Locale("MM")) shouldBe LocaleText("Diamonds")
+    render(King).in(Locale("MM")) shouldBe LocaleText("'King'")
 
   }
 

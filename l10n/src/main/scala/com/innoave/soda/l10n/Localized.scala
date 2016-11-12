@@ -30,3 +30,16 @@ trait LocalizedP[T, A <: Product] extends Localized[T] {
   def args(): A
 
 }
+
+case class LocalizedValue[T](
+    override val value: T,
+    override val key: String,
+    override val bundleName: BundleName
+    ) extends Localized[T]
+
+case class LocalizedPValue[T, A <: Product](
+    override val value: T,
+    override val args: A,
+    override val key: String,
+    override val bundleName: BundleName
+    ) extends LocalizedP[T, A]
