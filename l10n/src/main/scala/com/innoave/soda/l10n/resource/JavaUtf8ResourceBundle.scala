@@ -35,8 +35,8 @@ final class JavaUtf8ResourceBundle(
     ) extends ResourceBundle {
 
   val delegate: JResourceBundle = JResourceBundle.getBundle(
-      bundleName.value, locale.asJavaLocale, Utf8ResourceBundleControl
-      )
+      bundleName.value, locale.asJavaLocale,
+      Utf8ResourceBundleControl)
 
   override def stringFor(message: Message): String =
     _stringFor(message.key())
