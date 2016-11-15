@@ -15,37 +15,39 @@
  */
 package com.innoave.soda.l10n
 
+import com.innoave.soda.l10n.resource.ResourceBundle
+
 trait RenderLocalized {
 
   protected def messageFormatFor(pattern: String, locale: Locale): MessageFormat
 
-  protected def patternFor(key: String, locale: Locale, bundleName: BundleName): String
+  protected def resourceBundleFor(bundleName: BundleName, locale: Locale): ResourceBundle
 
   final def renderLocalized[T](localized: Localized[T])(implicit locale: Locale): LocaleText =
     localized.value match {
       case v: LocalizedP[_, _]  =>
-        LocaleText(messageFormatFor(patternFor(v.key, locale, v.bundleName), locale).format(renderLocalized(v).value))
+        LocaleText(messageFormatFor(resourceBundleFor(v.bundleName(), locale).stringFor(v), locale).format(renderLocalized(v).value))
       case v: Localized[_] =>
-        LocaleText(messageFormatFor(patternFor(v.key, locale, v.bundleName), locale).format(renderLocalized(v).value))
+        LocaleText(messageFormatFor(resourceBundleFor(v.bundleName(), locale).stringFor(v), locale).format(renderLocalized(v).value))
       case v =>
-        LocaleText(messageFormatFor(patternFor(localized.key, locale, localized.bundleName), locale).format())
+        LocaleText(messageFormatFor(resourceBundleFor(localized.bundleName(), locale).stringFor(localized), locale).format())
     }
 
   final def renderLocalized[T, A <: Product](localized: LocalizedP[T, A])(implicit locale: Locale): LocaleText = {
     val args = localized.args.productIterator.map({
       case a: LocalizedP[_, _] =>
-        messageFormatFor(patternFor(a.key, locale, a.bundleName), locale).format(renderLocalized(a).value)
+        messageFormatFor(resourceBundleFor(a.bundleName(), locale).stringFor(a), locale).format(renderLocalized(a).value)
       case a: Localized[_] =>
-        messageFormatFor(patternFor(a.key, locale, a.bundleName), locale).format(renderLocalized(a).value)
+        messageFormatFor(resourceBundleFor(a.bundleName(), locale).stringFor(a), locale).format(renderLocalized(a).value)
       case a => a
     })
     localized.value match {
       case v: LocalizedP[_, _]  =>
-        LocaleText(messageFormatFor(patternFor(v.key, locale, v.bundleName), locale).format(args.toArray))
+        LocaleText(messageFormatFor(resourceBundleFor(v.bundleName(), locale).stringFor(v), locale).format(args.toArray))
       case v: Localized[_]  =>
-        LocaleText(messageFormatFor(patternFor(v.key, locale, v.bundleName), locale).format(args.toArray))
+        LocaleText(messageFormatFor(resourceBundleFor(v.bundleName(), locale).stringFor(v), locale).format(args.toArray))
       case v =>
-        LocaleText(messageFormatFor(patternFor(localized.key, locale, localized.bundleName), locale).format(args.toArray))
+        LocaleText(messageFormatFor(resourceBundleFor(localized.bundleName(), locale).stringFor(localized), locale).format(args.toArray))
     }
   }
 

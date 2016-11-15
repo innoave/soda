@@ -19,6 +19,7 @@ import com.innoave.soda.l10n.BundleName
 import com.innoave.soda.l10n.DefineMessage
 import com.innoave.soda.l10n.KeyNamingStrategy
 import com.innoave.soda.l10n.Locale
+import com.innoave.soda.l10n.Localized
 import com.innoave.soda.l10n.Message
 
 trait ResourceBundle {
@@ -27,9 +28,9 @@ trait ResourceBundle {
 
   def locale: Locale
 
-  def stringFor(key: String): String
-
   def stringFor(message: Message): String
+
+  def stringFor[T](localized: Localized[T]): String
 
 }
 

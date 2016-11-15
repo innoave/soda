@@ -20,11 +20,12 @@ import scala.util.control.NonFatal
 import com.innoave.soda.l10n.BundleName
 import com.innoave.soda.l10n.Locale
 import com.innoave.soda.l10n.Message
+import com.innoave.soda.l10n.Localized
 
 trait JavaUtf8ResourceBundleProducer {
 
-  final def patternFor(key: String, locale: Locale, bundleName: BundleName): String =
-    new JavaUtf8ResourceBundle(bundleName, locale).stringFor(key)
+  final def resourceBundleFor(bundleName: BundleName, locale: Locale): ResourceBundle =
+    new JavaUtf8ResourceBundle(bundleName, locale)
 
 }
 
@@ -37,11 +38,11 @@ final class JavaUtf8ResourceBundle(
       bundleName.value, locale.asJavaLocale, Utf8ResourceBundleControl
       )
 
-  override def stringFor(key: String): String =
-    _stringFor(key)
-
   override def stringFor(message: Message): String =
-    _stringFor(message.key)
+    _stringFor(message.key())
+
+  override def stringFor[T](localized: Localized[T]): String =
+    _stringFor(localized.key())
 
   private def _stringFor(key: String): String =
     try {
