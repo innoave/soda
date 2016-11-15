@@ -2,6 +2,9 @@
 // [https://github.com/sbt/sbt-javaversioncheck]
 addSbtPlugin("com.typesafe.sbt" % "sbt-javaversioncheck" % "0.1.0")
 
+// [https://github.com/scoverage/sbt-scoverage]
+addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.4.0")
+
 // [https://github.com/sbt/sbt-git]
 addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "0.8.5")
 
@@ -21,5 +24,5 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-site" % "1.1.0")
 resolvers += "jgit-repo" at "http://download.eclipse.org/jgit/maven"
 addSbtPlugin("com.typesafe.sbt" % "sbt-ghpages" % "0.5.4")
 
-// [https://github.com/scoverage/sbt-scoverage]
-addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.4.0")
+// [https://github.com/tpolecat/tut]
+addSbtPlugin("org.tpolecat" % "tut-plugin" % "0.4.6")

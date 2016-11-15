@@ -41,13 +41,53 @@ class KeyNamingStrategySpec extends FlatSpec with Matchers {
 
   }
 
-  "DotSeparatedKeyNames" should "convert the name to dot separated lower case strings" in {
+  "DotSeparatedKeyNames" should "convert a name with first letter is lower case to a dot separated lower case string" in {
+
+    DotSeparatedKeyNames.keyFor(0, "firstMessageToBeTested") shouldBe "first.message.to.be.tested"
+
+  }
+
+  it should "convert a name with first letter is upper case to a dot separated lower case string" in {
 
     DotSeparatedKeyNames.keyFor(0, "HelloWorld") shouldBe "hello.world"
-    DotSeparatedKeyNames.keyFor(0, "anotherMessage") shouldBe "another.message"
+
+  }
+
+  it should "convert a name with no uppercase letter to a string with no dots" in {
+
+    DotSeparatedKeyNames.keyFor(0, "namewithnouppercaseletter") shouldBe "namewithnouppercaseletter"
+
+  }
+
+  it should "convert a name with all uppercase letters to a string with no dots" in {
+
+    DotSeparatedKeyNames.keyFor(0, "NAMEWITHALLUPPERCASELETTERS") shouldBe "namewithalluppercaseletters"
+
+  }
+
+  it should "convert a name with one uppercase letter at the beginning to a string with no dots" in {
+
+    DotSeparatedKeyNames.keyFor(0, "Firstcharacterisuppercase") shouldBe "firstcharacterisuppercase"
+
+  }
+
+  it should "not insert a dot on numbers" in {
+
     DotSeparatedKeyNames.keyFor(0, "SomeMoreMessage2processWithThisStrategy") shouldBe "some.more.message2process.with.this.strategy"
     DotSeparatedKeyNames.keyFor(0, "WindowTitle100") shouldBe "window.title100"
     DotSeparatedKeyNames.keyFor(0, "textAreaLabel951") shouldBe "text.area.label951"
+
+  }
+
+  it should "insert only one dot in names with a sequence of upper case letters" in {
+
+    DotSeparatedKeyNames.keyFor(0, "SomeISOValue") shouldBe "some.isovalue"
+
+  }
+
+  it should "should replace underscore chars with a dot" in {
+
+    DotSeparatedKeyNames.keyFor(0, "NAME_WITH_UnderScore") shouldBe "name.with.under.score"
 
   }
 

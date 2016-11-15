@@ -160,7 +160,7 @@ class DefineMessageSpec extends FlatSpec with Matchers {
 
   }
 
-  "DefineMessage ValueSet empty method" should "construct an empty value set" in {
+  "DefineMessage MessageSet empty method" should "construct an empty message set" in {
 
     val emptySet = DemoMessages.MessageSet.empty
 
@@ -168,7 +168,15 @@ class DefineMessageSpec extends FlatSpec with Matchers {
 
   }
 
-  "DefineMessage ValueSet apply method" should "construct a value set with given values" in {
+  "DefineMessage MessageSet empty method on MessageSet with values" should "return a new empty MessageSet" in {
+
+    val valueSet = DemoMessages.values
+
+    valueSet.empty.size shouldBe 0
+
+  }
+
+  "DefineMessage MessageSet apply method" should "construct a value set with given messages" in {
 
     val valueSet = DemoMessages.MessageSet(DemoMessages.MyMessage1, DemoMessages.MyMessage3, DemoMessages.MessageWithCustomKey)
 
@@ -180,7 +188,7 @@ class DefineMessageSpec extends FlatSpec with Matchers {
 
   }
 
-  "DefineMessage value set + method" should "add a value to the value set" in {
+  "DefineMessage MessageSet + method" should "add a value to the message set" in {
 
     val set0 = DemoMessages.MessageSet.empty
     val set1 = set0 + DemoMessages.MessageWithDefaultNameAndKey + DemoMessages.MessageWithCustomNameAndKey
@@ -213,7 +221,7 @@ class DefineMessageSpec extends FlatSpec with Matchers {
 
   }
 
-  "DefineMessage value set - method" should "remove a value from the value set" in {
+  "DefineMessage MessageSet - method" should "remove a value from the message set" in {
 
     val set1 = DemoMessages.values
     val set2 = set1 - DemoMessages.MessageWithDefaultNameAndKey
@@ -254,7 +262,7 @@ class DefineMessageSpec extends FlatSpec with Matchers {
 
   }
 
-  "DefineMessage value set iterator" should "iterate in the order of the definition of the values" in {
+  "DefineMessage MessageSet iterator" should "iterate in the order of the definition of the values" in {
 
     val iterator = DemoMessages.values.iterator
 
@@ -267,7 +275,20 @@ class DefineMessageSpec extends FlatSpec with Matchers {
 
   }
 
-  "DefineMessage value equals method" should "return true for same values" in {
+  "DefineMessage MessageSet contains method" should "return true if a value is part of the set" in {
+
+    val valueSet = DemoMessages.values
+
+    valueSet.contains(DemoMessages.MyMessage1) shouldBe true
+    valueSet.contains(DemoMessages.MessageWithCustomKey) shouldBe true
+    valueSet.contains(DemoMessages.MyMessage2) shouldBe true
+    valueSet.contains(DemoMessages.MyMessage3) shouldBe true
+    valueSet.contains(DemoMessages.MessageWithDefaultNameAndKey) shouldBe true
+    valueSet.contains(DemoMessages.MessageWithCustomNameAndKey) shouldBe true
+
+  }
+
+  "DefineMessage Message equals method" should "return true for same values" in {
 
     val value1 = DemoMessages.MessageWithDefaultNameAndKey
     val value2 = DemoMessages.MessageWithCustomKey
@@ -280,7 +301,7 @@ class DefineMessageSpec extends FlatSpec with Matchers {
 
   }
 
-  "DefineMessage value equals method" should "return false for different values" in {
+  "DefineMessage Message equals method" should "return false for different values" in {
 
     val value1 = DemoMessages.MessageWithDefaultNameAndKey
     val value2 = DemoMessages.MessageWithCustomKey

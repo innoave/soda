@@ -31,7 +31,7 @@ description := "Soda for Scala"
 lazy val sodaL10n = Project(
   id = "soda-l10n",
   base = file("l10n"),
-  settings = commonSettings ++ ghpages.settings ++ publishSettings ++ Seq(
+  settings = commonSettings ++ docsSettings ++ publishSettings ++ Seq(
     description := "Soda Localization",
     libraryDependencies ++= Seq(
       scalatest % "test"
@@ -95,7 +95,6 @@ enablePlugins(
 
 commonSettings
 publishArtifact := false
-sourcesInBase := false
 
 //
 // Common Settings
@@ -184,6 +183,16 @@ lazy val buildSettings = Seq(
   manifestSetting
 )
 
+lazy val docsSettings = commonSettings ++ tutDocsSettings ++ ghpages.settings
+
+lazy val docsMappingsTutDir = settingKey[String]("Name of subdirectory in site target directory for tut docs")
+
+lazy val tutDocsSettings = tutSettings ++ Seq(
+  tutSourceDirectory := baseDirectory.value / "docs" / "tut",
+  docsMappingsTutDir := "tut",
+  addMappingsToSiteDir(tut, docsMappingsTutDir)
+)
+
 lazy val manifestSetting = packageOptions += {
     Package.ManifestAttributes(
       "Created-By" -> "Simple Build Tool",
@@ -239,8 +248,3 @@ lazy val publishSettings = bintraySettings ++ Seq(
     </developers>
   )
 )
-
-//
-// Project website
-//
-//sourceDirectory in Jekyll := baseDirectory.value / "website"

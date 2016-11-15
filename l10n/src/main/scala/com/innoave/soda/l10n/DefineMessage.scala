@@ -87,6 +87,12 @@ abstract class DefineMessage(
   protected final def Message1[A1]: MsgP[Tuple1[A1]] = new MsgP(nextId, null, null)
   protected final def Message2[A1, A2]: MsgP[Tuple2[A1, A2]] = new MsgP(nextId, null, null)
   protected final def Message3[A1, A2, A3]: MsgP[Tuple3[A1, A2, A3]] = new MsgP(nextId, null, null)
+  protected final def Message4[A1, A2, A3, A4]: MsgP[Tuple4[A1, A2, A3, A4]] = new MsgP(nextId, null, null)
+  protected final def Message5[A1, A2, A3, A4, A5]: MsgP[Tuple5[A1, A2, A3, A4, A5]] = new MsgP(nextId, null, null)
+  protected final def Message6[A1, A2, A3, A4, A5, A6]: MsgP[Tuple6[A1, A2, A3, A4, A5, A6]] = new MsgP(nextId, null, null)
+  protected final def Message7[A1, A2, A3, A4, A5, A6, A7]: MsgP[Tuple7[A1, A2, A3, A4, A5, A6, A7]] = new MsgP(nextId, null, null)
+  protected final def Message8[A1, A2, A3, A4, A5, A6, A7, A8]: MsgP[Tuple8[A1, A2, A3, A4, A5, A6, A7, A8]] = new MsgP(nextId, null, null)
+  protected final def Message9[A1, A2, A3, A4, A5, A6, A7, A8, A9]: MsgP[Tuple9[A1, A2, A3, A4, A5, A6, A7, A8, A9]] = new MsgP(nextId, null, null)
 
   /**
    * Creates a fresh message, part of this Messages
@@ -97,6 +103,12 @@ abstract class DefineMessage(
   protected final def Message1[A1](key: String): MsgP[Tuple1[A1]] = new MsgP(nextId, null, key)
   protected final def Message2[A1, A2](key: String): MsgP[Tuple2[A1, A2]] = new MsgP(nextId, null, key)
   protected final def Message3[A1, A2, A3](key: String): MsgP[Tuple3[A1, A2, A3]] = new MsgP(nextId, null, key)
+  protected final def Message4[A1, A2, A3, A4](key: String): MsgP[Tuple4[A1, A2, A3, A4]] = new MsgP(nextId, null, key)
+  protected final def Message5[A1, A2, A3, A4, A5](key: String): MsgP[Tuple5[A1, A2, A3, A4, A5]] = new MsgP(nextId, null, key)
+  protected final def Message6[A1, A2, A3, A4, A5, A6](key: String): MsgP[Tuple6[A1, A2, A3, A4, A5, A6]] = new MsgP(nextId, null, key)
+  protected final def Message7[A1, A2, A3, A4, A5, A6, A7](key: String): MsgP[Tuple7[A1, A2, A3, A4, A5, A6, A7]] = new MsgP(nextId, null, key)
+  protected final def Message8[A1, A2, A3, A4, A5, A6, A7, A8](key: String): MsgP[Tuple8[A1, A2, A3, A4, A5, A6, A7, A8]] = new MsgP(nextId, null, key)
+  protected final def Message9[A1, A2, A3, A4, A5, A6, A7, A8, A9](key: String): MsgP[Tuple9[A1, A2, A3, A4, A5, A6, A7, A8, A9]] = new MsgP(nextId, null, key)
 
   /**
    * Creates a fresh message, part of this Messages
@@ -107,6 +119,12 @@ abstract class DefineMessage(
   protected final def Message1[A1](name: String, key: String): MsgP[Tuple1[A1]] = new MsgP(nextId, name, key)
   protected final def Message2[A1, A2](name: String, key: String): MsgP[Tuple2[A1, A2]] = new MsgP(nextId, name, key)
   protected final def Message3[A1, A2, A3](name: String, key: String): MsgP[Tuple3[A1, A2, A3]] = new MsgP(nextId, name, key)
+  protected final def Message4[A1, A2, A3, A4](name: String, key: String): MsgP[Tuple4[A1, A2, A3, A4]] = new MsgP(nextId, name, key)
+  protected final def Message5[A1, A2, A3, A4, A5](name: String, key: String): MsgP[Tuple5[A1, A2, A3, A4, A5]] = new MsgP(nextId, name, key)
+  protected final def Message6[A1, A2, A3, A4, A5, A6](name: String, key: String): MsgP[Tuple6[A1, A2, A3, A4, A5, A6]] = new MsgP(nextId, name, key)
+  protected final def Message7[A1, A2, A3, A4, A5, A6, A7](name: String, key: String): MsgP[Tuple7[A1, A2, A3, A4, A5, A6, A7]] = new MsgP(nextId, name, key)
+  protected final def Message8[A1, A2, A3, A4, A5, A6, A7, A8](name: String, key: String): MsgP[Tuple8[A1, A2, A3, A4, A5, A6, A7, A8]] = new MsgP(nextId, name, key)
+  protected final def Message9[A1, A2, A3, A4, A5, A6, A7, A8, A9](name: String, key: String): MsgP[Tuple9[A1, A2, A3, A4, A5, A6, A7, A8, A9]] = new MsgP(nextId, name, key)
 
   private def nameOf(id: Int): String =
     synchronized {

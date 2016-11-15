@@ -59,15 +59,17 @@ class CharacterSeparatedKeyNames(separatorChar: Char) extends KeyNamingStrategy 
       throw new IllegalArgumentException("Name must not be empty")
     }
     val result = new StringBuilder
-    result + name.head.toLower
-    name.tail.foldLeft(result) { (r, c) =>
-      if (c.isUpper)
-        if (r.last != separatorChar)
-          r + separatorChar + c.toLower
-        else
-          r + c.toLower
+    name.foldLeft((true, result)) { (r, c) =>
+      if (c == '_')
+        (true, r._2 + separatorChar)
       else
-        r + c
+        if (c.isUpper)
+          if (!r._1)
+            (true, r._2 + separatorChar + c.toLower)
+          else
+            (true, r._2 + c.toLower)
+        else
+          (false, r._2 + c)
     }
     result.toString
   }
