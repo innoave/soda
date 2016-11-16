@@ -51,6 +51,13 @@ class LocaleSpec extends FlatSpec with Matchers {
 
   }
 
+  it should "be equal with predefined constant value" in {
+
+    Language("fr") shouldBe Language.FR
+    Language("fr") should be theSameInstanceAs Language.FR
+
+  }
+
   "Country" should "be defined by given ISO code" in {
 
     Country("US").code shouldBe "US"
@@ -81,6 +88,13 @@ class LocaleSpec extends FlatSpec with Matchers {
 
   }
 
+  it should "be equal with predefined constant value" in {
+
+    Country("FR") shouldBe Country.FR
+    Country("FR") should be theSameInstanceAs Country.FR
+
+  }
+
   "Variant" should "be defined by given code" in {
 
     Variant("polyton").code shouldBe "polyton"
@@ -108,6 +122,220 @@ class LocaleSpec extends FlatSpec with Matchers {
   it should "return a human readable string on #toString" in {
 
     Variant("polyton").toString shouldBe "Variant(polyton)"
+
+  }
+
+  it should "be equal with predefined constant value" in {
+
+    Variant("") shouldBe Variant.Any
+    Variant("") should be theSameInstanceAs Variant.Any
+
+  }
+
+  "Locale" should "be defined by given ISO code for language" in {
+
+    val locale = Locale("en")
+
+    locale.language shouldBe Language("en")
+    locale.country  shouldBe Country.Any
+    locale.variant  shouldBe Variant.Any
+
+  }
+
+  it should "be defined by given ISO code for language and country" in {
+
+    val locale = Locale("en", "US")
+
+    locale.language shouldBe Language("en")
+    locale.country  shouldBe Country("US")
+    locale.variant  shouldBe Variant.Any
+
+  }
+
+  it should "be defined by given ISO code for language and country and a variant" in {
+
+    val locale = Locale("pt", "BR", "polyton")
+
+    locale.language shouldBe Language("pt")
+    locale.country  shouldBe Country("BR")
+    locale.variant  shouldBe Variant("polyton")
+
+  }
+
+  it should "be defined by given language" in {
+
+    val locale = Locale(Language.IT)
+
+    locale.language shouldBe Language.IT
+    locale.country shouldBe Country.Any
+    locale.variant shouldBe Variant.Any
+
+  }
+
+  it should "be defined by given language and country" in {
+
+    val locale = Locale(Language.ES, Country.US)
+
+    locale.language shouldBe Language.ES
+    locale.country shouldBe Country.US
+    locale.variant shouldBe Variant.Any
+
+  }
+
+  it should "be defined by given language, country and variant" in {
+
+    val locale = Locale(Language.EN, Country.AU, Variant.Any)
+
+    locale.language shouldBe Language.EN
+    locale.country shouldBe Country.AU
+    locale.variant shouldBe Variant.Any
+
+  }
+
+  it should "be constructed from a language tag" in {
+
+    val locale1 = Locale.forLanguageTag("zh-TW")
+
+    locale1.language shouldBe Language.ZH
+    locale1.country shouldBe Country.TW
+    locale1.variant shouldBe Variant.Any
+
+    locale1 shouldBe Locale.ZH_TW
+
+    val locale2 = Locale.forLanguageTag("de-AT")
+
+    locale2.language shouldBe Language.DE
+    locale2.country shouldBe Country.AT
+    locale2.variant shouldBe Variant.Any
+
+    locale2 shouldBe Locale.DE_AT
+
+  }
+
+  it should "allow an empty language, empty country and empty variant" in {
+
+    val locale = Locale("", "", "")
+
+    locale.language shouldBe Language.Any
+    locale.country  shouldBe Country.Any
+    locale.variant  shouldBe Variant.Any
+
+  }
+
+  it should "allow any language, any country and any variant" in {
+
+    val locale = Locale(Language.Any, Country.Any, Variant.Any)
+
+    locale.language shouldBe Language.Any
+    locale.country  shouldBe Country.Any
+    locale.variant  shouldBe Variant.Any
+
+  }
+
+  it should "be equal when language, country and variant are equal" in {
+
+    Locale("en") == Locale("en") shouldBe true
+    Locale("en") == Locale("es") shouldBe false
+
+    Locale("en", "US") == Locale("en", "US") shouldBe true
+    Locale("en", "US") == Locale("es", "US") shouldBe false
+    Locale("en", "US") == Locale("en", "GB") shouldBe false
+
+    Locale("pt", "BR", "polyton") == Locale("pt", "BR", "polyton") shouldBe true
+
+    Locale("pt", "BR", "polyton") == Locale("es", "BR", "polyton") shouldBe false
+    Locale("pt", "BR", "polyton") == Locale("pt", "PT", "polyton") shouldBe false
+    Locale("pt", "BR", "polyton") == Locale("pt", "BR", "") shouldBe false
+
+  }
+
+  it should "be compared by the order of the code" in {
+
+    Locale("en").compare(Locale("es")) should be < 0
+    Locale("en").compare(Locale("de")) should be > 0
+    Locale("en").compare(Locale("en")) shouldBe 0
+
+    Locale("pt", "BR").compare(Locale("pt", "PT")) should be < 0
+    Locale("pt", "PT").compare(Locale("pt", "BR")) should be > 0
+    Locale("de", "AT").compare(Locale("de", "AT")) shouldBe 0
+
+    Locale("pt", "BR", "").compare(Locale("pt", "BR", "polyton")) should be < 0
+    Locale("pt", "BR", "polyton").compare(Locale("pt", "BR", "")) should be > 0
+    Locale("pt", "BR", "polyton").compare(Locale("pt", "BR", "polyton")) shouldBe 0
+
+    Locale("pt", "BR", "polyton").compare(Locale("pt", "PT", "")) should be < 0
+    Locale("pt", "PT", "").compare(Locale("pt", "BR", "polyton")) should be > 0
+
+    Locale("", "PT", "polyton").compare(Locale("pt", "BR", "")) should be < 0
+    Locale("pt", "BR", "").compare(Locale("", "PT", "polyton")) should be > 0
+
+  }
+
+  it should "return a human readable string on #toString" in {
+
+    Locale("en").toString shouldBe "Locale(Language(en), Country(), Variant())"
+    Locale("pt", "PT").toString shouldBe "Locale(Language(pt), Country(PT), Variant())"
+    Locale("pt", "BR", "polyton").toString shouldBe "Locale(Language(pt), Country(BR), Variant(polyton))"
+
+  }
+
+  it should "be equal with predefined constant values" in {
+
+    Locale("fr") shouldBe Locale.FR
+    Locale("fr") should be theSameInstanceAs Locale.FR
+
+    Locale("de", "CH") shouldBe Locale.DE_CH
+    Locale("de", "CH") should be theSameInstanceAs Locale.DE_CH
+
+  }
+
+  "All available Locales" should "have different hash codes" in {
+
+    val availableLocales = Locale.availableLocales().distinct
+
+    val hashCodes = availableLocales.map(_.hashCode())
+    val dupHashCodes = hashCodes.diff(hashCodes.distinct)
+
+    availableLocales.filter(x => dupHashCodes.contains(x.hashCode())).map(x => (x, x.hashCode())) shouldBe empty
+
+  }
+
+  "All languages" should "match in code with all ISO codes" in {
+
+    Locale.languages().map(_.code) shouldBe Locale.isoLanguages()
+
+  }
+
+  "All countries" should "match in code with all ISO countries" in {
+
+    Locale.countries().map(_.code) shouldBe Locale.isoCountries()
+
+  }
+
+  "A Locale" should "display info in human readable form" in {
+
+    Locale.default = Locale.DE_AT
+
+    val locale = Locale.FR_BE
+
+    locale.displayName() shouldBe "Französisch (Belgien)"
+    locale.displayLanguage() shouldBe "Französisch"
+    locale.displayCountry() shouldBe "Belgien"
+    locale.displayVariant() shouldBe ""
+
+    locale.displayName(Locale.EN_AU) shouldBe "French (Belgium)"
+    locale.displayLanguage(Locale.FR_CA) shouldBe "français"
+    locale.displayCountry(Locale.FR_CA) shouldBe "Belgique"
+    locale.displayVariant(Locale.FR_CA) shouldBe ""
+
+  }
+
+  "A Locale" should "return the ISO3 language code and ISO3 country code" in {
+
+    val locale = Locale.FR_CH
+
+    locale.iso3Language() shouldBe "fra"
+    locale.iso3Country() shouldBe "CHE"
 
   }
 

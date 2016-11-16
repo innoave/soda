@@ -28,11 +28,28 @@ private object DemoMessages extends DefineMessage {
 
 }
 
+private object OtherMessages extends DefineMessage {
+
+  val MessageWithDefaultNameAndKey = Message0
+  val MyMessage1, MyMessage2, MyMessage3 = Message0
+  val MessageWithCustomKey = Message0("MESSAGE_WITH_CUSTOM_KEY")
+  val MessageWithCustomNameAndKey = Message0("CustomName", "custom_key")
+
+}
+
+private object DialogMessages extends DefineMessage {
+
+  val DialogTitle, DialogCloseButton = Message0
+  val DialogMessage = Message1[String]
+
+}
+
 private object MessagesWithCustomBundleName extends DefineMessage {
 
-  override val bundleName = BundleName("custom_messages")
+  override val bundleName = BundleName("l10n.CustomMessages")
 
-  val Message1, Message2, Message3 = Message0
+  val DialogTitle, DialogCloseButton = Message0
+  val DialogMessage = Message1[String]
 
 }
 
@@ -89,7 +106,7 @@ class DefineMessageSpec extends FlatSpec with Matchers {
 
   "DefineMessage with custom BundleName" should "return the specified bundle base name" in {
 
-    MessagesWithCustomBundleName.bundleName.value shouldBe "custom_messages"
+    MessagesWithCustomBundleName.bundleName.value shouldBe "l10n.CustomMessages"
 
   }
 
@@ -363,14 +380,29 @@ class DefineMessageSpec extends FlatSpec with Matchers {
     (value1 != DemoMessages.MessageWithCustomKey) should be (true)
     (value2 != DemoMessages.MessageWithDefaultNameAndKey) should be (true)
 
+    (value1 == DialogMessages.DialogCloseButton) should be (false)
+    (value2 == DialogMessages.DialogCloseButton) should be (false)
+
+    (value1 != DialogMessages.DialogCloseButton) should be (true)
+    (value2 != DialogMessages.DialogCloseButton) should be (true)
+
+  }
+
+  "Messages of different DefineMessages" should "never be equal" in {
+
+    (DemoMessages.MessageWithDefaultNameAndKey == OtherMessages.MessageWithDefaultNameAndKey) should be (false)
+    (DemoMessages.MessageWithCustomKey == OtherMessages.MessageWithCustomKey) should be (false)
+
+    (DemoMessages.MessageWithDefaultNameAndKey != OtherMessages.MessageWithDefaultNameAndKey) should be (true)
+    (DemoMessages.MessageWithCustomKey != OtherMessages.MessageWithCustomKey) should be (true)
   }
 
   "DefineMessage Message compare method" should "compare message by their ordinal in order of their definition" in {
 
     import DemoMessages._
 
-    MyMessage1.compare(MyMessage2) shouldBe -1
-    MyMessage3.compare(MyMessage2) shouldBe +1
+    MyMessage1.compare(MyMessage2) should be < 0
+    MyMessage3.compare(MyMessage2) should be > 0
 
   }
 

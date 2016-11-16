@@ -195,6 +195,7 @@ object Language {
   def ES = languageOf("es")
   def FR = languageOf("fr")
   def IT = languageOf("it")
+  def ZH = languageOf("zh")
 
 }
 
@@ -212,13 +213,20 @@ object Country {
 
   def AT = countryOf("AT")
   def AU = countryOf("AU")
+  def BE = countryOf("BE")
+  def CA = countryOf("CA")
   def CH = countryOf("CH")
+  def CN = countryOf("CN")
   def DE = countryOf("DE")
   def ES = countryOf("ES")
   def FR = countryOf("FR")
   def GB = countryOf("GB")
+  def HK = countryOf("HK")
   def IT = countryOf("IT")
+  def MX = countryOf("MX")
+  def SG = countryOf("SG")
   def US = countryOf("US")
+  def TW = countryOf("TW")
 
 }
 
@@ -267,6 +275,15 @@ object Locale {
   final private def javaLocale2Locale(jLocale: JLocale): Locale =
     localeOf(jLocale.getLanguage, jLocale.getCountry, jLocale.getVariant)
 
+  def apply(language: Language): Locale =
+    localeOf(language)
+
+  def apply(language: Language, country: Country): Locale =
+    localeOf(language, country)
+
+  def apply(language: Language, country: Country, variant: Variant): Locale =
+    localeOf(language, country, variant)
+
   def apply(language: String): Locale =
     localeOf(language)
 
@@ -314,12 +331,23 @@ object Locale {
   def DE_CH = localeOf(Language.DE, Country.CH)
 
   def FR = localeOf(Language.FR)
+  def FR_BE = localeOf(Language.FR, Country.BE)
+  def FR_CA = localeOf(Language.FR, Country.CA)
+  def FR_CH = localeOf(Language.FR, Country.CH)
   def FR_FR = localeOf(Language.FR, Country.FR)
 
   def IT = localeOf(Language.IT)
   def IT_IT = localeOf(Language.IT, Country.IT)
+  def IT_CH = localeOf(Language.IT, Country.CH)
 
   def ES = localeOf(Language.ES)
   def ES_ES = localeOf(Language.ES, Country.ES)
+  def ES_MX = localeOf(Language.ES, Country.MX)
+
+  def ZH = localeOf(Language.ZH)
+  def ZH_CN = localeOf(Language.ZH, Country.CN)
+  def ZH_HK = localeOf(Language.ZH, Country.HK)
+  def ZH_SG = localeOf(Language.ZH, Country.SG)
+  def ZH_TW = localeOf(Language.ZH, Country.TW)
 
 }
