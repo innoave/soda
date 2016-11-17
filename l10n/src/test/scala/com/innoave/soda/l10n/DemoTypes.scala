@@ -40,7 +40,7 @@ object DemoTypes {
 object DemoTypesLocalizer extends DefineLocalized {
   import DemoTypes._
 
-  override val bundleName = BundleName("l10n.demotypes")
+  override val bundleName = BundleName("l10n.DemoTypes")
   override val keyNamingStrategy = NamesAsKeys
 
   implicit def localizedSuit(suit: Suit) = localized(suit)

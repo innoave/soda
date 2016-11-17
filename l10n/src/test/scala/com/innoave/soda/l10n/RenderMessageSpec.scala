@@ -31,7 +31,7 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
 
     import syntax._
     import Locale._
-    import TestMessages._
+    import DemoMessages._
 
     implicit val implicitLocale = EN
     helloWorld().asLocaleText shouldBe LocaleText("Hello World!")
@@ -50,7 +50,7 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
 
     import syntax._
     import Locale._
-    import TestMessages._
+    import DemoMessages._
 
     implicit val implicitLocale = EN
     greeting("Frank").asLocaleText shouldBe LocaleText("Greetings to Frank")
@@ -69,7 +69,7 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
 
     import syntax._
     import Locale._
-    import TestMessages._
+    import DemoMessages._
 
     implicit val implicitLocale = EN
     productsInShoppingCart("Paul", 0).asLocaleText shouldBe LocaleText("Paul has no items in the cart.")
@@ -87,7 +87,7 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
   it should "render the test message with choice type for different values" in {
 
     import syntax._
-    import TestMessages._
+    import DemoMessages._
     implicit val implicitLocale = Locale.EN
 
     productsInShoppingCart("Paul", 0).asLocaleText shouldBe LocaleText("Paul has no items in the cart.")

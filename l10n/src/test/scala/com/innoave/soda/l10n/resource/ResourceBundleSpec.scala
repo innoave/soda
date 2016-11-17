@@ -17,14 +17,14 @@ package com.innoave.soda.l10n.resource
 
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
-import com.innoave.soda.l10n.TestMessages
+import com.innoave.soda.l10n.DemoMessages
 
 class ResourceBundleSpec extends FlatSpec with Matchers {
 
   "ResourceBundle" should "generate text that can be used as a stub for message bundle files" in {
 
-    ResourceBundle.stubFor(TestMessages) shouldBe """#
-        |# TestMessages : Message definitions
+    ResourceBundle.stubFor(DemoMessages) shouldBe """#
+        |# DemoMessages : Message definitions
         |#
         |greeting=
         |hello.world=

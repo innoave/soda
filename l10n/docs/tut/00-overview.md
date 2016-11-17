@@ -29,7 +29,7 @@ import com.innoave.soda.l10n.DefineMessage
 object DemoMessages extends DefineMessage {
 
   //define a custom base name for the message bundle
-  override val bundleName = BundleName("l10n.testmessages")
+  override val bundleName = BundleName("l10n.DemoMessages")
 
   // message with no parameters
   val helloWorld = Message0

@@ -18,12 +18,12 @@ package com.innoave.soda.l10n.resource
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
 import com.innoave.soda.l10n.BundleName
+import com.innoave.soda.l10n.DemoMessages._
 import com.innoave.soda.l10n.DemoTypes._
 import com.innoave.soda.l10n.DemoTypesLocalizer
 import com.innoave.soda.l10n.DemoTypesLocalizer._
 import com.innoave.soda.l10n.Locale
 import com.innoave.soda.l10n.Locale._
-import com.innoave.soda.l10n.TestMessages._
 import java.util.MissingResourceException
 import org.scalatest.BeforeAndAfterAll
 

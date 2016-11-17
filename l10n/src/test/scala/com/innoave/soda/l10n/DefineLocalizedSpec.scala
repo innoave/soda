@@ -38,7 +38,7 @@ class DefineLocalizedSpec extends FlatSpec with Matchers {
 
   "DefineMessage with custom BundleName" should "return the specified bundle base name" in {
 
-    DemoTypesLocalizer.bundleName shouldBe BundleName("l10n.demotypes")
+    DemoTypesLocalizer.bundleName shouldBe BundleName("l10n.DemoTypes")
 
   }
 

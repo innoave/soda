@@ -15,10 +15,10 @@
  */
 package com.innoave.soda.l10n
 
-object TestMessages extends DefineMessage {
+object DemoMessages extends DefineMessage {
 
   type TestMessages = Msg
-  override val bundleName = BundleName("l10n.testmessages")
+  override val bundleName = BundleName("l10n.DemoMessages")
 
   val helloWorld = Message0
 

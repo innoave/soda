@@ -19,7 +19,7 @@ import java.time.LocalDateTime
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
 
-private object DemoMessages extends DefineMessage {
+private object TestMessages extends DefineMessage {
 
   val MessageWithDefaultNameAndKey = Message0
   val MyMessage1, MyMessage2, MyMessage3 = Message0
@@ -94,13 +94,13 @@ class DefineMessageSpec extends FlatSpec with Matchers {
 
   "DefineMessage#toString" should "return an appropriate string" in {
 
-    DemoMessages.toString() shouldBe "DemoMessages"
+    TestMessages.toString() shouldBe "TestMessages"
 
   }
 
   "DefineMessage with default BundleName" should "return the simple object name" in {
 
-    DemoMessages.bundleName shouldBe BundleName("DemoMessages")
+    TestMessages.bundleName shouldBe BundleName("TestMessages")
 
   }
 
@@ -112,87 +112,87 @@ class DefineMessageSpec extends FlatSpec with Matchers {
 
   "DefineMessage values with no given name nor key" should "have default name and key" in {
 
-    DemoMessages.MessageWithDefaultNameAndKey.id shouldBe 0
-    DemoMessages.MessageWithDefaultNameAndKey.name() shouldBe "MessageWithDefaultNameAndKey"
-    DemoMessages.MessageWithDefaultNameAndKey.key() shouldBe "message.with.default.name.and.key"
+    TestMessages.MessageWithDefaultNameAndKey.id shouldBe 0
+    TestMessages.MessageWithDefaultNameAndKey.name() shouldBe "MessageWithDefaultNameAndKey"
+    TestMessages.MessageWithDefaultNameAndKey.key() shouldBe "message.with.default.name.and.key"
 
   }
 
   "DefineMessage with multiple values defined at once" should "be separat values" in {
 
-    DemoMessages.MyMessage1.id shouldBe 1
-    DemoMessages.MyMessage2.id shouldBe 2
-    DemoMessages.MyMessage3.id shouldBe 3
+    TestMessages.MyMessage1.id shouldBe 1
+    TestMessages.MyMessage2.id shouldBe 2
+    TestMessages.MyMessage3.id shouldBe 3
 
-    DemoMessages.MyMessage1.name shouldBe "MyMessage1"
-    DemoMessages.MyMessage2.name shouldBe "MyMessage2"
-    DemoMessages.MyMessage3.name shouldBe "MyMessage3"
+    TestMessages.MyMessage1.name shouldBe "MyMessage1"
+    TestMessages.MyMessage2.name shouldBe "MyMessage2"
+    TestMessages.MyMessage3.name shouldBe "MyMessage3"
 
-    DemoMessages.MyMessage1.key shouldBe "my.message1"
-    DemoMessages.MyMessage2.key shouldBe "my.message2"
-    DemoMessages.MyMessage3.key shouldBe "my.message3"
+    TestMessages.MyMessage1.key shouldBe "my.message1"
+    TestMessages.MyMessage2.key shouldBe "my.message2"
+    TestMessages.MyMessage3.key shouldBe "my.message3"
 
   }
 
   "DefineMessage values toString method" should "return the appropriate string" in {
 
-    DemoMessages.MessageWithDefaultNameAndKey.toString shouldBe "DemoMessages#MessageWithDefaultNameAndKey(message.with.default.name.and.key)"
-    DemoMessages.MyMessage1.toString shouldBe "DemoMessages#MyMessage1(my.message1)"
-    DemoMessages.MyMessage2.toString shouldBe "DemoMessages#MyMessage2(my.message2)"
-    DemoMessages.MyMessage3.toString shouldBe "DemoMessages#MyMessage3(my.message3)"
+    TestMessages.MessageWithDefaultNameAndKey.toString shouldBe "TestMessages#MessageWithDefaultNameAndKey(message.with.default.name.and.key)"
+    TestMessages.MyMessage1.toString shouldBe "TestMessages#MyMessage1(my.message1)"
+    TestMessages.MyMessage2.toString shouldBe "TestMessages#MyMessage2(my.message2)"
+    TestMessages.MyMessage3.toString shouldBe "TestMessages#MyMessage3(my.message3)"
 
   }
 
   "DefineMessage value with custom key" should "be defined with custom key" in {
 
-    DemoMessages.MessageWithCustomKey.id shouldBe 4
-    DemoMessages.MessageWithCustomKey.name shouldBe "MessageWithCustomKey"
-    DemoMessages.MessageWithCustomKey.key shouldBe "MESSAGE_WITH_CUSTOM_KEY"
+    TestMessages.MessageWithCustomKey.id shouldBe 4
+    TestMessages.MessageWithCustomKey.name shouldBe "MessageWithCustomKey"
+    TestMessages.MessageWithCustomKey.key shouldBe "MESSAGE_WITH_CUSTOM_KEY"
 
   }
 
   "DefineMessage value with custom name and key" should "be defined with custom name and key" in {
 
-    DemoMessages.MessageWithCustomNameAndKey.id shouldBe 5
-    DemoMessages.MessageWithCustomNameAndKey.name shouldBe "CustomName"
-    DemoMessages.MessageWithCustomNameAndKey.key shouldBe "custom_key"
+    TestMessages.MessageWithCustomNameAndKey.id shouldBe 5
+    TestMessages.MessageWithCustomNameAndKey.name shouldBe "CustomName"
+    TestMessages.MessageWithCustomNameAndKey.key shouldBe "custom_key"
 
   }
 
   "DefineMessage values method" should "return a ValueSet containing all of its values" in {
 
-    DemoMessages.values should contain (DemoMessages.MessageWithDefaultNameAndKey)
-    DemoMessages.values should contain (DemoMessages.MyMessage1)
-    DemoMessages.values should contain (DemoMessages.MyMessage2)
-    DemoMessages.values should contain (DemoMessages.MyMessage3)
-    DemoMessages.values should contain (DemoMessages.MessageWithCustomKey)
-    DemoMessages.values should contain (DemoMessages.MessageWithCustomNameAndKey)
+    TestMessages.values should contain (TestMessages.MessageWithDefaultNameAndKey)
+    TestMessages.values should contain (TestMessages.MyMessage1)
+    TestMessages.values should contain (TestMessages.MyMessage2)
+    TestMessages.values should contain (TestMessages.MyMessage3)
+    TestMessages.values should contain (TestMessages.MessageWithCustomKey)
+    TestMessages.values should contain (TestMessages.MessageWithCustomNameAndKey)
 
-    DemoMessages.values.size shouldBe 6
+    TestMessages.values.size shouldBe 6
 
   }
 
   "DefineMessage value set toString method" should "return an appropriate string" in {
 
-    DemoMessages.values.toString should be ("""|
-        |DemoMessages.ValueSet(
-        |DemoMessages#MessageWithDefaultNameAndKey(message.with.default.name.and.key)
-        |, DemoMessages#MyMessage1(my.message1)
-        |, DemoMessages#MyMessage2(my.message2)
-        |, DemoMessages#MyMessage3(my.message3)
-        |, DemoMessages#MessageWithCustomKey(MESSAGE_WITH_CUSTOM_KEY)
-        |, DemoMessages#CustomName(custom_key)
+    TestMessages.values.toString should be ("""|
+        |TestMessages.ValueSet(
+        |TestMessages#MessageWithDefaultNameAndKey(message.with.default.name.and.key)
+        |, TestMessages#MyMessage1(my.message1)
+        |, TestMessages#MyMessage2(my.message2)
+        |, TestMessages#MyMessage3(my.message3)
+        |, TestMessages#MessageWithCustomKey(MESSAGE_WITH_CUSTOM_KEY)
+        |, TestMessages#CustomName(custom_key)
         |)""".stripMargin.replace("\n", ""))
 
   }
 
   "DefineMessage range of value set" should "return a value set of the specified range" in {
 
-    val valueSetRange = DemoMessages.values.range(DemoMessages.MyMessage1, DemoMessages.MyMessage3)
+    val valueSetRange = TestMessages.values.range(TestMessages.MyMessage1, TestMessages.MyMessage3)
 
-    valueSetRange should contain (DemoMessages.MyMessage1)
-    valueSetRange should contain (DemoMessages.MyMessage2)
-    valueSetRange should not contain (DemoMessages.MyMessage3)
+    valueSetRange should contain (TestMessages.MyMessage1)
+    valueSetRange should contain (TestMessages.MyMessage2)
+    valueSetRange should not contain (TestMessages.MyMessage3)
 
     valueSetRange.size shouldBe 2
 
@@ -200,16 +200,16 @@ class DefineMessageSpec extends FlatSpec with Matchers {
 
   "DefineMessage value + method" should "construct a value set of 2 values" in {
 
-    import DemoMessages._
+    import TestMessages._
 
     val valueSet = MessageWithDefaultNameAndKey + MessageWithCustomNameAndKey
 
-    valueSet should contain (DemoMessages.MessageWithDefaultNameAndKey)
-    valueSet should contain (DemoMessages.MessageWithCustomNameAndKey)
-    valueSet should not contain (DemoMessages.MyMessage1)
-    valueSet should not contain (DemoMessages.MyMessage2)
-    valueSet should not contain (DemoMessages.MyMessage3)
-    valueSet should not contain (DemoMessages.MessageWithCustomKey)
+    valueSet should contain (TestMessages.MessageWithDefaultNameAndKey)
+    valueSet should contain (TestMessages.MessageWithCustomNameAndKey)
+    valueSet should not contain (TestMessages.MyMessage1)
+    valueSet should not contain (TestMessages.MyMessage2)
+    valueSet should not contain (TestMessages.MyMessage3)
+    valueSet should not contain (TestMessages.MessageWithCustomKey)
 
     valueSet.size shouldBe 2
 
@@ -217,7 +217,7 @@ class DefineMessageSpec extends FlatSpec with Matchers {
 
   "DefineMessage MessageSet empty method" should "construct an empty message set" in {
 
-    val emptySet = DemoMessages.MessageSet.empty
+    val emptySet = TestMessages.MessageSet.empty
 
     emptySet.size shouldBe 0
 
@@ -225,7 +225,7 @@ class DefineMessageSpec extends FlatSpec with Matchers {
 
   "DefineMessage MessageSet empty method on MessageSet with values" should "return a new empty MessageSet" in {
 
-    val valueSet = DemoMessages.values
+    val valueSet = TestMessages.values
 
     valueSet.empty.size shouldBe 0
 
@@ -233,11 +233,11 @@ class DefineMessageSpec extends FlatSpec with Matchers {
 
   "DefineMessage MessageSet apply method" should "construct a value set with given messages" in {
 
-    val valueSet = DemoMessages.MessageSet(DemoMessages.MyMessage1, DemoMessages.MyMessage3, DemoMessages.MessageWithCustomKey)
+    val valueSet = TestMessages.MessageSet(TestMessages.MyMessage1, TestMessages.MyMessage3, TestMessages.MessageWithCustomKey)
 
-    valueSet should contain (DemoMessages.MyMessage1)
-    valueSet should contain (DemoMessages.MyMessage3)
-    valueSet should contain (DemoMessages.MessageWithCustomKey)
+    valueSet should contain (TestMessages.MyMessage1)
+    valueSet should contain (TestMessages.MyMessage3)
+    valueSet should contain (TestMessages.MessageWithCustomKey)
 
     valueSet.size shouldBe 3
 
@@ -245,140 +245,140 @@ class DefineMessageSpec extends FlatSpec with Matchers {
 
   "DefineMessage MessageSet + method" should "add a value to the message set" in {
 
-    val set0 = DemoMessages.MessageSet.empty
-    val set1 = set0 + DemoMessages.MessageWithDefaultNameAndKey + DemoMessages.MessageWithCustomNameAndKey
-    val set2 = set1 + DemoMessages.MyMessage1
-    val set3 = set2 + DemoMessages.MessageWithCustomKey
+    val set0 = TestMessages.MessageSet.empty
+    val set1 = set0 + TestMessages.MessageWithDefaultNameAndKey + TestMessages.MessageWithCustomNameAndKey
+    val set2 = set1 + TestMessages.MyMessage1
+    val set3 = set2 + TestMessages.MessageWithCustomKey
 
-    set1 should contain (DemoMessages.MessageWithDefaultNameAndKey)
-    set1 should contain (DemoMessages.MessageWithCustomNameAndKey)
-    set1 should not contain (DemoMessages.MyMessage1)
-    set1 should not contain (DemoMessages.MyMessage2)
-    set1 should not contain (DemoMessages.MyMessage3)
-    set1 should not contain (DemoMessages.MessageWithCustomKey)
+    set1 should contain (TestMessages.MessageWithDefaultNameAndKey)
+    set1 should contain (TestMessages.MessageWithCustomNameAndKey)
+    set1 should not contain (TestMessages.MyMessage1)
+    set1 should not contain (TestMessages.MyMessage2)
+    set1 should not contain (TestMessages.MyMessage3)
+    set1 should not contain (TestMessages.MessageWithCustomKey)
     set1.size shouldBe 2
 
-    set2 should contain (DemoMessages.MessageWithDefaultNameAndKey)
-    set2 should contain (DemoMessages.MessageWithCustomNameAndKey)
-    set2 should contain (DemoMessages.MyMessage1)
-    set2 should not contain (DemoMessages.MyMessage2)
-    set2 should not contain (DemoMessages.MyMessage3)
-    set2 should not contain (DemoMessages.MessageWithCustomKey)
+    set2 should contain (TestMessages.MessageWithDefaultNameAndKey)
+    set2 should contain (TestMessages.MessageWithCustomNameAndKey)
+    set2 should contain (TestMessages.MyMessage1)
+    set2 should not contain (TestMessages.MyMessage2)
+    set2 should not contain (TestMessages.MyMessage3)
+    set2 should not contain (TestMessages.MessageWithCustomKey)
     set2.size shouldBe 3
 
-    set3 should contain (DemoMessages.MessageWithDefaultNameAndKey)
-    set3 should contain (DemoMessages.MessageWithCustomNameAndKey)
-    set3 should contain (DemoMessages.MyMessage1)
-    set3 should not contain (DemoMessages.MyMessage2)
-    set3 should not contain (DemoMessages.MyMessage3)
-    set3 should contain (DemoMessages.MessageWithCustomKey)
+    set3 should contain (TestMessages.MessageWithDefaultNameAndKey)
+    set3 should contain (TestMessages.MessageWithCustomNameAndKey)
+    set3 should contain (TestMessages.MyMessage1)
+    set3 should not contain (TestMessages.MyMessage2)
+    set3 should not contain (TestMessages.MyMessage3)
+    set3 should contain (TestMessages.MessageWithCustomKey)
     set3.size shouldBe 4
 
   }
 
   "DefineMessage MessageSet - method" should "remove a value from the message set" in {
 
-    val set1 = DemoMessages.values
-    val set2 = set1 - DemoMessages.MessageWithDefaultNameAndKey
-    val set3 = set2 - DemoMessages.MyMessage2
-    val set4 = set3 - DemoMessages.MessageWithCustomNameAndKey
+    val set1 = TestMessages.values
+    val set2 = set1 - TestMessages.MessageWithDefaultNameAndKey
+    val set3 = set2 - TestMessages.MyMessage2
+    val set4 = set3 - TestMessages.MessageWithCustomNameAndKey
 
-    set1 should contain (DemoMessages.MessageWithDefaultNameAndKey)
-    set1 should contain (DemoMessages.MessageWithCustomNameAndKey)
-    set1 should contain (DemoMessages.MyMessage1)
-    set1 should contain (DemoMessages.MyMessage2)
-    set1 should contain (DemoMessages.MyMessage3)
-    set1 should contain (DemoMessages.MessageWithCustomKey)
+    set1 should contain (TestMessages.MessageWithDefaultNameAndKey)
+    set1 should contain (TestMessages.MessageWithCustomNameAndKey)
+    set1 should contain (TestMessages.MyMessage1)
+    set1 should contain (TestMessages.MyMessage2)
+    set1 should contain (TestMessages.MyMessage3)
+    set1 should contain (TestMessages.MessageWithCustomKey)
     set1.size shouldBe 6
 
-    set2 should not contain (DemoMessages.MessageWithDefaultNameAndKey)
-    set2 should contain (DemoMessages.MessageWithCustomNameAndKey)
-    set2 should contain (DemoMessages.MyMessage1)
-    set2 should contain (DemoMessages.MyMessage2)
-    set2 should contain (DemoMessages.MyMessage3)
-    set2 should contain (DemoMessages.MessageWithCustomKey)
+    set2 should not contain (TestMessages.MessageWithDefaultNameAndKey)
+    set2 should contain (TestMessages.MessageWithCustomNameAndKey)
+    set2 should contain (TestMessages.MyMessage1)
+    set2 should contain (TestMessages.MyMessage2)
+    set2 should contain (TestMessages.MyMessage3)
+    set2 should contain (TestMessages.MessageWithCustomKey)
     set2.size shouldBe 5
 
-    set3 should not contain (DemoMessages.MessageWithDefaultNameAndKey)
-    set3 should contain (DemoMessages.MessageWithCustomNameAndKey)
-    set3 should contain (DemoMessages.MyMessage1)
-    set3 should not contain (DemoMessages.MyMessage2)
-    set3 should contain (DemoMessages.MyMessage3)
-    set3 should contain (DemoMessages.MessageWithCustomKey)
+    set3 should not contain (TestMessages.MessageWithDefaultNameAndKey)
+    set3 should contain (TestMessages.MessageWithCustomNameAndKey)
+    set3 should contain (TestMessages.MyMessage1)
+    set3 should not contain (TestMessages.MyMessage2)
+    set3 should contain (TestMessages.MyMessage3)
+    set3 should contain (TestMessages.MessageWithCustomKey)
     set3.size shouldBe 4
 
-    set4 should not contain (DemoMessages.MessageWithDefaultNameAndKey)
-    set4 should not contain (DemoMessages.MessageWithCustomNameAndKey)
-    set4 should contain (DemoMessages.MyMessage1)
-    set4 should not contain (DemoMessages.MyMessage2)
-    set4 should contain (DemoMessages.MyMessage3)
-    set4 should contain (DemoMessages.MessageWithCustomKey)
+    set4 should not contain (TestMessages.MessageWithDefaultNameAndKey)
+    set4 should not contain (TestMessages.MessageWithCustomNameAndKey)
+    set4 should contain (TestMessages.MyMessage1)
+    set4 should not contain (TestMessages.MyMessage2)
+    set4 should contain (TestMessages.MyMessage3)
+    set4 should contain (TestMessages.MessageWithCustomKey)
     set4.size shouldBe 3
 
   }
 
   "DefineMessage MessageSet iterator" should "iterate in the order of the definition of the messages" in {
 
-    val iterator = DemoMessages.values.iterator
+    val iterator = TestMessages.values.iterator
 
-    iterator.next shouldBe DemoMessages.MessageWithDefaultNameAndKey
-    iterator.next shouldBe DemoMessages.MyMessage1
-    iterator.next shouldBe DemoMessages.MyMessage2
-    iterator.next shouldBe DemoMessages.MyMessage3
-    iterator.next shouldBe DemoMessages.MessageWithCustomKey
-    iterator.next shouldBe DemoMessages.MessageWithCustomNameAndKey
+    iterator.next shouldBe TestMessages.MessageWithDefaultNameAndKey
+    iterator.next shouldBe TestMessages.MyMessage1
+    iterator.next shouldBe TestMessages.MyMessage2
+    iterator.next shouldBe TestMessages.MyMessage3
+    iterator.next shouldBe TestMessages.MessageWithCustomKey
+    iterator.next shouldBe TestMessages.MessageWithCustomNameAndKey
     iterator.hasNext shouldBe false
 
   }
 
   "DefineMessage MessageSet keysIteratorFrom" should "iterate in the order of the definition of the messages beginning with the start value" in {
 
-    val iterator = DemoMessages.values.keysIteratorFrom(DemoMessages.MyMessage2)
+    val iterator = TestMessages.values.keysIteratorFrom(TestMessages.MyMessage2)
 
-    iterator.next shouldBe DemoMessages.MyMessage2
-    iterator.next shouldBe DemoMessages.MyMessage3
-    iterator.next shouldBe DemoMessages.MessageWithCustomKey
-    iterator.next shouldBe DemoMessages.MessageWithCustomNameAndKey
+    iterator.next shouldBe TestMessages.MyMessage2
+    iterator.next shouldBe TestMessages.MyMessage3
+    iterator.next shouldBe TestMessages.MessageWithCustomKey
+    iterator.next shouldBe TestMessages.MessageWithCustomNameAndKey
     iterator.hasNext shouldBe false
 
   }
 
   "DefineMessage MessageSet contains method" should "return true if a value is part of the set" in {
 
-    val valueSet = DemoMessages.values
+    val valueSet = TestMessages.values
 
-    valueSet.contains(DemoMessages.MyMessage1) shouldBe true
-    valueSet.contains(DemoMessages.MessageWithCustomKey) shouldBe true
-    valueSet.contains(DemoMessages.MyMessage2) shouldBe true
-    valueSet.contains(DemoMessages.MyMessage3) shouldBe true
-    valueSet.contains(DemoMessages.MessageWithDefaultNameAndKey) shouldBe true
-    valueSet.contains(DemoMessages.MessageWithCustomNameAndKey) shouldBe true
+    valueSet.contains(TestMessages.MyMessage1) shouldBe true
+    valueSet.contains(TestMessages.MessageWithCustomKey) shouldBe true
+    valueSet.contains(TestMessages.MyMessage2) shouldBe true
+    valueSet.contains(TestMessages.MyMessage3) shouldBe true
+    valueSet.contains(TestMessages.MessageWithDefaultNameAndKey) shouldBe true
+    valueSet.contains(TestMessages.MessageWithCustomNameAndKey) shouldBe true
 
   }
 
   "DefineMessage Message equals method" should "return true for same values" in {
 
-    val value1 = DemoMessages.MessageWithDefaultNameAndKey
-    val value2 = DemoMessages.MessageWithCustomKey
+    val value1 = TestMessages.MessageWithDefaultNameAndKey
+    val value2 = TestMessages.MessageWithCustomKey
 
-    (value1 == DemoMessages.MessageWithDefaultNameAndKey) should be (true)
-    (value2 == DemoMessages.MessageWithCustomKey) should be (true)
+    (value1 == TestMessages.MessageWithDefaultNameAndKey) should be (true)
+    (value2 == TestMessages.MessageWithCustomKey) should be (true)
 
-    (value1 != DemoMessages.MessageWithDefaultNameAndKey) should be (false)
-    (value2 != DemoMessages.MessageWithCustomKey) should be (false)
+    (value1 != TestMessages.MessageWithDefaultNameAndKey) should be (false)
+    (value2 != TestMessages.MessageWithCustomKey) should be (false)
 
   }
 
   "DefineMessage Message equals method" should "return false for different values" in {
 
-    val value1 = DemoMessages.MessageWithDefaultNameAndKey
-    val value2 = DemoMessages.MessageWithCustomKey
+    val value1 = TestMessages.MessageWithDefaultNameAndKey
+    val value2 = TestMessages.MessageWithCustomKey
 
-    (value1 == DemoMessages.MessageWithCustomKey) should be (false)
-    (value2 == DemoMessages.MessageWithDefaultNameAndKey) should be (false)
+    (value1 == TestMessages.MessageWithCustomKey) should be (false)
+    (value2 == TestMessages.MessageWithDefaultNameAndKey) should be (false)
 
-    (value1 != DemoMessages.MessageWithCustomKey) should be (true)
-    (value2 != DemoMessages.MessageWithDefaultNameAndKey) should be (true)
+    (value1 != TestMessages.MessageWithCustomKey) should be (true)
+    (value2 != TestMessages.MessageWithDefaultNameAndKey) should be (true)
 
     (value1 == DialogMessages.DialogCloseButton) should be (false)
     (value2 == DialogMessages.DialogCloseButton) should be (false)
@@ -390,16 +390,16 @@ class DefineMessageSpec extends FlatSpec with Matchers {
 
   "Messages of different DefineMessages" should "never be equal" in {
 
-    (DemoMessages.MessageWithDefaultNameAndKey == OtherMessages.MessageWithDefaultNameAndKey) should be (false)
-    (DemoMessages.MessageWithCustomKey == OtherMessages.MessageWithCustomKey) should be (false)
+    (TestMessages.MessageWithDefaultNameAndKey == OtherMessages.MessageWithDefaultNameAndKey) should be (false)
+    (TestMessages.MessageWithCustomKey == OtherMessages.MessageWithCustomKey) should be (false)
 
-    (DemoMessages.MessageWithDefaultNameAndKey != OtherMessages.MessageWithDefaultNameAndKey) should be (true)
-    (DemoMessages.MessageWithCustomKey != OtherMessages.MessageWithCustomKey) should be (true)
+    (TestMessages.MessageWithDefaultNameAndKey != OtherMessages.MessageWithDefaultNameAndKey) should be (true)
+    (TestMessages.MessageWithCustomKey != OtherMessages.MessageWithCustomKey) should be (true)
   }
 
   "DefineMessage Message compare method" should "compare message by their ordinal in order of their definition" in {
 
-    import DemoMessages._
+    import TestMessages._
 
     MyMessage1.compare(MyMessage2) should be < 0
     MyMessage3.compare(MyMessage2) should be > 0
@@ -408,7 +408,7 @@ class DefineMessageSpec extends FlatSpec with Matchers {
 
   "DefineMessage values" should "all have different hash values" in {
 
-    DemoMessages.values.map(_.##).toSet.size shouldBe DemoMessages.values.size
+    TestMessages.values.map(_.##).toSet.size shouldBe TestMessages.values.size
 
   }
 
