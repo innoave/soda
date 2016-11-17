@@ -31,6 +31,10 @@ object DemoTypes {
 
   case class Card(suit: Suit, face: Face)
 
+  case class Player(name: String)
+
+  case class PlayedCard(player: Player, card: Card)
+
 }
 
 object DemoTypesLocalizer extends DefineLocalized {
@@ -43,6 +47,14 @@ object DemoTypesLocalizer extends DefineLocalized {
 
   implicit def localizedFace(face: Face) = localized(face)
 
-  implicit def localizedCard(card: Card) = localized(card, (localized(card.suit), localized(card.face)))
+  implicit def localizedCard(card: Card) = localized(card, (
+      localizedSuit(card.suit), localizedFace(card.face)
+      ))
+
+  implicit def localizedPlayer(player: Player) = localized(player, Tuple1(player.name))
+
+  implicit def localizedPlayedCard(playedCard: PlayedCard) = localized(playedCard, (
+      localizedPlayer(playedCard.player), localizedCard(playedCard.card)
+      ))
 
 }

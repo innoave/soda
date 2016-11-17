@@ -31,8 +31,8 @@ class RenderLocalizedSpec extends FlatSpec with Matchers with BeforeAndAfterAll 
 
     import syntax._
     import Locale._
-    import DemoTypesLocalizer._
     import DemoTypes._
+    import DemoTypesLocalizer._
 
     val queenOfHearts = Card(Hearts, Queen)
 
@@ -49,8 +49,8 @@ class RenderLocalizedSpec extends FlatSpec with Matchers with BeforeAndAfterAll 
 
     import syntax._
     import Locale._
-    import DemoTypesLocalizer._
     import DemoTypes._
+    import DemoTypesLocalizer._
 
     implicit val implicitLocale = EN
     render(King).asLocaleText shouldBe LocaleText("King")
@@ -58,6 +58,20 @@ class RenderLocalizedSpec extends FlatSpec with Matchers with BeforeAndAfterAll 
     render(King) in DE_AT shouldBe LocaleText("König")
 
     render(King).in(Locale("MM")) shouldBe LocaleText("'King'")
+
+  }
+
+  it should "render a text for a case class with case class arguments in different languages" in {
+
+    import syntax._
+    import Locale._
+    import DemoTypes._
+    import DemoTypesLocalizer._
+
+    val playedCard = PlayedCard(Player("Frank"), Card(Clubs, King))
+
+    implicit val implicitLocale = EN
+    render(playedCard).asLocaleText shouldBe LocaleText("Player Frank played King of Clubs")
 
   }
 

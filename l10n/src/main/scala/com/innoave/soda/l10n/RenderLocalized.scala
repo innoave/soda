@@ -23,32 +23,20 @@ trait RenderLocalized {
 
   protected def resourceBundleFor(bundleName: BundleName, locale: Locale): ResourceBundle
 
-  final def renderLocalized[T](localized: Localized[T])(implicit locale: Locale): LocaleText =
-    localized.value match {
-      case v: LocalizedP[_, _]  =>
-        LocaleText(messageFormatFor(resourceBundleFor(v.bundleName(), locale).stringFor(v), locale).format(renderLocalized(v).value))
-      case v: Localized[_] =>
-        LocaleText(messageFormatFor(resourceBundleFor(v.bundleName(), locale).stringFor(v), locale).format(renderLocalized(v).value))
-      case v =>
-        LocaleText(messageFormatFor(resourceBundleFor(localized.bundleName(), locale).stringFor(localized), locale).format())
-    }
+  final def renderLocalized[T](localized: Localized[T])(implicit locale: Locale): LocaleText = {
+    val pattern = resourceBundleFor(localized.bundleName(), locale).stringFor(localized)
+    LocaleText(messageFormatFor(pattern, locale).format())
+  }
 
   final def renderLocalized[T, A <: Product](localized: LocalizedP[T, A])(implicit locale: Locale): LocaleText = {
     val args = localized.args.productIterator.map({
-      case a: LocalizedP[_, _] =>
-        messageFormatFor(resourceBundleFor(a.bundleName(), locale).stringFor(a), locale).format(renderLocalized(a).value)
-      case a: Localized[_] =>
-        messageFormatFor(resourceBundleFor(a.bundleName(), locale).stringFor(a), locale).format(renderLocalized(a).value)
+      case a: LocalizedP[_, _] => renderLocalized(a).value
+      case a: Localized[_] => renderLocalized(a).value
+      case a: LocaleText => a.value
       case a => a
     })
-    localized.value match {
-      case v: LocalizedP[_, _]  =>
-        LocaleText(messageFormatFor(resourceBundleFor(v.bundleName(), locale).stringFor(v), locale).format(args.toArray))
-      case v: Localized[_]  =>
-        LocaleText(messageFormatFor(resourceBundleFor(v.bundleName(), locale).stringFor(v), locale).format(args.toArray))
-      case v =>
-        LocaleText(messageFormatFor(resourceBundleFor(localized.bundleName(), locale).stringFor(localized), locale).format(args.toArray))
-    }
+    val pattern = resourceBundleFor(localized.bundleName(), locale).stringFor(localized)
+    LocaleText(messageFormatFor(pattern, locale).format(args.toArray))
   }
 
 }

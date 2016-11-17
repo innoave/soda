@@ -15,20 +15,31 @@
  */
 package com.innoave.soda.l10n
 
-trait DefineLocalized { thisdefine =>
+import org.scalatest.FlatSpec
+import org.scalatest.Matchers
 
-  val bundleName: BundleName = new BundleName(toString)
-  val keyNamingStrategy: KeyNamingStrategy = KeyNamingStrategy.default
+object DefineLocalizedWithDefaultBundleName extends DefineLocalized {
 
-  override def toString: String = KeyNamingStrategy.simpleTypeName(getClass)
+}
 
-  private def keyFor[T](value: T): String =
-    keyNamingStrategy.keyFor(0, KeyNamingStrategy.simpleTypeName(value.getClass))
+class DefineLocalizedSpec extends FlatSpec with Matchers {
 
-  final protected def localized[T](value: T): Localized[T] =
-    new LocalizedValue(value, keyFor(value), bundleName)
+  "DefineLocalized#toString" should "return an appropriate string" in {
 
-  final protected def localized[T, A <: Product](value: T, args: A): LocalizedP[T, A] =
-    new LocalizedPValue(value, args, keyFor(value), bundleName)
+    DefineLocalizedWithDefaultBundleName.toString() shouldBe "DefineLocalizedWithDefaultBundleName"
+
+  }
+
+  "DefineLocalized with default BundleName" should "return the simple object name" in {
+
+    DefineLocalizedWithDefaultBundleName.bundleName shouldBe BundleName("DefineLocalizedWithDefaultBundleName")
+
+  }
+
+  "DefineMessage with custom BundleName" should "return the specified bundle base name" in {
+
+    DemoTypesLocalizer.bundleName shouldBe BundleName("l10n.demotypes")
+
+  }
 
 }

@@ -100,13 +100,13 @@ class DefineMessageSpec extends FlatSpec with Matchers {
 
   "DefineMessage with default BundleName" should "return the simple object name" in {
 
-    DemoMessages.bundleName.value shouldBe "DemoMessages"
+    DemoMessages.bundleName shouldBe BundleName("DemoMessages")
 
   }
 
   "DefineMessage with custom BundleName" should "return the specified bundle base name" in {
 
-    MessagesWithCustomBundleName.bundleName.value shouldBe "l10n.CustomMessages"
+    MessagesWithCustomBundleName.bundleName shouldBe BundleName("l10n.CustomMessages")
 
   }
 
