@@ -73,6 +73,10 @@ class RenderLocalizedSpec extends FlatSpec with Matchers with BeforeAndAfterAll 
     implicit val implicitLocale = EN
     render(playedCard).asLocaleText shouldBe LocaleText("Player Frank played King of Clubs")
 
+    render(playedCard).in(DE) shouldBe LocaleText("Spieler Frank hat Pik König ausgespielt")
+
+    render(playedCard) in Locale("MM") shouldBe LocaleText("['Player Frank' played ['King' of 'Clubs']]")
+
   }
 
 }

@@ -10,3 +10,5 @@ Jack=Bube
 Queen=Dame
 King=König
 Card={0} {1}
+Player=Spieler {0}
+PlayedCard={0} hat {1} ausgespielt
