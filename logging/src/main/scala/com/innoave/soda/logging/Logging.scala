@@ -17,6 +17,6 @@ package com.innoave.soda.logging
 
 trait Logging {
 
-  protected lazy val log: Logger = Logger(getClass)
+  protected val log: Logger = Logger(getClass)
 
 }

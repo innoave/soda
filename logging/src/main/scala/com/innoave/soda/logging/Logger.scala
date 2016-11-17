@@ -21,7 +21,7 @@ import scala.reflect.ClassTag
 import scala.reflect.classTag
 import org.slf4j.Marker
 
-class Logger(underlying: SLF4JLogger) {
+class Logger private(underlying: SLF4JLogger) {
 
   @inline final def name(): String = underlying.getName
 
@@ -95,10 +95,10 @@ object Logger {
     new Logger(SLF4JLoggerFactory.getLogger(name))
 
   def apply(clazz: Class[_]): Logger =
-    apply(clazz.getName)
+    new Logger(SLF4JLoggerFactory.getLogger(clazz))
 
   def apply[C: ClassTag](): Logger =
-    apply(classTag[C].runtimeClass.getName)
+    apply(classTag[C].runtimeClass)
 
   def rootLogger =
     apply(RootLoggerName)
