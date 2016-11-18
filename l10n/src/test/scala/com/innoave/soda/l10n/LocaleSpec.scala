@@ -27,7 +27,7 @@ class LocaleSpec extends FlatSpec with Matchers {
 
   }
 
-  it should "be equal when ISO code is equal" in {
+  it should "be equal when its ISO code is equal" in {
 
     Language("en") == Language("en") shouldBe true
     Language("pt") == Language("pt") shouldBe true
@@ -65,7 +65,7 @@ class LocaleSpec extends FlatSpec with Matchers {
 
   }
 
-  it should "be equal when ISO code is equal" in {
+  it should "be equal when its ISO code is equal" in {
 
     Country("US") == Country("US") shouldBe true
     Country("CH") == Country("CH") shouldBe true
@@ -102,7 +102,7 @@ class LocaleSpec extends FlatSpec with Matchers {
 
   }
 
-  it should "be equal when ISO code is equal" in {
+  it should "be equal when its code is equal" in {
 
     Variant("polyton") == Variant("polyton") shouldBe true
     Variant("traditional") == Variant("traditional") shouldBe true
@@ -212,6 +212,25 @@ class LocaleSpec extends FlatSpec with Matchers {
 
   }
 
+  it should "be constructed from java.util.Locale" in {
+
+    val locale1 = Locale.fromJavaLocale(java.util.Locale.ENGLISH)
+    locale1.language shouldBe Language.EN
+    locale1.country shouldBe Country.Any
+    locale1.variant shouldBe Variant.Any
+
+    val locale2 = Locale.fromJavaLocale(new java.util.Locale("zh", "SG"))
+    locale2.language shouldBe Language.ZH
+    locale2.country shouldBe Country.SG
+    locale2.variant shouldBe Variant.Any
+
+    val locale3 = Locale.fromJavaLocale(new java.util.Locale("pt", "BR", "polyton"))
+    locale3.language shouldBe Language.PT
+    locale3.country shouldBe Country.BR
+    locale3.variant shouldBe Variant("polyton")
+
+  }
+
   it should "allow an empty language, empty country and empty variant" in {
 
     val locale = Locale("", "", "")
@@ -246,6 +265,8 @@ class LocaleSpec extends FlatSpec with Matchers {
     Locale("pt", "BR", "polyton") == Locale("es", "BR", "polyton") shouldBe false
     Locale("pt", "BR", "polyton") == Locale("pt", "PT", "polyton") shouldBe false
     Locale("pt", "BR", "polyton") == Locale("pt", "BR", "") shouldBe false
+
+    Locale("en") == new java.util.Locale("en") shouldBe false
 
   }
 
@@ -286,6 +307,16 @@ class LocaleSpec extends FlatSpec with Matchers {
 
     Locale("de", "CH") shouldBe Locale.DE_CH
     Locale("de", "CH") should be theSameInstanceAs Locale.DE_CH
+
+  }
+
+  "Locale#asLanguageTag" should "return the language tag of the locale" in {
+
+    Locale.EN.asLanguageTag shouldBe "en"
+    Locale.DE_CH.asLanguageTag shouldBe "de-CH"
+    Locale.ZH_SG.asLanguageTag shouldBe "zh-SG"
+
+    Locale("pt", "BR", "polyton").asLanguageTag shouldBe "pt-BR-polyton"
 
   }
 

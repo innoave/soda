@@ -397,12 +397,19 @@ class DefineMessageSpec extends FlatSpec with Matchers {
     (TestMessages.MessageWithCustomKey != OtherMessages.MessageWithCustomKey) should be (true)
   }
 
+  "DefineMessage Message equals object of other type" should "return false" in {
+
+    DialogMessages.DialogTitle == "DialogTitle" should be (false)
+    DialogMessages.DialogTitle == 0 should be (false)
+
+  }
+
   "DefineMessage Message compare method" should "compare message by their ordinal in order of their definition" in {
 
-    import TestMessages._
+    import DialogMessages._
 
-    MyMessage1.compare(MyMessage2) should be < 0
-    MyMessage3.compare(MyMessage2) should be > 0
+    DialogTitle.compare(DialogCloseButton) should be < 0
+    DialogMessage.compare(DialogCloseButton) should be > 0
 
   }
 

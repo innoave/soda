@@ -25,7 +25,7 @@ class Locale private[Locale](
     ) extends Equals with Ordered[Locale] {
 
   lazy val asJavaLocale: JLocale =
-    new java.util.Locale(language.code, country.code, variant.code)
+    new JLocale(language.code, country.code, variant.code)
 
   override def canEqual(other: Any): Boolean =
     other.isInstanceOf[Locale]
@@ -62,7 +62,7 @@ class Locale private[Locale](
     }
   }
 
-  def toLanguageTag: String =
+  def asLanguageTag: String =
     asJavaLocale.toLanguageTag
 
   def displayName(): String =
@@ -195,6 +195,7 @@ object Language {
   def ES = languageOf("es")
   def FR = languageOf("fr")
   def IT = languageOf("it")
+  def PT = languageOf("pt")
   def ZH = languageOf("zh")
 
 }
@@ -214,6 +215,7 @@ object Country {
   def AT = countryOf("AT")
   def AU = countryOf("AU")
   def BE = countryOf("BE")
+  def BR = countryOf("BR")
   def CA = countryOf("CA")
   def CH = countryOf("CH")
   def CN = countryOf("CN")
