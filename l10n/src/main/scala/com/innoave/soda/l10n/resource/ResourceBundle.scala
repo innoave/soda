@@ -41,6 +41,6 @@ object ResourceBundle {
       |# ${KeyNamingStrategy.simpleTypeName(messages.getClass)} : Message definitions
       |#
       |""".stripMargin +
-    messages.values.map(m => m.key + "=\n").mkString
+    messages.values.iterator.map(m => m.key + "=\n").mkString
 
 }

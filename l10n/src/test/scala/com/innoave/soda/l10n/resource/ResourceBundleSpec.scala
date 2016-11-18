@@ -26,9 +26,10 @@ class ResourceBundleSpec extends FlatSpec with Matchers {
     ResourceBundle.stubFor(DemoMessages) shouldBe """#
         |# DemoMessages : Message definitions
         |#
-        |greeting=
         |hello.world=
+        |greeting=
         |products.in.shopping.cart=
+        |greetings.to.card=
         |""".stripMargin
 
   }
