@@ -15,6 +15,8 @@
  */
 package com.innoave.soda.l10n
 
+import com.innoave.soda.l10n.DemoTypes._
+
 object DemoMessages extends DefineMessage {
 
   type DemoMessages = Msg
@@ -25,5 +27,7 @@ object DemoMessages extends DefineMessage {
   val greeting = Message1[String]
 
   val productsInShoppingCart = Message2[String, Int]
+
+  val greetingsToCard = Message1[LocalizedP[Card, (Localized[Suit], Localized[Face])]]
 
 }

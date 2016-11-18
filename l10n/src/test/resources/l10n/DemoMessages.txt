@@ -4,3 +4,4 @@
 hello.world=Hello World!
 greeting=Hello {0}
 products.in.shopping.cart={0} has {1,choice,0#no products|1#one product|1<{1,number,integer} products} in the cart.
+greetings.to.card=Hello {0}
