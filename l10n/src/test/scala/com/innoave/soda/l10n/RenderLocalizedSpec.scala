@@ -37,11 +37,11 @@ class RenderLocalizedSpec extends FlatSpec with Matchers with BeforeAndAfterAll 
     val queenOfHearts = Card(Hearts, Queen)
 
     implicit val implicitLocale = EN
-    render(queenOfHearts).asLocaleText shouldBe LocaleText("Queen of Hearts")
+    render(queenOfHearts).asLocalText shouldBe LocalText("Queen of Hearts")
 
-    render(queenOfHearts).in(DE_AT) shouldBe LocaleText("Herz Dame")
+    render(queenOfHearts).in(DE_AT) shouldBe LocalText("Herz Dame")
 
-    render(queenOfHearts) in Locale("MM") shouldBe LocaleText("['Queen' of 'Hearts']")
+    render(queenOfHearts) in Locale("MM") shouldBe LocalText("['Queen' of 'Hearts']")
 
   }
 
@@ -53,11 +53,11 @@ class RenderLocalizedSpec extends FlatSpec with Matchers with BeforeAndAfterAll 
     import DemoTypesLocalizer._
 
     implicit val implicitLocale = EN
-    render(King).asLocaleText shouldBe LocaleText("King")
+    render(King).asLocalText shouldBe LocalText("King")
 
-    render(King) in DE_AT shouldBe LocaleText("König")
+    render(King) in DE_AT shouldBe LocalText("König")
 
-    render(King).in(Locale("MM")) shouldBe LocaleText("'King'")
+    render(King).in(Locale("MM")) shouldBe LocalText("'King'")
 
   }
 
@@ -71,11 +71,11 @@ class RenderLocalizedSpec extends FlatSpec with Matchers with BeforeAndAfterAll 
     val playedCard = PlayedCard(Player("Frank"), Card(Clubs, King))
 
     implicit val implicitLocale = EN
-    render(playedCard).asLocaleText shouldBe LocaleText("Player Frank played King of Clubs")
+    render(playedCard).asLocalText shouldBe LocalText("Player Frank played King of Clubs")
 
-    render(playedCard).in(DE) shouldBe LocaleText("Spieler Frank hat Pik König ausgespielt")
+    render(playedCard).in(DE) shouldBe LocalText("Spieler Frank hat Pik König ausgespielt")
 
-    render(playedCard) in Locale("MM") shouldBe LocaleText("['Player Frank' played ['King' of 'Clubs']]")
+    render(playedCard) in Locale("MM") shouldBe LocalText("['Player Frank' played ['King' of 'Clubs']]")
 
   }
 

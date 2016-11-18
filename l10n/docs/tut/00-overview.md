@@ -79,6 +79,6 @@ greeting("Frank").in(DE).value
 implicit val locale = EN
 
 //render message localized in the implicitly set language
-productsInShoppingCart("Paul", 0).asLocaleText.value
+productsInShoppingCart("Paul", 0).asLocalText.value
 ```
 

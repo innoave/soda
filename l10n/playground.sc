@@ -1,4 +1,3 @@
-import com.innoave.soda.l10n.TestMessages
 import com.innoave.soda.l10n.resource.ResourceBundle
 import scala.reflect.NameTransformer._
 import scala.util.matching.Regex
@@ -12,7 +11,7 @@ object playground {
   object DemoMessages extends DefineMessage {
 	  
 	  //define a custom base name for the message bundle
-	  override val bundleName = BundleName("l10n.testmessages")
+	  override val bundleName = BundleName("l10n.DemoMessages")
 	
 	  // message with no parameters
 	  val helloWorld = Message0
@@ -40,10 +39,10 @@ object playground {
                                                   //| riant())
 
   //render message localized in the implicitly set language
-  productsInShoppingCart("Paul", 0).asLocaleText.value
+  productsInShoppingCart("Paul", 0).asLocalText.value
                                                   //> res2: String = Paul has no items in the cart.
 
-  
+   
   
 
   JLocale.getAvailableLocales.filter(_.getLanguage == "en")
@@ -76,8 +75,8 @@ object playground {
  
 
                                                     
-  ResourceBundle.stubFor(TestMessages)            //> res17: String = "#
-                                                  //| # TestMessages : Message definitions
+  ResourceBundle.stubFor(DemoMessages)            //> res17: String = "#
+                                                  //| # DemoMessages : Message definitions
                                                   //| #
                                                   //| greeting=
                                                   //| hello.world=
@@ -93,8 +92,8 @@ object playground {
 
   val queenOfHearts = Card(Hearts, Queen)         //> queenOfHearts  : com.innoave.soda.l10n.DemoTypes.Card = Card(Hearts,Queen)
                                                   //| 
-  renderLocalized(queenOfHearts)(EN)              //> res18: com.innoave.soda.l10n.LocaleText = LocaleText(Queen of Hearts)
-  renderLocalized(queenOfHearts)(DE)              //> res19: com.innoave.soda.l10n.LocaleText = LocaleText(Herz Dame)
+  renderLocalized(queenOfHearts)(EN)              //> res18: com.innoave.soda.l10n.LocalText = LocalText(Queen of Hearts)
+  renderLocalized(queenOfHearts)(DE)              //> res19: com.innoave.soda.l10n.LocalText = LocalText(Herz Dame)
 
   (1, "2").productIterator.map({case x: Int => x.toString case a => a}).toArray
                                                   //> res20: Array[Any] = Array(1, 2)

@@ -18,6 +18,9 @@ package com.innoave.soda.l10n
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
 import org.scalatest.BeforeAndAfterAll
+import java.util.Date
+import java.util.TimeZone
+import java.util.Calendar
 
 class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
 
@@ -27,6 +30,21 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
     Locale.default = Locale("XX")
   }
 
+  def date(year: Int, month: Int, day: Int, hour: Int, minute: Int): Date = {
+    val cal = Calendar.getInstance()
+    cal.setTimeZone(TimeZone.getTimeZone("UTC"))
+    cal.set(Calendar.YEAR, year)
+    cal.set(Calendar.MONTH, month - 1)
+    cal.set(Calendar.DAY_OF_MONTH, day)
+    cal.set(Calendar.HOUR_OF_DAY, hour)
+    cal.set(Calendar.MINUTE, minute)
+    cal.set(Calendar.SECOND, 0)
+    cal.set(Calendar.MILLISECOND, 0)
+    cal.getTime()
+  }
+
+
+
   "RenderLocalized" should "render the test message with no parameters in different languages" in {
 
     import syntax._
@@ -34,15 +52,15 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
     import DemoMessages._
 
     implicit val implicitLocale = EN
-    helloWorld().asLocaleText shouldBe LocaleText("Hello World!")
+    helloWorld().asLocalText shouldBe LocalText("Hello World!")
 
-    helloWorld().asLocaleText(EN_GB) shouldBe LocaleText("Good day World!")
+    helloWorld().asLocalText(EN_GB) shouldBe LocalText("Good day World!")
 
-    helloWorld().in(DE) shouldBe LocaleText("Hallo Welt!")
+    helloWorld().in(DE) shouldBe LocalText("Hallo Welt!")
 
-    helloWorld() in DE_AT shouldBe LocaleText("Servus Welt!")
+    helloWorld() in DE_AT shouldBe LocalText("Servus Welt!")
 
-    helloWorld() in(Locale("MM")) shouldBe LocaleText("Hello World!")
+    helloWorld() in(Locale("MM")) shouldBe LocalText("Hello World!")
 
   }
 
@@ -53,15 +71,15 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
     import DemoMessages._
 
     implicit val implicitLocale = EN
-    greeting("Frank").asLocaleText shouldBe LocaleText("Greetings to Frank")
+    greeting("Frank").asLocalText shouldBe LocalText("Greetings to Frank")
 
-    greeting("Frank").in(EN_GB) shouldBe LocaleText("Dear Frank")
+    greeting("Frank").in(EN_GB) shouldBe LocalText("Dear Frank")
 
-    greeting("Frank") in DE shouldBe LocaleText("Guten Tag Frank")
+    greeting("Frank") in DE shouldBe LocalText("Guten Tag Frank")
 
-    greeting("Frank") in(DE_AT) shouldBe LocaleText("Grüß Gott Frank")
+    greeting("Frank") in(DE_AT) shouldBe LocalText("Grüß Gott Frank")
 
-    greeting("Frank").asLocaleText(Locale("MM")) shouldBe LocaleText("Hello Frank")
+    greeting("Frank").asLocalText(Locale("MM")) shouldBe LocalText("Hello Frank")
 
   }
 
@@ -72,15 +90,15 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
     import DemoMessages._
 
     implicit val implicitLocale = EN
-    productsInShoppingCart("Paul", 0).asLocaleText shouldBe LocaleText("Paul has no items in the cart.")
+    productsInShoppingCart("Paul", 0).asLocalText shouldBe LocalText("Paul has no items in the cart.")
 
-    productsInShoppingCart("Paul", 0) in EN_GB shouldBe LocaleText("Paul has no products in the shopping cart.")
+    productsInShoppingCart("Paul", 0) in EN_GB shouldBe LocalText("Paul has no products in the shopping cart.")
 
-    productsInShoppingCart("Paul", 0).in(DE) shouldBe LocaleText("Paul hat keine Produkte im Einkaufskorb.")
+    productsInShoppingCart("Paul", 0).in(DE) shouldBe LocalText("Paul hat keine Produkte im Einkaufskorb.")
 
-    productsInShoppingCart("Paul", 0) in(DE_AT) shouldBe LocaleText("Paul hat keine Produkte im Einkaufskörberl.")
+    productsInShoppingCart("Paul", 0) in(DE_AT) shouldBe LocalText("Paul hat keine Produkte im Einkaufskörberl.")
 
-    productsInShoppingCart("Paul", 0).in(Locale("MM")) shouldBe LocaleText("Paul has no products in the cart.")
+    productsInShoppingCart("Paul", 0).in(Locale("MM")) shouldBe LocalText("Paul has no products in the cart.")
 
   }
 
@@ -88,15 +106,185 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
 
     import syntax._
     import DemoMessages._
+
     implicit val implicitLocale = Locale.EN
+    productsInShoppingCart("Paul", 0).asLocalText shouldBe LocalText("Paul has no items in the cart.")
 
-    productsInShoppingCart("Paul", 0).asLocaleText shouldBe LocaleText("Paul has no items in the cart.")
+    productsInShoppingCart("Paul", 1).asLocalText shouldBe LocalText("Paul has one item in the cart.")
 
-    productsInShoppingCart("Paul", 1).asLocaleText shouldBe LocaleText("Paul has one item in the cart.")
+    productsInShoppingCart("Paul", 2).asLocalText shouldBe LocalText("Paul has 2 items in the cart.")
 
-    productsInShoppingCart("Paul", 2).asLocaleText shouldBe LocaleText("Paul has 2 items in the cart.")
+    productsInShoppingCart("Paul", 3).asLocalText shouldBe LocalText("Paul has 3 items in the cart.")
 
-    productsInShoppingCart("Paul", 3).asLocaleText shouldBe LocaleText("Paul has 3 items in the cart.")
+  }
+
+  "Messages with no arguments" should "render in the language for the given Locale" in {
+
+    import syntax._
+    import Locale._
+    import AllPossibleMessageVariations._
+
+    MyMessage0()        in EN shouldBe LocalText("My message without arguments")
+    MyMessage0()        in DE shouldBe LocalText("Meine Nachricht ohne Argumente")
+
+    CustomKeyMessage0() in EN shouldBe LocalText("Custom key message without arguments")
+    CustomKeyMessage0() in DE shouldBe LocalText("Eigener Key Nachricht ohne Argumente")
+
+    AllCustomMessage0() in EN shouldBe LocalText("All custom message without arguments")
+    AllCustomMessage0() in DE shouldBe LocalText("Total angepasste Nachricht ohne Argumente")
+
+  }
+
+  "Messages with 1 argument" should "render in the language for the given Locale" in {
+
+    import syntax._
+    import Locale._
+    import AllPossibleMessageVariations._
+
+    MyMessage1(10L)        in EN shouldBe LocalText("My message with 1 argument: [ 10 ]")
+    MyMessage1(10L)        in DE shouldBe LocalText("Meine Nachricht mit 1 Argument: [ 10 ]")
+
+    CustomKeyMessage1(10L) in EN shouldBe LocalText("Custom key message with 1 argument: [ 10 ]")
+    CustomKeyMessage1(10L) in DE shouldBe LocalText("Eigener Key Nachricht mit 1 Argument: [ 10 ]")
+
+    AllCustomMessage1(10L) in EN shouldBe LocalText("All custom message with 1 argument: [ 10 ]")
+    AllCustomMessage1(10L) in DE shouldBe LocalText("Total angepasste Nachricht mit 1 Argument: [ 10 ]")
+
+  }
+
+  "Messages with 2 argument" should "render in the language for the given Locale" in {
+
+    import syntax._
+    import Locale._
+    import AllPossibleMessageVariations._
+
+    MyMessage2("Lion", "King")        in EN shouldBe LocalText("My message with 2 arguments: [ Lion, King ]")
+    MyMessage2("Lion", "King")        in DE shouldBe LocalText("Meine Nachricht mit 2 Argumenten: [ Lion, King ]")
+
+    CustomKeyMessage2("Lion", "King") in EN shouldBe LocalText("Custom key message with 2 arguments: [ Lion, King ]")
+    CustomKeyMessage2("Lion", "King") in DE shouldBe LocalText("Eigener Key Nachricht mit 2 Argumenten: [ Lion, King ]")
+
+    AllCustomMessage2("Lion", "King") in EN shouldBe LocalText("All custom message with 2 arguments: [ Lion, King ]")
+    AllCustomMessage2("Lion", "King") in DE shouldBe LocalText("Total angepasste Nachricht mit 2 Argumenten: [ Lion, King ]")
+
+  }
+
+  "Messages with 3 argument" should "render in the language for the given Locale" in {
+
+    import syntax._
+    import Locale._
+    import AllPossibleMessageVariations._
+
+    MyMessage3(30, BigDecimal(31.23), "total")        in EN shouldBe LocalText("My message with 3 arguments: [ 30, 31.23, total ]")
+    MyMessage3(30, BigDecimal(31.23), "total")        in DE shouldBe LocalText("Meine Nachricht mit 3 Argumenten: [ 30, 31,23, total ]")
+
+    CustomKeyMessage3(30, BigDecimal(31.23), "total") in EN shouldBe LocalText("Custom key message with 3 arguments: [ 30, 31.23, total ]")
+    CustomKeyMessage3(30, BigDecimal(31.23), "total") in DE shouldBe LocalText("Eigener Key Nachricht mit 3 Argumenten: [ 30, 31,23, total ]")
+
+    AllCustomMessage3(30, BigDecimal(31.23), "total") in EN shouldBe LocalText("All custom message with 3 arguments: [ 30, 31.23, total ]")
+    AllCustomMessage3(30, BigDecimal(31.23), "total") in DE shouldBe LocalText("Total angepasste Nachricht mit 3 Argumenten: [ 30, 31,23, total ]")
+
+  }
+
+  "Messages with 4 argument" should "render in the language for the given Locale" in {
+
+    import syntax._
+    import Locale._
+    import AllPossibleMessageVariations._
+
+    MyMessage4("Pos", 40, date(2016, 11, 18, 0, 0), "midnight")        in EN shouldBe LocalText("My message with 4 arguments: [ Pos, 40, Nov 18, 2016, midnight ]")
+    MyMessage4("Pos", 40, date(2016, 11, 18, 0, 0), "midnight")        in DE shouldBe LocalText("Meine Nachricht mit 4 Argumenten: [ Pos, 40, 18.11.2016, midnight ]")
+
+    CustomKeyMessage4("Pos", 40, date(2016, 11, 18, 0, 0), "midnight") in EN shouldBe LocalText("Custom key message with 4 arguments: [ Pos, 40, Nov 18, 2016, midnight ]")
+    CustomKeyMessage4("Pos", 40, date(2016, 11, 18, 0, 0), "midnight") in DE shouldBe LocalText("Eigener Key Nachricht mit 4 Argumenten: [ Pos, 40, 18.11.2016, midnight ]")
+
+    AllCustomMessage4("Pos", 40, date(2016, 11, 18, 0, 0), "midnight") in EN shouldBe LocalText("All custom message with 4 arguments: [ Pos, 40, Nov 18, 2016, midnight ]")
+    AllCustomMessage4("Pos", 40, date(2016, 11, 18, 0, 0), "midnight") in DE shouldBe LocalText("Total angepasste Nachricht mit 4 Argumenten: [ Pos, 40, 18.11.2016, midnight ]")
+
+  }
+
+  "Messages with 5 argument" should "render in the language for the given Locale" in {
+
+    import syntax._
+    import Locale._
+    import AllPossibleMessageVariations._
+
+    MyMessage5(50, 51, 52, 53, 54)        in EN shouldBe LocalText("My message with 5 arguments: [ 50, 51, 52, 53, 54 ]")
+    MyMessage5(50, 51, 52, 53, 54)        in DE shouldBe LocalText("Meine Nachricht mit 5 Argumenten: [ 50, 51, 52, 53, 54 ]")
+
+    CustomKeyMessage5(50, 51, 52, 53, 54) in EN shouldBe LocalText("Custom key message with 5 arguments: [ 50, 51, 52, 53, 54 ]")
+    CustomKeyMessage5(50, 51, 52, 53, 54) in DE shouldBe LocalText("Eigener Key Nachricht mit 5 Argumenten: [ 50, 51, 52, 53, 54 ]")
+
+    AllCustomMessage5(50, 51, 52, 53, 54) in EN shouldBe LocalText("All custom message with 5 arguments: [ 50, 51, 52, 53, 54 ]")
+    AllCustomMessage5(50, 51, 52, 53, 54) in DE shouldBe LocalText("Total angepasste Nachricht mit 5 Argumenten: [ 50, 51, 52, 53, 54 ]")
+
+  }
+
+  "Messages with 6 argument" should "render in the language for the given Locale" in {
+
+    import syntax._
+    import Locale._
+    import AllPossibleMessageVariations._
+
+    MyMessage6(60L, "record", 61, 62, "first", "last")        in EN shouldBe LocalText("My message with 6 arguments: [ 60, record, 61, 62, first, last ]")
+    MyMessage6(60L, "record", 61, 62, "first", "last")        in DE shouldBe LocalText("Meine Nachricht mit 6 Argumenten: [ 60, record, 61, 62, first, last ]")
+
+    CustomKeyMessage6(60L, "record", 61, 62, "first", "last") in EN shouldBe LocalText("Custom key message with 6 arguments: [ 60, record, 61, 62, first, last ]")
+    CustomKeyMessage6(60L, "record", 61, 62, "first", "last") in DE shouldBe LocalText("Eigener Key Nachricht mit 6 Argumenten: [ 60, record, 61, 62, first, last ]")
+
+    AllCustomMessage6(60L, "record", 61, 62, "first", "last") in EN shouldBe LocalText("All custom message with 6 arguments: [ 60, record, 61, 62, first, last ]")
+    AllCustomMessage6(60L, "record", 61, 62, "first", "last") in DE shouldBe LocalText("Total angepasste Nachricht mit 6 Argumenten: [ 60, record, 61, 62, first, last ]")
+
+  }
+
+  "Messages with 7 argument" should "render in the language for the given Locale" in {
+
+    import syntax._
+    import Locale._
+    import AllPossibleMessageVariations._
+
+    MyMessage7(date(2016, 11, 17, 12, 59), 70L, "points", 71, 72, "round", "one")        in EN shouldBe LocalText("My message with 7 arguments: [ Nov 17, 2016, 70, points, 71, 72, round, one ]")
+    MyMessage7(date(2016, 11, 17, 12, 59), 70L, "points", 71, 72, "round", "one")        in DE shouldBe LocalText("Meine Nachricht mit 7 Argumenten: [ 17.11.2016, 70, points, 71, 72, round, one ]")
+
+    CustomKeyMessage7(date(2016, 11, 17, 12, 59), 70L, "points", 71, 72, "round", "one") in EN shouldBe LocalText("Custom key message with 7 arguments: [ Nov 17, 2016, 70, points, 71, 72, round, one ]")
+    CustomKeyMessage7(date(2016, 11, 17, 12, 59), 70L, "points", 71, 72, "round", "one") in DE shouldBe LocalText("Eigener Key Nachricht mit 7 Argumenten: [ 17.11.2016, 70, points, 71, 72, round, one ]")
+
+    AllCustomMessage7(date(2016, 11, 17, 12, 59), 70L, "points", 71, 72, "round", "one") in EN shouldBe LocalText("All custom message with 7 arguments: [ Nov 17, 2016, 70, points, 71, 72, round, one ]")
+    AllCustomMessage7(date(2016, 11, 17, 12, 59), 70L, "points", 71, 72, "round", "one") in DE shouldBe LocalText("Total angepasste Nachricht mit 7 Argumenten: [ 17.11.2016, 70, points, 71, 72, round, one ]")
+
+  }
+
+  "Messages with 8 argument" should "render in the language for the given Locale" in {
+
+    import syntax._
+    import Locale._
+    import AllPossibleMessageVariations._
+
+    MyMessage8(80L, 81L, 82L, 83L, 84L, 85L, 86L, 87L)        in EN shouldBe LocalText("My message with 8 arguments: [ 80, 81, 82, 83, 84, 85, 86, 87 ]")
+    MyMessage8(80L, 81L, 82L, 83L, 84L, 85L, 86L, 87L)        in DE shouldBe LocalText("Meine Nachricht mit 8 Argumenten: [ 80, 81, 82, 83, 84, 85, 86, 87 ]")
+
+    CustomKeyMessage8(80L, 81L, 82L, 83L, 84L, 85L, 86L, 87L) in EN shouldBe LocalText("Custom key message with 8 arguments: [ 80, 81, 82, 83, 84, 85, 86, 87 ]")
+    CustomKeyMessage8(80L, 81L, 82L, 83L, 84L, 85L, 86L, 87L) in DE shouldBe LocalText("Eigener Key Nachricht mit 8 Argumenten: [ 80, 81, 82, 83, 84, 85, 86, 87 ]")
+
+    AllCustomMessage8(80L, 81L, 82L, 83L, 84L, 85L, 86L, 87L) in EN shouldBe LocalText("All custom message with 8 arguments: [ 80, 81, 82, 83, 84, 85, 86, 87 ]")
+    AllCustomMessage8(80L, 81L, 82L, 83L, 84L, 85L, 86L, 87L) in DE shouldBe LocalText("Total angepasste Nachricht mit 8 Argumenten: [ 80, 81, 82, 83, 84, 85, 86, 87 ]")
+
+  }
+
+  "Messages with 9 argument" should "render in the language for the given Locale" in {
+
+    import syntax._
+    import Locale._
+    import AllPossibleMessageVariations._
+
+    MyMessage9(90, 91, 92, 93, 94, 95, 96, 97, 98)        in EN shouldBe LocalText("My message with 9 arguments: [ 90, 91, 92, 93, 94, 95, 96, 97, 98 ]")
+    MyMessage9(90, 91, 92, 93, 94, 95, 96, 97, 98)        in DE shouldBe LocalText("Meine Nachricht mit 9 Argumenten: [ 90, 91, 92, 93, 94, 95, 96, 97, 98 ]")
+
+    CustomKeyMessage9(90, 91, 92, 93, 94, 95, 96, 97, 98) in EN shouldBe LocalText("Custom key message with 9 arguments: [ 90, 91, 92, 93, 94, 95, 96, 97, 98 ]")
+    CustomKeyMessage9(90, 91, 92, 93, 94, 95, 96, 97, 98) in DE shouldBe LocalText("Eigener Key Nachricht mit 9 Argumenten: [ 90, 91, 92, 93, 94, 95, 96, 97, 98 ]")
+
+    AllCustomMessage9(90, 91, 92, 93, 94, 95, 96, 97, 98) in EN shouldBe LocalText("All custom message with 9 arguments: [ 90, 91, 92, 93, 94, 95, 96, 97, 98 ]")
+    AllCustomMessage9(90, 91, 92, 93, 94, 95, 96, 97, 98) in DE shouldBe LocalText("Total angepasste Nachricht mit 9 Argumenten: [ 90, 91, 92, 93, 94, 95, 96, 97, 98 ]")
 
   }
 

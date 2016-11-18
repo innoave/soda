@@ -23,20 +23,20 @@ trait RenderLocalized {
 
   protected def resourceBundleFor(bundleName: BundleName, locale: Locale): ResourceBundle
 
-  final def renderLocalized[T](localized: Localized[T])(implicit locale: Locale): LocaleText = {
+  final def renderLocalized[T](localized: Localized[T])(implicit locale: Locale): LocalText = {
     val pattern = resourceBundleFor(localized.bundleName(), locale).stringFor(localized)
-    LocaleText(messageFormatFor(pattern, locale).format())
+    LocalText(messageFormatFor(pattern, locale).format())
   }
 
-  final def renderLocalized[T, A <: Product](localized: LocalizedP[T, A])(implicit locale: Locale): LocaleText = {
+  final def renderLocalized[T, A <: Product](localized: LocalizedP[T, A])(implicit locale: Locale): LocalText = {
     val args = localized.args.productIterator.map({
       case a: LocalizedP[_, _] => renderLocalized(a).value
       case a: Localized[_] => renderLocalized(a).value
-      case a: LocaleText => a.value
+      case a: LocalText => a.value
       case a => a
     })
     val pattern = resourceBundleFor(localized.bundleName(), locale).stringFor(localized)
-    LocaleText(messageFormatFor(pattern, locale).format(args.toArray))
+    LocalText(messageFormatFor(pattern, locale).format(args.toArray))
   }
 
 }

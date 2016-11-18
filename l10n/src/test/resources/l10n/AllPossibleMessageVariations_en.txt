@@ -1,0 +1,33 @@
+#
+# AllPossibleMessageVariations in English
+#
+my.message0=My message without arguments
+my.message1=My message with 1 argument: [ {0,number} ]
+my.message2=My message with 2 arguments: [ {0}, {1} ]
+my.message3=My message with 3 arguments: [ {0,number}, {1,number}, {2} ]
+my.message4=My message with 4 arguments: [ {0}, {1,number}, {2,date}, {3} ]
+my.message5=My message with 5 arguments: [ {0,number}, {1,number}, {2,number}, {3,number}, {4,number} ]
+my.message6=My message with 6 arguments: [ {0,number}, {1}, {2,number}, {3,number}, {4}, {5} ]
+my.message7=My message with 7 arguments: [ {0,date}, {1,number}, {2}, {3,number}, {4,number}, {5}, {6} ]
+my.message8=My message with 8 arguments: [ {0,number}, {1,number}, {2,number}, {3,number}, {4,number}, {5,number}, {6,number}, {7,number} ]
+my.message9=My message with 9 arguments: [ {0,number}, {1,number}, {2,number}, {3,number}, {4,number}, {5,number}, {6,number}, {7,number}, {8,number} ]
+ck__message0=Custom key message without arguments
+ck__message1=Custom key message with 1 argument: [ {0,number} ]
+ck__message2=Custom key message with 2 arguments: [ {0}, {1} ]
+ck__message3=Custom key message with 3 arguments: [ {0,number}, {1,number}, {2} ]
+ck__message4=Custom key message with 4 arguments: [ {0}, {1,number}, {2,date}, {3} ]
+ck__message5=Custom key message with 5 arguments: [ {0,number}, {1,number}, {2,number}, {3,number}, {4,number} ]
+ck__message6=Custom key message with 6 arguments: [ {0,number}, {1}, {2,number}, {3,number}, {4}, {5} ]
+ck__message7=Custom key message with 7 arguments: [ {0,date}, {1,number}, {2}, {3,number}, {4,number}, {5}, {6} ]
+ck__message8=Custom key message with 8 arguments: [ {0,number}, {1,number}, {2,number}, {3,number}, {4,number}, {5,number}, {6,number}, {7,number} ]
+ck__message9=Custom key message with 9 arguments: [ {0,number}, {1,number}, {2,number}, {3,number}, {4,number}, {5,number}, {6,number}, {7,number}, {8,number} ]
+ac__message0=All custom message without arguments
+ac__message1=All custom message with 1 argument: [ {0,number} ]
+ac__message2=All custom message with 2 arguments: [ {0}, {1} ]
+ac__message3=All custom message with 3 arguments: [ {0,number}, {1,number}, {2} ]
+ac__message4=All custom message with 4 arguments: [ {0}, {1,number}, {2,date}, {3} ]
+ac__message5=All custom message with 5 arguments: [ {0,number}, {1,number}, {2,number}, {3,number}, {4,number} ]
+ac__message6=All custom message with 6 arguments: [ {0,number}, {1}, {2,number}, {3,number}, {4}, {5} ]
+ac__message7=All custom message with 7 arguments: [ {0,date}, {1,number}, {2}, {3,number}, {4,number}, {5}, {6} ]
+ac__message8=All custom message with 8 arguments: [ {0,number}, {1,number}, {2,number}, {3,number}, {4,number}, {5,number}, {6,number}, {7,number} ]
+ac__message9=All custom message with 9 arguments: [ {0,number}, {1,number}, {2,number}, {3,number}, {4,number}, {5,number}, {6,number}, {7,number}, {8,number} ]

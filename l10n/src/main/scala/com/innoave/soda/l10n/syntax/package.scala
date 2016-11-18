@@ -27,16 +27,16 @@ package object syntax {
   final def render[T, A <: Product](localized: LocalizedP[T, A]): LocalizedP[T, A] = localized
 
   implicit final class RenderLocalizedOps[T](val wrappedLocalized: Localized[T]) extends AnyVal {
-    final def asLocaleText(implicit locale: Locale): LocaleText =
+    final def asLocalText(implicit locale: Locale): LocalText =
       renderLocalized(wrappedLocalized)(locale)
-    final def in(locale: Locale): LocaleText =
+    final def in(locale: Locale): LocalText =
       renderLocalized(wrappedLocalized)(locale)
   }
 
   implicit final class RenderLocalizedPOps[T, A <: Product](val wrappedLocalized: LocalizedP[T, A]) extends AnyVal {
-    final def asLocaleText(implicit locale: Locale): LocaleText =
+    final def asLocalText(implicit locale: Locale): LocalText =
       renderLocalized(wrappedLocalized)(locale)
-    final def in(locale: Locale): LocaleText =
+    final def in(locale: Locale): LocalText =
       renderLocalized(wrappedLocalized)(locale)
   }
 

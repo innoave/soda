@@ -1,0 +1,33 @@
+#
+# AllPossibleMessageVariations in German
+#
+my.message0=Meine Nachricht ohne Argumente
+my.message1=Meine Nachricht mit 1 Argument: [ {0,number} ]
+my.message2=Meine Nachricht mit 2 Argumenten: [ {0}, {1} ]
+my.message3=Meine Nachricht mit 3 Argumenten: [ {0,number}, {1,number}, {2} ]
+my.message4=Meine Nachricht mit 4 Argumenten: [ {0}, {1,number}, {2,date}, {3} ]
+my.message5=Meine Nachricht mit 5 Argumenten: [ {0,number}, {1,number}, {2,number}, {3,number}, {4,number} ]
+my.message6=Meine Nachricht mit 6 Argumenten: [ {0,number}, {1}, {2,number}, {3,number}, {4}, {5} ]
+my.message7=Meine Nachricht mit 7 Argumenten: [ {0,date}, {1,number}, {2}, {3,number}, {4,number}, {5}, {6} ]
+my.message8=Meine Nachricht mit 8 Argumenten: [ {0,number}, {1,number}, {2,number}, {3,number}, {4,number}, {5,number}, {6,number}, {7,number} ]
+my.message9=Meine Nachricht mit 9 Argumenten: [ {0,number}, {1,number}, {2,number}, {3,number}, {4,number}, {5,number}, {6,number}, {7,number}, {8,number} ]
+ck__message0=Eigener Key Nachricht ohne Argumente
+ck__message1=Eigener Key Nachricht mit 1 Argument: [ {0,number} ]
+ck__message2=Eigener Key Nachricht mit 2 Argumenten: [ {0}, {1} ]
+ck__message3=Eigener Key Nachricht mit 3 Argumenten: [ {0,number}, {1,number}, {2} ]
+ck__message4=Eigener Key Nachricht mit 4 Argumenten: [ {0}, {1,number}, {2,date}, {3} ]
+ck__message5=Eigener Key Nachricht mit 5 Argumenten: [ {0,number}, {1,number}, {2,number}, {3,number}, {4,number} ]
+ck__message6=Eigener Key Nachricht mit 6 Argumenten: [ {0,number}, {1}, {2,number}, {3,number}, {4}, {5} ]
+ck__message7=Eigener Key Nachricht mit 7 Argumenten: [ {0,date}, {1,number}, {2}, {3,number}, {4,number}, {5}, {6} ]
+ck__message8=Eigener Key Nachricht mit 8 Argumenten: [ {0,number}, {1,number}, {2,number}, {3,number}, {4,number}, {5,number}, {6,number}, {7,number} ]
+ck__message9=Eigener Key Nachricht mit 9 Argumenten: [ {0,number}, {1,number}, {2,number}, {3,number}, {4,number}, {5,number}, {6,number}, {7,number}, {8,number} ]
+ac__message0=Total angepasste Nachricht ohne Argumente
+ac__message1=Total angepasste Nachricht mit 1 Argument: [ {0,number} ]
+ac__message2=Total angepasste Nachricht mit 2 Argumenten: [ {0}, {1} ]
+ac__message3=Total angepasste Nachricht mit 3 Argumenten: [ {0,number}, {1,number}, {2} ]
+ac__message4=Total angepasste Nachricht mit 4 Argumenten: [ {0}, {1,number}, {2,date}, {3} ]
+ac__message5=Total angepasste Nachricht mit 5 Argumenten: [ {0,number}, {1,number}, {2,number}, {3,number}, {4,number} ]
+ac__message6=Total angepasste Nachricht mit 6 Argumenten: [ {0,number}, {1}, {2,number}, {3,number}, {4}, {5} ]
+ac__message7=Total angepasste Nachricht mit 7 Argumenten: [ {0,date}, {1,number}, {2}, {3,number}, {4,number}, {5}, {6} ]
+ac__message8=Total angepasste Nachricht mit 8 Argumenten: [ {0,number}, {1,number}, {2,number}, {3,number}, {4,number}, {5,number}, {6,number}, {7,number} ]
+ac__message9=Total angepasste Nachricht mit 9 Argumenten: [ {0,number}, {1,number}, {2,number}, {3,number}, {4,number}, {5,number}, {6,number}, {7,number}, {8,number} ]
