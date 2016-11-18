@@ -70,6 +70,22 @@ class FileSystemSpec extends FlatSpec with Matchers {
 
   }
 
+  "MsWinLikeFileSystem with no version specified" should "return default file path" in {
+
+    val fs = mswinFS(None, "C:\\Documents and Settings\\joda", "C:\\temp")
+
+    fs.reservedCharacters shouldBe Set('<', '>', ':', '"', '/', '\\', '|', '?', '*')
+    fs.tempDir shouldBe "C:\\temp"
+    fs.userHomeDir shouldBe "C:\\Documents and Settings\\joda"
+    fs.userAppDataDir("anapp1") shouldBe "C:\\Documents and Settings\\joda\\.anapp1"
+    fs.userLocalAppDataDir("anapp2") shouldBe "C:\\Documents and Settings\\joda\\.anapp2"
+    fs.userDocumentsDir shouldBe "C:\\Documents and Settings\\joda\\Documents"
+    fs.userPicturesDir shouldBe "C:\\Documents and Settings\\joda\\Pictures"
+    fs.userMusicDir shouldBe "C:\\Documents and Settings\\joda\\Music"
+    fs.userVideosDir shouldBe "C:\\Documents and Settings\\joda\\Videos"
+
+  }
+
   "MsWinLikeFileSystem of version 4" should "return default file path" in {
 
     val fs = mswinFS(Some(4), "C:\\Documents and Settings\\joda", "C:\\temp")
