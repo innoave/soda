@@ -23,8 +23,8 @@ class OSSpec extends FlatSpec with Matchers {
 
   def testOS(tname: String, tversion: String): OS =
     new OS {
-      override def name: Option[String] = Some(tname)
-      override def version: Option[String] = Some(tversion)
+      override def name: Option[String] = Option(tname)
+      override def version: Option[String] = Option(tversion)
     }
 
   "OS.brand" should "return Unkown for Fantasy OS" in {
@@ -51,6 +51,12 @@ class OSSpec extends FlatSpec with Matchers {
 
   }
 
+  "OS.brand" should "return Unknown for no name specified" in {
+
+    testOS(null, "X").brand shouldBe Unknown
+
+  }
+
   "OS.majorVersion" should "return None for Version ver1" in {
 
     testOS("Fantasy", "ver1").majorVersion shouldBe None
@@ -72,6 +78,12 @@ class OSSpec extends FlatSpec with Matchers {
   "OS.majorVersion" should "return 10 for Version 10.0.14393" in {
 
     testOS("Windows", "10.0.14393").majorVersion shouldBe Some(10)
+
+  }
+
+  "OS.majorVersion" should "return None for no version specified" in {
+
+    testOS("Fantasy", null).majorVersion shouldBe None
 
   }
 

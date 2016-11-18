@@ -38,7 +38,7 @@ class FileSystemSpec extends FlatSpec with Matchers {
     override def osMajorVersion: Option[Int] = version
   }
 
-  "LinuxLikeFileSystem" should "return linux like file path" in {
+  "LinuxLikeFileSystem" should "return Linux like file path" in {
 
     val fs = linuxFS("/home/joda", "/var/temp")
 
@@ -54,7 +54,7 @@ class FileSystemSpec extends FlatSpec with Matchers {
 
   }
 
-  "MacOsLikeFileSystem" should "return mac os like file path" in {
+  "MacOsLikeFileSystem" should "return Mac OS X like file path" in {
 
     val fs = macosFS("/home/joda", "/var/temp")
 
@@ -70,7 +70,23 @@ class FileSystemSpec extends FlatSpec with Matchers {
 
   }
 
-  "MsWinLikeFileSystem of version 5" should "return win xp like file path" in {
+  "MsWinLikeFileSystem of version 4" should "return default file path" in {
+
+    val fs = mswinFS(Some(4), "C:\\Documents and Settings\\joda", "C:\\temp")
+
+    fs.reservedCharacters shouldBe Set('<', '>', ':', '"', '/', '\\', '|', '?', '*')
+    fs.tempDir shouldBe "C:\\temp"
+    fs.userHomeDir shouldBe "C:\\Documents and Settings\\joda"
+    fs.userAppDataDir("anapp1") shouldBe "C:\\Documents and Settings\\joda\\.anapp1"
+    fs.userLocalAppDataDir("anapp2") shouldBe "C:\\Documents and Settings\\joda\\.anapp2"
+    fs.userDocumentsDir shouldBe "C:\\Documents and Settings\\joda\\Documents"
+    fs.userPicturesDir shouldBe "C:\\Documents and Settings\\joda\\Pictures"
+    fs.userMusicDir shouldBe "C:\\Documents and Settings\\joda\\Music"
+    fs.userVideosDir shouldBe "C:\\Documents and Settings\\joda\\Videos"
+
+  }
+
+  "MsWinLikeFileSystem of version 5" should "return Win XP like file path" in {
 
     val fs = mswinFS(Some(5), "C:\\Documents and Settings\\joda", "C:\\temp")
 
@@ -86,7 +102,7 @@ class FileSystemSpec extends FlatSpec with Matchers {
 
   }
 
-  "MsWinLikeFileSystem of version 6" should "return win vista like file path" in {
+  "MsWinLikeFileSystem of version 6" should "return Win Vista like file path" in {
 
     val fs = mswinFS(Some(6), "C:\\Users\\joda", "C:\\windows\\temp")
 
