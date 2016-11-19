@@ -32,13 +32,13 @@ object DemoMessages extends DefineMessage {
   override val bundleName = BundleName("l10n.DemoMessages")
 
   // message with no parameters
-  val HelloWorld = Message0
+  val HelloWorld = message0
 
   // message with one parameter of type string
-  val Greeting = Message1[String]
+  val Greeting = message1[String]
 
   // message with two parameters of types string and integer
-  val ProductsInShoppingCart = Message2[String, Int]
+  val ProductsInShoppingCart = message2[String, Int]
 
 }
 ```

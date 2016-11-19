@@ -20,26 +20,26 @@ import org.scalatest.Matchers
 
 private object TestMessages extends DefineMessage {
 
-  val MessageWithDefaultNameAndKey = Message0
-  val MyMessage1, MyMessage2, MyMessage3 = Message0
-  val MessageWithCustomKey = Message0("MESSAGE_WITH_CUSTOM_KEY")
-  val MessageWithCustomNameAndKey = Message0("CustomName", "custom_key")
+  val MessageWithDefaultNameAndKey = message0
+  val MyMessage1, MyMessage2, MyMessage3 = message0
+  val MessageWithCustomKey = message0("MESSAGE_WITH_CUSTOM_KEY")
+  val MessageWithCustomNameAndKey = message0("CustomName", "custom_key")
 
 }
 
 private object OtherMessages extends DefineMessage {
 
-  val MessageWithDefaultNameAndKey = Message0
-  val MyMessage1, MyMessage2, MyMessage3 = Message0
-  val MessageWithCustomKey = Message0("MESSAGE_WITH_CUSTOM_KEY")
-  val MessageWithCustomNameAndKey = Message0("CustomName", "custom_key")
+  val MessageWithDefaultNameAndKey = message0
+  val MyMessage1, MyMessage2, MyMessage3 = message0
+  val MessageWithCustomKey = message0("MESSAGE_WITH_CUSTOM_KEY")
+  val MessageWithCustomNameAndKey = message0("CustomName", "custom_key")
 
 }
 
 private object DialogMessages extends DefineMessage {
 
-  val DialogTitle, DialogCloseButton = Message0
-  val DialogMessage = Message1[String]
+  val DialogTitle, DialogCloseButton = message0
+  val DialogMessage = message1[String]
 
 }
 
@@ -47,8 +47,8 @@ private object MessagesWithCustomBundleName extends DefineMessage {
 
   override val bundleName = BundleName("l10n.CustomMessages")
 
-  val DialogTitle, DialogCloseButton = Message0
-  val DialogMessage = Message1[String]
+  val DialogTitle, DialogCloseButton = message0
+  val DialogMessage = message1[String]
 
 }
 

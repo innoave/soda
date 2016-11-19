@@ -24,10 +24,14 @@ trait RenderLocalized {
 
   protected def resourceBundleFor(bundleName: BundleName, locale: Locale): ResourceBundle
 
-  final def renderLocalized[T](localized: Localized[T])(implicit locale: Locale): LocalText = {
-    val pattern = resourceBundleFor(localized.bundleName(), locale).stringFor(localized)
-    LocalText(messageFormatFor(pattern, locale).format())
-  }
+  final def renderLocalized[T](localized: Localized[T])(implicit locale: Locale): LocalText =
+    localized match {
+      case localizedP: LocalizedP[_, _] =>
+        renderLocalized(localizedP)
+      case _ =>
+        val pattern = resourceBundleFor(localized.bundleName(), locale).stringFor(localized)
+        LocalText(messageFormatFor(pattern, locale).format())
+    }
 
   final def renderLocalized[T, A <: Product](localized: LocalizedP[T, A])(implicit locale: Locale): LocalText = {
     def recRenderLocalized[RT, RA <: Product](localized: LocalizedP[RT, RA])(implicit locale: Locale): TailRec[LocalText] = {
