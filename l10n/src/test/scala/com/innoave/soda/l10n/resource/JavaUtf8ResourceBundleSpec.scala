@@ -41,9 +41,9 @@ class JavaUtf8ResourceBundleSpec extends FlatSpec with Matchers with BeforeAndAf
 
   "ResourceBundle" should "return a pattern string for given message" in {
 
-    bundleFor(helloWorld.bundleName, EN).stringFor(helloWorld) shouldBe "Hello World!"
-    bundleFor(greeting.bundleName, EN).stringFor(greeting) shouldBe "Greetings to {0}"
-    bundleFor(greeting.bundleName, DE_AT).stringFor(greeting) shouldBe "Grüß Gott {0}"
+    bundleFor(HelloWorld.bundleName, EN).stringFor(HelloWorld) shouldBe "Hello World!"
+    bundleFor(Greeting.bundleName, EN).stringFor(Greeting) shouldBe "Greetings to {0}"
+    bundleFor(Greeting.bundleName, DE_AT).stringFor(Greeting) shouldBe "Grüß Gott {0}"
 
   }
 
@@ -58,7 +58,7 @@ class JavaUtf8ResourceBundleSpec extends FlatSpec with Matchers with BeforeAndAf
 
   it should "return the key surrounded by exclamation marks if the key is not found in the bundle" in {
 
-    bundleFor(DemoTypesLocalizer.bundleName, EN).stringFor(helloWorld) shouldBe "!!!hello.world!!!"
+    bundleFor(DemoTypesLocalizer.bundleName, EN).stringFor(HelloWorld) shouldBe "!!!hello.world!!!"
 
   }
 
@@ -66,7 +66,7 @@ class JavaUtf8ResourceBundleSpec extends FlatSpec with Matchers with BeforeAndAf
 
     Locale.default = DE
 
-    bundleFor(greeting.bundleName, Locale("mm")).stringFor(greeting) shouldBe "Guten Tag {0}"
+    bundleFor(Greeting.bundleName, Locale("mm")).stringFor(Greeting) shouldBe "Guten Tag {0}"
 
   }
 
@@ -74,7 +74,7 @@ class JavaUtf8ResourceBundleSpec extends FlatSpec with Matchers with BeforeAndAf
 
     Locale.default = Locale("XX")
 
-    bundleFor(greeting.bundleName, Locale("mm")).stringFor(greeting) shouldBe "Hello {0}"
+    bundleFor(Greeting.bundleName, Locale("mm")).stringFor(Greeting) shouldBe "Hello {0}"
 
   }
 

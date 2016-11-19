@@ -25,13 +25,13 @@ class SyntaxSpec extends FlatSpec with Matchers {
     import syntax._
     import DemoMessages._
 
-    greeting("Frank") //needed to avoid unused import warning, just for this test
+    Greeting("Frank") //needed to avoid unused import warning, just for this test
 
-    """greeting(25)""" shouldNot typeCheck
-    """greeting("Frank")""" should compile
+    """Greeting(25)""" shouldNot typeCheck
+    """Greeting("Frank")""" should compile
 
-    """productsInShoppingCart("Frank", "7")""" shouldNot typeCheck
-    """productsInShoppingCart("Frank", 7)""" should compile
+    """ProductsInShoppingCart("Frank", "7")""" shouldNot typeCheck
+    """ProductsInShoppingCart("Frank", 7)""" should compile
 
   }
 
@@ -40,18 +40,18 @@ class SyntaxSpec extends FlatSpec with Matchers {
     import syntax._
     import DemoMessages._
 
-    greeting("Frank") //needed to avoid unused import warning, just for this test
+    Greeting("Frank") //needed to avoid unused import warning, just for this test
 
-    """helloWorld("Frank")""" shouldNot typeCheck
-    """helloWorld()""" should compile
+    """HelloWorld("Frank")""" shouldNot typeCheck
+    """HelloWorld()""" should compile
 
-    """greeting()""" shouldNot typeCheck
-    """greeting("Paul", "Hello")""" shouldNot typeCheck
-    """greeting("Paul")""" should compile
+    """Greeting()""" shouldNot typeCheck
+    """Greeting("Paul", "Hello")""" shouldNot typeCheck
+    """Greeting("Paul")""" should compile
 
-    """productsInShoppingCart("Frank")""" shouldNot typeCheck
-    """productsInShoppingCart("Frank", 3, "total")""" shouldNot typeCheck
-    """productsInShoppingCart("Frank", 1)""" should compile
+    """ProductsInShoppingCart("Frank")""" shouldNot typeCheck
+    """ProductsInShoppingCart("Frank", 3, "total")""" shouldNot typeCheck
+    """ProductsInShoppingCart("Frank", 1)""" should compile
 
   }
 
@@ -63,10 +63,10 @@ class SyntaxSpec extends FlatSpec with Matchers {
     import DemoTypes._
     import DemoTypesLocalizer._
 
-    greetingCard(Card(Diamonds, King)) in EN shouldBe LocalText("Greetings to King of Diamonds")
-    greetingCard(Card(Diamonds, King)) in EN_GB shouldBe LocalText("Dear King of Diamonds")
-    greetingCard(Card(Diamonds, King)) in DE shouldBe LocalText("Guten Tag Karo König")
-    greetingCard(Card(Diamonds, King)) in DE_AT shouldBe LocalText("Meine Verehrung Karo König")
+    GreetingPlayCard(Card(Diamonds, King)) in EN shouldBe LocalText("Greetings to King of Diamonds")
+    GreetingPlayCard(Card(Diamonds, King)) in EN_GB shouldBe LocalText("Dear King of Diamonds")
+    GreetingPlayCard(Card(Diamonds, King)) in DE shouldBe LocalText("Guten Tag Karo König")
+    GreetingPlayCard(Card(Diamonds, King)) in DE_AT shouldBe LocalText("Meine Verehrung Karo König")
 
   }
 

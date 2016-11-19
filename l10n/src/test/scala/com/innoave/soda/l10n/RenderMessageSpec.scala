@@ -52,15 +52,15 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
     import DemoMessages._
 
     implicit val implicitLocale = EN
-    helloWorld().asLocalText shouldBe LocalText("Hello World!")
+    HelloWorld().asLocalText shouldBe LocalText("Hello World!")
 
-    helloWorld().asLocalText(EN_GB) shouldBe LocalText("Good day World!")
+    HelloWorld().asLocalText(EN_GB) shouldBe LocalText("Good day World!")
 
-    helloWorld().in(DE) shouldBe LocalText("Hallo Welt!")
+    HelloWorld().in(DE) shouldBe LocalText("Hallo Welt!")
 
-    helloWorld() in DE_AT shouldBe LocalText("Servus Welt!")
+    HelloWorld() in DE_AT shouldBe LocalText("Servus Welt!")
 
-    helloWorld() in(Locale("MM")) shouldBe LocalText("Hello World!")
+    HelloWorld() in(Locale("MM")) shouldBe LocalText("Hello World!")
 
   }
 
@@ -71,15 +71,15 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
     import DemoMessages._
 
     implicit val implicitLocale = EN
-    greeting("Frank").asLocalText shouldBe LocalText("Greetings to Frank")
+    Greeting("Frank").asLocalText shouldBe LocalText("Greetings to Frank")
 
-    greeting("Frank").in(EN_GB) shouldBe LocalText("Dear Frank")
+    Greeting("Frank").in(EN_GB) shouldBe LocalText("Dear Frank")
 
-    greeting("Frank") in DE shouldBe LocalText("Guten Tag Frank")
+    Greeting("Frank") in DE shouldBe LocalText("Guten Tag Frank")
 
-    greeting("Frank") in(DE_AT) shouldBe LocalText("Grüß Gott Frank")
+    Greeting("Frank") in(DE_AT) shouldBe LocalText("Grüß Gott Frank")
 
-    greeting("Frank").asLocalText(Locale("MM")) shouldBe LocalText("Hello Frank")
+    Greeting("Frank").asLocalText(Locale("MM")) shouldBe LocalText("Hello Frank")
 
   }
 
@@ -90,15 +90,15 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
     import DemoMessages._
 
     implicit val implicitLocale = EN
-    productsInShoppingCart("Paul", 0).asLocalText shouldBe LocalText("Paul has no items in the cart.")
+    ProductsInShoppingCart("Paul", 0).asLocalText shouldBe LocalText("Paul has no items in the cart.")
 
-    productsInShoppingCart("Paul", 0) in EN_GB shouldBe LocalText("Paul has no products in the shopping cart.")
+    ProductsInShoppingCart("Paul", 0) in EN_GB shouldBe LocalText("Paul has no products in the shopping cart.")
 
-    productsInShoppingCart("Paul", 0).in(DE) shouldBe LocalText("Paul hat keine Produkte im Einkaufskorb.")
+    ProductsInShoppingCart("Paul", 0).in(DE) shouldBe LocalText("Paul hat keine Produkte im Einkaufskorb.")
 
-    productsInShoppingCart("Paul", 0) in(DE_AT) shouldBe LocalText("Paul hat keine Produkte im Einkaufskörberl.")
+    ProductsInShoppingCart("Paul", 0) in(DE_AT) shouldBe LocalText("Paul hat keine Produkte im Einkaufskörberl.")
 
-    productsInShoppingCart("Paul", 0).in(Locale("MM")) shouldBe LocalText("Paul has no products in the cart.")
+    ProductsInShoppingCart("Paul", 0).in(Locale("MM")) shouldBe LocalText("Paul has no products in the cart.")
 
   }
 
@@ -108,13 +108,13 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
     import DemoMessages._
 
     implicit val implicitLocale = Locale.EN
-    productsInShoppingCart("Paul", 0).asLocalText shouldBe LocalText("Paul has no items in the cart.")
+    ProductsInShoppingCart("Paul", 0).asLocalText shouldBe LocalText("Paul has no items in the cart.")
 
-    productsInShoppingCart("Paul", 1).asLocalText shouldBe LocalText("Paul has one item in the cart.")
+    ProductsInShoppingCart("Paul", 1).asLocalText shouldBe LocalText("Paul has one item in the cart.")
 
-    productsInShoppingCart("Paul", 2).asLocalText shouldBe LocalText("Paul has 2 items in the cart.")
+    ProductsInShoppingCart("Paul", 2).asLocalText shouldBe LocalText("Paul has 2 items in the cart.")
 
-    productsInShoppingCart("Paul", 3).asLocalText shouldBe LocalText("Paul has 3 items in the cart.")
+    ProductsInShoppingCart("Paul", 3).asLocalText shouldBe LocalText("Paul has 3 items in the cart.")
 
   }
 

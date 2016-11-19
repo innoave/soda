@@ -32,19 +32,19 @@ object DemoMessages extends DefineMessage {
   override val bundleName = BundleName("l10n.DemoMessages")
 
   // message with no parameters
-  val helloWorld = Message0
+  val HelloWorld = Message0
 
   // message with one parameter of type string
-  val greeting = Message1[String]
+  val Greeting = Message1[String]
 
   // message with two parameters of types string and integer
-  val productsInShoppingCart = Message2[String, Int]
+  val ProductsInShoppingCart = Message2[String, Int]
 
 }
 ```
 
 Prepare the translations in UTF8 text files:
-file for default language: `l10n/testmessages.txt`
+file for default language: `l10n/DemoMessages.txt`
 ```
 #
 # Test Messages in English
@@ -53,7 +53,7 @@ hello.world=Hello World!
 greeting=Hello {0}
 products.in.shopping.cart={0} has {1,choice,0#no items|1#one item|1<{1,number,integer} items} in the cart.
 ```
-file for translations in german: `l10n/testmessages_de.txt`
+file for translations in german: `l10n/DemoMessages_de.txt`
 ```
 #
 # Test Messages in German
@@ -70,15 +70,15 @@ import com.innoave.soda.l10n.syntax._
 import DemoMessages._
 
 //render message localized in specified language
-helloWorld().in(EN).value
+HelloWorld().in(EN).value
 
 //render message with parameter in specified language
-greeting("Frank").in(DE).value
+Greeting("Frank").in(DE).value
 
 //define implicit locale to be used
 implicit val locale = EN
 
 //render message localized in the implicitly set language
-productsInShoppingCart("Paul", 0).asLocalText.value
+ProductsInShoppingCart("Paul", 0).asLocalText.value
 ```
 

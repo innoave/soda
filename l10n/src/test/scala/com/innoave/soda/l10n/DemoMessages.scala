@@ -22,12 +22,12 @@ object DemoMessages extends DefineMessage {
   type DemoMessages = Msg
   override val bundleName = BundleName("l10n.DemoMessages")
 
-  val helloWorld = Message0
+  val HelloWorld = Message0
 
-  val greeting = Message1[String]
+  val Greeting = Message1[String]
 
-  val productsInShoppingCart = Message2[String, Int]
+  val ProductsInShoppingCart = Message2[String, Int]
 
-  val greetingCard = Message1[LocalizedP[Card, (Localized[Suit], Localized[Face])]]
+  val GreetingPlayCard = Message1[LocalizedP[Card, (Localized[Suit], Localized[Face])]]
 
 }

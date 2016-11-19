@@ -29,7 +29,7 @@ class ResourceBundleSpec extends FlatSpec with Matchers {
         |hello.world=
         |greeting=
         |products.in.shopping.cart=
-        |greeting.card=
+        |greeting.play.card=
         |""".stripMargin
 
   }
