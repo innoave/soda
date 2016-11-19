@@ -46,6 +46,7 @@ class SyntaxSpec extends FlatSpec with Matchers {
     """helloWorld()""" should compile
 
     """greeting()""" shouldNot typeCheck
+    """greeting("Paul", "Hello")""" shouldNot typeCheck
     """greeting("Paul")""" should compile
 
     """productsInShoppingCart("Frank")""" shouldNot typeCheck
