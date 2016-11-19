@@ -20,12 +20,6 @@ import org.scalatest.Matchers
 
 class KeyNamingStrategySpec extends FlatSpec with Matchers {
 
-  "KeyNamingStrategy" should "be DotSeparatedKeyNames by default" in {
-
-    KeyNamingStrategy.default shouldBe DotSeparatedKeyNames
-
-  }
-
   "NamesAsKeys" should "give name strings as keys" in {
 
     NamesAsKeys.keyFor(0, "HelloWorld") shouldBe "HelloWorld"

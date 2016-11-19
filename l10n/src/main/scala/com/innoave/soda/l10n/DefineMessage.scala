@@ -23,12 +23,12 @@ import scala.collection.SortedSetLike
 import scala.reflect.NameTransformer._
 
 abstract class DefineMessage(
-    keyNamingStrategy: KeyNamingStrategy = KeyNamingStrategy.default,
     initial: Int = 0
     ) {
   thisDefineMessage =>
 
   val bundleName = new BundleName(toString)
+  val keyNamingStrategy: KeyNamingStrategy = DotSeparatedKeyNames
 
   /* Note that `readResolve` cannot be private, since otherwise
      the JVM does not invoke it when deserializing subclasses. */

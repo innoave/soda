@@ -18,7 +18,7 @@ package com.innoave.soda.l10n
 trait DefineLocalized { thisdefine =>
 
   val bundleName: BundleName = new BundleName(toString)
-  val keyNamingStrategy: KeyNamingStrategy = KeyNamingStrategy.default
+  val keyNamingStrategy: KeyNamingStrategy = NamesAsKeys
 
   override def toString: String = KeyNamingStrategy.simpleTypeName(getClass)
 

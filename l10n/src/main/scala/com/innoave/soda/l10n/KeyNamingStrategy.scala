@@ -33,8 +33,6 @@ trait KeyNamingStrategy {
 
 object KeyNamingStrategy {
 
-  val default: KeyNamingStrategy = DotSeparatedKeyNames
-
   def simpleTypeName(clazz: Class[_]): String =
     ((clazz.getName stripSuffix MODULE_SUFFIX_STRING split '.').last split
       Regex.quote(NAME_JOIN_STRING)).last
@@ -52,7 +50,7 @@ object NamesAsKeys extends KeyNamingStrategy {
 
 }
 
-class CharacterSeparatedKeyNames(separatorChar: Char) extends KeyNamingStrategy {
+class CharacterSeparatedKeyNames(val separatorChar: Char) extends KeyNamingStrategy {
 
   override def keyFor(id: Int, name: String): String = {
     if (name.isEmpty()) {
