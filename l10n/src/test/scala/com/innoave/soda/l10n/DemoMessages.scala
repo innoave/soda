@@ -28,6 +28,6 @@ object DemoMessages extends DefineMessage {
 
   val productsInShoppingCart = Message2[String, Int]
 
-  val greetingsToCard = Message1[LocalizedP[Card, (Localized[Suit], Localized[Face])]]
+  val greetingCard = Message1[LocalizedP[Card, (Localized[Suit], Localized[Face])]]
 
 }

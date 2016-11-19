@@ -15,6 +15,7 @@
  */
 package com.innoave.soda.l10n
 
+import scala.util.control.TailCalls._
 import com.innoave.soda.l10n.resource.ResourceBundle
 
 trait RenderLocalized {
@@ -29,14 +30,17 @@ trait RenderLocalized {
   }
 
   final def renderLocalized[T, A <: Product](localized: LocalizedP[T, A])(implicit locale: Locale): LocalText = {
-    val args = localized.args.productIterator.map({
-      case a: LocalizedP[_, _] => renderLocalized(a).value
-      case a: Localized[_] => renderLocalized(a).value
-      case a: LocalText => a.value
-      case a => a
-    })
-    val pattern = resourceBundleFor(localized.bundleName(), locale).stringFor(localized)
-    LocalText(messageFormatFor(pattern, locale).format(args.toArray))
+    def recRenderLocalized[RT, RA <: Product](localized: LocalizedP[RT, RA])(implicit locale: Locale): TailRec[LocalText] = {
+      val args = localized.args.productIterator.map({
+        case a: LocalizedP[_, _] => tailcall(recRenderLocalized(a)).result.value
+        case a: Localized[_] => renderLocalized(a).value
+        case a: LocalText => a.value
+        case a => a
+      })
+      val pattern = resourceBundleFor(localized.bundleName(), locale).stringFor(localized)
+      done(LocalText(messageFormatFor(pattern, locale).format(args.toArray)))
+    }
+    recRenderLocalized(localized).result
   }
 
 }

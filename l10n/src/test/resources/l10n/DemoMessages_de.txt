@@ -4,4 +4,4 @@
 hello.world=Hallo Welt!
 greeting=Guten Tag {0}
 products.in.shopping.cart={0} hat {1,choice,0#keine Produkte|1#ein Produkt|1<{1,number,integer} Produkte} im Einkaufskorb.
-greetings.to.card=Guten Tag {0}
+greeting.card=Guten Tag {0}

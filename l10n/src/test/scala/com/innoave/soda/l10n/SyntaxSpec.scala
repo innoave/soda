@@ -22,25 +22,35 @@ class SyntaxSpec extends FlatSpec with Matchers {
 
   "Applying an argument of wrong type to a message" should "not compile with type error" in {
 
+    import syntax._
     import DemoMessages._
 
+    greeting("Frank") //needed to avoid unused import warning, just for this test
+
     """greeting(25)""" shouldNot typeCheck
+    """greeting("Frank")""" should compile
 
     """productsInShoppingCart("Frank", "7")""" shouldNot typeCheck
+    """productsInShoppingCart("Frank", 7)""" should compile
 
   }
 
   "Applying the wrong number of arguments to a message" should "not compile with type error" in {
 
+    import syntax._
     import DemoMessages._
 
+    greeting("Frank") //needed to avoid unused import warning, just for this test
+
     """helloWorld("Frank")""" shouldNot typeCheck
+    """helloWorld()""" should compile
 
     """greeting()""" shouldNot typeCheck
+    """greeting("Paul")""" should compile
 
     """productsInShoppingCart("Frank")""" shouldNot typeCheck
-
     """productsInShoppingCart("Frank", 3, "total")""" shouldNot typeCheck
+    """productsInShoppingCart("Frank", 1)""" should compile
 
   }
 
@@ -52,10 +62,10 @@ class SyntaxSpec extends FlatSpec with Matchers {
     import DemoTypes._
     import DemoTypesLocalizer._
 
-    greetingsToCard(Card(Diamonds, King)) in EN shouldBe LocalText("Greetings to King of Diamonds")
-    greetingsToCard(Card(Diamonds, King)) in EN_GB shouldBe LocalText("Dear King of Diamonds")
-    greetingsToCard(Card(Diamonds, King)) in DE shouldBe LocalText("Guten Tag Karo König")
-    greetingsToCard(Card(Diamonds, King)) in DE_AT shouldBe LocalText("Meine Verehrung Karo König")
+    greetingCard(Card(Diamonds, King)) in EN shouldBe LocalText("Greetings to King of Diamonds")
+    greetingCard(Card(Diamonds, King)) in EN_GB shouldBe LocalText("Dear King of Diamonds")
+    greetingCard(Card(Diamonds, King)) in DE shouldBe LocalText("Guten Tag Karo König")
+    greetingCard(Card(Diamonds, King)) in DE_AT shouldBe LocalText("Meine Verehrung Karo König")
 
   }
 
