@@ -26,6 +26,8 @@ package object syntax {
 
   final def render[T, A <: Product](localized: LocalizedP[T, A]): LocalizedP[T, A] = localized
 
+  final def render[T](localized: Traversable[Localized[T]]): Traversable[Localized[T]] = localized
+
   implicit final class RenderLocalizedOps[T](val wrappedLocalized: Localized[T]) extends AnyVal {
     final def asLocalText(implicit locale: Locale): LocalText =
       renderLocalized(wrappedLocalized)(locale)
@@ -34,6 +36,13 @@ package object syntax {
   }
 
   implicit final class RenderLocalizedPOps[T, A <: Product](val wrappedLocalized: LocalizedP[T, A]) extends AnyVal {
+    final def asLocalText(implicit locale: Locale): LocalText =
+      renderLocalized(wrappedLocalized)(locale)
+    final def in(locale: Locale): LocalText =
+      renderLocalized(wrappedLocalized)(locale)
+  }
+
+  implicit final class RenderLocalizedSOps[T](val wrappedLocalized: Traversable[Localized[T]]) extends AnyVal {
     final def asLocalText(implicit locale: Locale): LocalText =
       renderLocalized(wrappedLocalized)(locale)
     final def in(locale: Locale): LocalText =

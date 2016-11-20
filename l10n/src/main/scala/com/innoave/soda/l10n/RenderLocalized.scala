@@ -28,7 +28,7 @@ trait RenderLocalized {
     localized match {
       case localizedP: LocalizedP[_, _] =>
         renderLocalized(localizedP)
-      case _ =>
+      case localized =>
         val pattern = resourceBundleFor(localized.bundleName(), locale).stringFor(localized)
         LocalText(messageFormatFor(pattern, locale).format())
     }
@@ -46,5 +46,8 @@ trait RenderLocalized {
     }
     recRenderLocalized(localized).result
   }
+
+  final def renderLocalized[T](localizedSeq: Traversable[Localized[T]])(implicit locale: Locale): LocalText =
+    LocalText(localizedSeq.map(renderLocalized(_).value).mkString(", "))
 
 }

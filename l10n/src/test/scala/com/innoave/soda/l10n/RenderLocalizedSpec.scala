@@ -79,4 +79,40 @@ class RenderLocalizedSpec extends FlatSpec with Matchers with BeforeAndAfterAll 
 
   }
 
+  it should "render a text for a sequence of case class as argument in different languages" in {
+
+    import syntax._
+    import Locale._
+    import DemoTypes._
+    import DemoTypesLocalizer._
+
+    val cards = List(Card(Diamonds, King), Card(Clubs, Ten), Card(Hearts, Ace), Card(Spades, Jack))
+
+    implicit val implicitLocale = EN
+    render(cards).asLocalText shouldBe LocalText("King of Diamonds, Ten of Clubs, Ace of Hearts, Jack of Spades")
+
+    render(cards) in DE shouldBe LocalText("Karo König, Pik Zehn, Herz Ass, Kreuz Bube")
+
+    render(cards) in Locale("MM") shouldBe LocalText("['King' of 'Diamonds'], ['Ten' of 'Clubs'], ['Ace' of 'Hearts'], ['Jack' of 'Spades']")
+
+  }
+
+  it should "render a text for a sequence of case objects as argument in different languages" in {
+
+    import syntax._
+    import Locale._
+    import DemoTypes._
+    import DemoTypesLocalizer._
+
+    val faces = List(Ten, Jack, Queen, King, Ace)
+
+    implicit val implicitLocale = EN
+    render(faces).asLocalText shouldBe LocalText("Ten, Jack, Queen, King, Ace")
+
+    render(faces).in(DE) shouldBe LocalText("Zehn, Bube, Dame, König, Ass")
+
+    render(faces).in(Locale("MM")) shouldBe LocalText("'Ten', 'Jack', 'Queen', 'King', 'Ace'")
+
+  }
+
 }

@@ -9,6 +9,7 @@ Ten=''Ten''
 Jack=''Jack''
 Queen=''Queen''
 King=''King''
+Ace=''Ace''
 Card=[{1} of {0}]
 Player=''Player {0}''
 PlayedCard=[{0} played {1}]

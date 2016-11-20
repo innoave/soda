@@ -28,6 +28,7 @@ object DemoTypes {
   case object Jack extends Face
   case object Queen extends Face
   case object King extends Face
+  case object Ace extends Face
 
   case class Card(suit: Suit, face: Face)
 
@@ -50,6 +51,12 @@ object DemoTypesLocalizer extends DefineLocalized {
   implicit def localizedCard(card: Card) = localized(card, (
       localizedSuit(card.suit), localizedFace(card.face)
       ))
+
+  implicit def localizedFaces(faces: Seq[Face]) =
+    faces.map(localizedFace(_))
+
+  implicit def localizedCards(cards: Seq[Card]) =
+    cards.map(localizedCard(_))
 
   implicit def localizedPlayer(player: Player) = localized(player, Tuple1(player.name))
 
