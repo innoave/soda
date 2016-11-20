@@ -81,7 +81,7 @@ lazy val sodaMvvm = Project(
 //
 // Dependencies
 //
-lazy val scalatest = "org.scalatest" %% "scalatest" % "3.0.0"
+lazy val scalatest = "org.scalatest" %% "scalatest" % "3.0.1"
 lazy val slf4jApi = "org.slf4j" % "slf4j-api" % "1.7.21"
 lazy val logback = "ch.qos.logback" % "logback-classic" % "1.1.7"
 
@@ -117,51 +117,56 @@ lazy val projectSettings = Seq(
 lazy val buildSettings = Seq(
   crossScalaVersions := Seq("2.11.8", "2.12.0"),
   scalaVersion := crossScalaVersions.value.head,
-  scalacOptions ++= (scalaVersion.value.substring(0, scalaVersion.value.lastIndexOf(".")) match {
-    case "2.11" =>
-      Seq(
-        "-target:jvm-1.8",
-        "-encoding", "utf8",
-        "-unchecked",
-        "-deprecation",
-    //    "-optimise",
-        "-feature",
-        "-language:_",
-        "-Xfatal-warnings",
-        "-Xlint:_",
-        "-Yno-adapted-args",
-        "-Yinline-warnings",
-        "-Ywarn-dead-code",        // N.B. doesn't work well with the ??? hole
-        "-Ywarn-numeric-widen",
-    //    "-Ywarn-value-discard",
-    //    "-Ywarn-unused",
-        "-Ywarn-unused-import"     // 2.11 only      
+  scalacOptions ++= { CrossVersion.partialVersion(scalaVersion.value) match {
+    case Some((2, 12)) => Seq(
+      "-target:jvm-1.8",
+      "-encoding", "utf8",
+      "-unchecked",
+      "-deprecation",
+  //    "-optimise",
+      "-feature",
+      "-language:_",
+      "-Xfatal-warnings",
+      "-Xlint:_",
+      "-Yno-adapted-args",
+//        "-Yinline-warnings",       // seems to be not supported in 2.12
+      "-Ywarn-dead-code",        // N.B. doesn't work well with the ??? hole
+      "-Ywarn-numeric-widen",
+      "-Ywarn-value-discard",
+      "-Ywarn-unused",
+      "-Ywarn-unused-import"     // 2.11+ only      
       )
-    case "2.12" =>
-      Seq(
-        "-target:jvm-1.8",
-        "-encoding", "utf8",
-        "-unchecked",
-        "-deprecation",
-    //    "-optimise",
-        "-feature",
-        "-language:_",
-        "-Xfatal-warnings",
-        "-Xlint:_",
-        "-Yno-adapted-args",
-//        "-Yinline-warnings",
-        "-Ywarn-dead-code",        // N.B. doesn't work well with the ??? hole
-        "-Ywarn-numeric-widen",
-    //    "-Ywarn-value-discard",
-    //    "-Ywarn-unused",
-        "-Ywarn-unused-import"     // 2.11 only      
+    case _ => Seq(
+      "-target:jvm-1.6",
+      "-encoding", "utf8",
+      "-unchecked",
+      "-deprecation",
+  //    "-optimise",
+      "-feature",
+      "-language:_",
+      "-Xfatal-warnings",
+      "-Xlint:_",
+      "-Yno-adapted-args",
+      "-Yinline-warnings",
+      "-Ywarn-dead-code",        // N.B. doesn't work well with the ??? hole
+      "-Ywarn-numeric-widen",
+      "-Ywarn-value-discard",
+      "-Ywarn-unused",
+      "-Ywarn-unused-import"     // 2.11+ only      
       )
-    }),
-  javacOptions ++= Seq(
-    "-target", "1.8",
-    "-source", "1.8",
-    "-Xlint:deprecation"
-  ),
+  }},
+  javacOptions ++= { CrossVersion.partialVersion(scalaVersion.value) match {
+    case Some((2, 12)) => Seq(
+      "-target", "1.8",
+      "-source", "1.8",
+      "-xlint:deprecation"
+      )
+    case _ => Seq(
+      "-target", "1.6",
+      "-source", "1.6",
+      "-xlint:deprecation"
+      )
+  }},
   javaVersionPrefix in javaVersionCheck := Some("1.8"),
   sourcesInBase := false,
 //  unmanagedSourceDirectories in Compile := List((scalaSource in Compile).value),
