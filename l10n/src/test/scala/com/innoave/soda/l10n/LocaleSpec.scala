@@ -32,7 +32,6 @@ class LocaleSpec extends FlatSpec with Matchers {
     Language("en") == Language("en") shouldBe true
     Language("pt") == Language("pt") shouldBe true
     Language("en") == Language("es") shouldBe false
-    Language("en") == Country("en") shouldBe false
 
   }
 
@@ -53,8 +52,7 @@ class LocaleSpec extends FlatSpec with Matchers {
 
   it should "be equal with predefined constant value" in {
 
-    Language("fr") shouldBe Language.FR
-    Language("fr") should be theSameInstanceAs Language.FR
+    Language("fr") shouldBe Language.fr
 
   }
 
@@ -70,7 +68,6 @@ class LocaleSpec extends FlatSpec with Matchers {
     Country("US") == Country("US") shouldBe true
     Country("CH") == Country("CH") shouldBe true
     Country("US") == Country("UN") shouldBe false
-    Country("US") == Language("US") shouldBe false
 
   }
 
@@ -91,7 +88,6 @@ class LocaleSpec extends FlatSpec with Matchers {
   it should "be equal with predefined constant value" in {
 
     Country("FR") shouldBe Country.FR
-    Country("FR") should be theSameInstanceAs Country.FR
 
   }
 
@@ -107,7 +103,6 @@ class LocaleSpec extends FlatSpec with Matchers {
     Variant("polyton") == Variant("polyton") shouldBe true
     Variant("traditional") == Variant("traditional") shouldBe true
     Variant("polyton") == Variant("traditional") shouldBe false
-    Variant("polyton") == Country("polyton") shouldBe false
 
   }
 
@@ -128,13 +123,12 @@ class LocaleSpec extends FlatSpec with Matchers {
   it should "be equal with predefined constant value" in {
 
     Variant("") shouldBe Variant.Any
-    Variant("") should be theSameInstanceAs Variant.Any
 
   }
 
   "Locale" should "be defined by given ISO code for language" in {
 
-    val locale = Locale("en")
+    val locale = Locale.of("en")
 
     locale.language shouldBe Language("en")
     locale.country  shouldBe Country.Any
@@ -144,7 +138,7 @@ class LocaleSpec extends FlatSpec with Matchers {
 
   it should "be defined by given ISO code for language and country" in {
 
-    val locale = Locale("en", "US")
+    val locale = Locale.of("en", "US")
 
     locale.language shouldBe Language("en")
     locale.country  shouldBe Country("US")
@@ -154,7 +148,7 @@ class LocaleSpec extends FlatSpec with Matchers {
 
   it should "be defined by given ISO code for language and country and a variant" in {
 
-    val locale = Locale("pt", "BR", "polyton")
+    val locale = Locale.of("pt", "BR", "polyton")
 
     locale.language shouldBe Language("pt")
     locale.country  shouldBe Country("BR")
@@ -164,9 +158,9 @@ class LocaleSpec extends FlatSpec with Matchers {
 
   it should "be defined by given language" in {
 
-    val locale = Locale(Language.IT)
+    val locale = Locale(Language.it)
 
-    locale.language shouldBe Language.IT
+    locale.language shouldBe Language.it
     locale.country shouldBe Country.Any
     locale.variant shouldBe Variant.Any
 
@@ -174,9 +168,9 @@ class LocaleSpec extends FlatSpec with Matchers {
 
   it should "be defined by given language and country" in {
 
-    val locale = Locale(Language.ES, Country.US)
+    val locale = Locale(Language.es, Country.US)
 
-    locale.language shouldBe Language.ES
+    locale.language shouldBe Language.es
     locale.country shouldBe Country.US
     locale.variant shouldBe Variant.Any
 
@@ -184,9 +178,9 @@ class LocaleSpec extends FlatSpec with Matchers {
 
   it should "be defined by given language, country and variant" in {
 
-    val locale = Locale(Language.EN, Country.AU, Variant.Any)
+    val locale = Locale(Language.en, Country.AU, Variant.Any)
 
-    locale.language shouldBe Language.EN
+    locale.language shouldBe Language.en
     locale.country shouldBe Country.AU
     locale.variant shouldBe Variant.Any
 
@@ -196,36 +190,36 @@ class LocaleSpec extends FlatSpec with Matchers {
 
     val locale1 = Locale.forLanguageTag("zh-TW")
 
-    locale1.language shouldBe Language.ZH
+    locale1.language shouldBe Language.zh
     locale1.country shouldBe Country.TW
     locale1.variant shouldBe Variant.Any
 
-    locale1 shouldBe Locale.ZH_TW
+    locale1 shouldBe Locale.zh_TW
 
     val locale2 = Locale.forLanguageTag("de-AT")
 
-    locale2.language shouldBe Language.DE
+    locale2.language shouldBe Language.de
     locale2.country shouldBe Country.AT
     locale2.variant shouldBe Variant.Any
 
-    locale2 shouldBe Locale.DE_AT
+    locale2 shouldBe Locale.de_AT
 
   }
 
   it should "be constructed from java.util.Locale" in {
 
     val locale1 = Locale.fromJavaLocale(java.util.Locale.ENGLISH)
-    locale1.language shouldBe Language.EN
+    locale1.language shouldBe Language.en
     locale1.country shouldBe Country.Any
     locale1.variant shouldBe Variant.Any
 
     val locale2 = Locale.fromJavaLocale(new java.util.Locale("zh", "SG"))
-    locale2.language shouldBe Language.ZH
+    locale2.language shouldBe Language.zh
     locale2.country shouldBe Country.SG
     locale2.variant shouldBe Variant.Any
 
     val locale3 = Locale.fromJavaLocale(new java.util.Locale("pt", "BR", "polyton"))
-    locale3.language shouldBe Language.PT
+    locale3.language shouldBe Language.pt
     locale3.country shouldBe Country.BR
     locale3.variant shouldBe Variant("polyton")
 
@@ -233,7 +227,7 @@ class LocaleSpec extends FlatSpec with Matchers {
 
   it should "allow an empty language, empty country and empty variant" in {
 
-    val locale = Locale("", "", "")
+    val locale = Locale.of("", "", "")
 
     locale.language shouldBe Language.Any
     locale.country  shouldBe Country.Any
@@ -253,70 +247,73 @@ class LocaleSpec extends FlatSpec with Matchers {
 
   it should "be equal when language, country and variant are equal" in {
 
-    Locale("en") == Locale("en") shouldBe true
-    Locale("en") == Locale("es") shouldBe false
+    Locale(Language("en")) == Locale(Language("en")) shouldBe true
+    Locale(Language("en")) == Locale(Language("es")) shouldBe false
 
-    Locale("en", "US") == Locale("en", "US") shouldBe true
-    Locale("en", "US") == Locale("es", "US") shouldBe false
-    Locale("en", "US") == Locale("en", "GB") shouldBe false
+    Locale(Language("en")) == Locale(Language.en) shouldBe true
+    Locale(Language("en")) == Locale(Language.es) shouldBe false
 
-    Locale("pt", "BR", "polyton") == Locale("pt", "BR", "polyton") shouldBe true
+    Locale(Language.en, Country.US) == Locale(Language("en"), Country("US")) shouldBe true
+    Locale(Language.en, Country.US) == Locale(Language.es, Country.US) shouldBe false
+    Locale(Language("en"), Country("US")) == Locale(Language("en"), Country("GB")) shouldBe false
 
-    Locale("pt", "BR", "polyton") == Locale("es", "BR", "polyton") shouldBe false
-    Locale("pt", "BR", "polyton") == Locale("pt", "PT", "polyton") shouldBe false
-    Locale("pt", "BR", "polyton") == Locale("pt", "BR", "") shouldBe false
+    Locale(Language("pt"), Country("BR"), Variant("polyton")) == Locale(Language.pt, Country.BR, Variant("polyton")) shouldBe true
 
-    Locale("en") == new java.util.Locale("en") shouldBe false
+    Locale(Language("pt"), Country("BR"), Variant("polyton")) == Locale(Language("es"), Country("BR"), Variant("polyton")) shouldBe false
+    Locale(Language("pt"), Country("BR"), Variant("polyton")) == Locale(Language("pt"), Country("PT"), Variant("polyton")) shouldBe false
+    Locale(Language("pt"), Country("BR"), Variant("polyton")) == Locale(Language("pt"), Country("BR"), Variant("")) shouldBe false
+
+    Locale(Language("en")) == new java.util.Locale("en") shouldBe false
 
   }
 
   it should "be compared by the order of the code" in {
 
-    Locale("en").compare(Locale("es")) should be < 0
-    Locale("en").compare(Locale("de")) should be > 0
-    Locale("en").compare(Locale("en")) shouldBe 0
+    Locale.en compare Locale.es should be < 0
+    Locale.en compare Locale.de should be > 0
+    Locale.en compare Locale.en shouldBe 0
 
-    Locale("pt", "BR").compare(Locale("pt", "PT")) should be < 0
-    Locale("pt", "PT").compare(Locale("pt", "BR")) should be > 0
-    Locale("de", "AT").compare(Locale("de", "AT")) shouldBe 0
+    Locale.pt_BR compare Locale.pt_PT should be < 0
+    Locale.pt_PT compare Locale.pt_BR should be > 0
+    Locale.de_AT compare Locale.de_AT shouldBe 0
 
-    Locale("pt", "BR", "").compare(Locale("pt", "BR", "polyton")) should be < 0
-    Locale("pt", "BR", "polyton").compare(Locale("pt", "BR", "")) should be > 0
-    Locale("pt", "BR", "polyton").compare(Locale("pt", "BR", "polyton")) shouldBe 0
+    Locale(Language.pt, Country.BR, Variant.Any) compare Locale(Language.pt, Country.BR, Variant("polyton")) should be < 0
+    Locale(Language.pt, Country.BR, Variant("polyton")) compare Locale(Language.pt, Country.BR, Variant.Any) should be > 0
+    Locale(Language.pt, Country.BR, Variant("polyton")) compare Locale(Language.pt, Country.BR, Variant("polyton")) shouldBe 0
 
-    Locale("pt", "BR", "polyton").compare(Locale("pt", "PT", "")) should be < 0
-    Locale("pt", "PT", "").compare(Locale("pt", "BR", "polyton")) should be > 0
+    Locale(Language("pt"), Country("BR"), Variant("polyton")) compare Locale(Language("pt"), Country("PT"), Variant("")) should be < 0
+    Locale(Language("pt"), Country("PT"), Variant("")) compare Locale(Language("pt"), Country("BR"), Variant("polyton")) should be > 0
 
-    Locale("", "PT", "polyton").compare(Locale("pt", "BR", "")) should be < 0
-    Locale("pt", "BR", "").compare(Locale("", "PT", "polyton")) should be > 0
+    Locale(Language.Any, Country.PT, Variant("polyton")) compare Locale(Language.pt, Country.BR, Variant.Any) should be < 0
+    Locale(Language.pt, Country.BR, Variant.Any) compare Locale(Language.Any, Country.PT, Variant("polyton")) should be > 0
 
   }
 
   it should "return a human readable string on #toString" in {
 
-    Locale("en").toString shouldBe "Locale(Language(en), Country(), Variant())"
-    Locale("pt", "PT").toString shouldBe "Locale(Language(pt), Country(PT), Variant())"
-    Locale("pt", "BR", "polyton").toString shouldBe "Locale(Language(pt), Country(BR), Variant(polyton))"
+    Locale.en.toString shouldBe "Locale(Language(en), Country(), Variant())"
+    Locale.pt_PT.toString shouldBe "Locale(Language(pt), Country(PT), Variant())"
+    Locale(Language.pt, Country.BR, Variant("polyton")).toString shouldBe "Locale(Language(pt), Country(BR), Variant(polyton))"
 
   }
 
   it should "be equal with predefined constant values" in {
 
-    Locale("fr") shouldBe Locale.FR
-    Locale("fr") should be theSameInstanceAs Locale.FR
+    Locale(Language("fr")) shouldBe Locale.fr
+    Locale(Language("fr")) should be theSameInstanceAs Locale.fr
 
-    Locale("de", "CH") shouldBe Locale.DE_CH
-    Locale("de", "CH") should be theSameInstanceAs Locale.DE_CH
+    Locale(Language("de"), Country("CH")) shouldBe Locale.de_CH
+    Locale(Language("de"), Country("CH")) should be theSameInstanceAs Locale.de_CH
 
   }
 
   "Locale#asLanguageTag" should "return the language tag of the locale" in {
 
-    Locale.EN.asLanguageTag shouldBe "en"
-    Locale.DE_CH.asLanguageTag shouldBe "de-CH"
-    Locale.ZH_SG.asLanguageTag shouldBe "zh-SG"
+    Locale.en.asLanguageTag shouldBe "en"
+    Locale.de_CH.asLanguageTag shouldBe "de-CH"
+    Locale.zh_SG.asLanguageTag shouldBe "zh-SG"
 
-    Locale("pt", "BR", "polyton").asLanguageTag shouldBe "pt-BR-polyton"
+    Locale(Language.pt, Country.BR, Variant("polyton")).asLanguageTag shouldBe "pt-BR-polyton"
 
   }
 
@@ -345,25 +342,25 @@ class LocaleSpec extends FlatSpec with Matchers {
 
   "A Locale" should "display info in human readable form" in {
 
-    Locale.default = Locale.DE_AT
+    Locale.default = Locale.de_AT
 
-    val locale = Locale.FR_BE
+    val locale = Locale.fr_BE
 
     locale.displayName() shouldBe "Französisch (Belgien)"
     locale.displayLanguage() shouldBe "Französisch"
     locale.displayCountry() shouldBe "Belgien"
     locale.displayVariant() shouldBe ""
 
-    locale.displayName(Locale.EN_AU) shouldBe "French (Belgium)"
-    locale.displayLanguage(Locale.FR_CA) shouldBe "français"
-    locale.displayCountry(Locale.FR_CA) shouldBe "Belgique"
-    locale.displayVariant(Locale.FR_CA) shouldBe ""
+    locale.displayName(Locale.en_AU) shouldBe "French (Belgium)"
+    locale.displayLanguage(Locale.fr_CA) shouldBe "français"
+    locale.displayCountry(Locale.fr_CA) shouldBe "Belgique"
+    locale.displayVariant(Locale.fr_CA) shouldBe ""
 
   }
 
   "A Locale" should "return the ISO3 language code and ISO3 country code" in {
 
-    val locale = Locale.FR_CH
+    val locale = Locale.fr_CH
 
     locale.iso3Language() shouldBe "fra"
     locale.iso3Country() shouldBe "CHE"

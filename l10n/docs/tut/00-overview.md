@@ -1,7 +1,7 @@
 ---
 layout: page
 number: 1
-title: Overview : Soda L10N
+title: Overview - Soda L10N
 ---
 With Soda L10N its easy to define and use messages and types that are rendered into localized text. The translations for different languages are defined in localization bundles.
 
@@ -70,13 +70,13 @@ import com.innoave.soda.l10n.syntax._
 import DemoMessages._
 
 //render message localized in specified language
-HelloWorld().in(EN).value
+HelloWorld().in(en).value
 
 //render message with parameter in specified language
-Greeting("Frank").in(DE).value
+Greeting("Frank").in(de).value
 
 //define implicit locale to be used
-implicit val locale = EN
+implicit val locale = en
 
 //render message localized in the implicitly set language
 ProductsInShoppingCart("Paul", 0).asLocalText.value

@@ -63,10 +63,10 @@ class SyntaxSpec extends FlatSpec with Matchers {
     import DemoTypes._
     import DemoTypesLocalizer._
 
-    GreetingPlayCard(Card(Diamonds, King)) in EN shouldBe LocalText("Greetings to King of Diamonds")
-    GreetingPlayCard(Card(Diamonds, King)) in EN_GB shouldBe LocalText("Dear King of Diamonds")
-    GreetingPlayCard(Card(Diamonds, King)) in DE shouldBe LocalText("Guten Tag Karo König")
-    GreetingPlayCard(Card(Diamonds, King)) in DE_AT shouldBe LocalText("Meine Verehrung Karo König")
+    GreetingPlayCard(Card(Diamonds, King)) in en shouldBe LocalText("Greetings to King of Diamonds")
+    GreetingPlayCard(Card(Diamonds, King)) in en_GB shouldBe LocalText("Dear King of Diamonds")
+    GreetingPlayCard(Card(Diamonds, King)) in de shouldBe LocalText("Guten Tag Karo König")
+    GreetingPlayCard(Card(Diamonds, King)) in de_AT shouldBe LocalText("Meine Verehrung Karo König")
 
   }
 

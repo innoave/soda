@@ -27,7 +27,7 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
   override def beforeAll(): Unit = {
     //set default Locale to language for which there is no resource file available
     //only needed for tests!!!
-    Locale.default = Locale("aa")
+    Locale.default = Locale(Language("aa"))
   }
 
   def date(year: Int, month: Int, day: Int, hour: Int, minute: Int): Date = {
@@ -51,16 +51,16 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
     import Locale._
     import DemoMessages._
 
-    implicit val implicitLocale = EN
+    implicit val implicitLocale = en
     HelloWorld().asLocalText shouldBe LocalText("Hello World!")
 
-    HelloWorld().asLocalText(EN_GB) shouldBe LocalText("Good day World!")
+    HelloWorld().asLocalText(en_GB) shouldBe LocalText("Good day World!")
 
-    HelloWorld().in(DE) shouldBe LocalText("Hallo Welt!")
+    HelloWorld().in(de) shouldBe LocalText("Hallo Welt!")
 
-    HelloWorld() in DE_AT shouldBe LocalText("Servus Welt!")
+    HelloWorld() in de_AT shouldBe LocalText("Servus Welt!")
 
-    HelloWorld() in(Locale("zu")) shouldBe LocalText("Hello World!")
+    HelloWorld() in(Locale(Language("zu"))) shouldBe LocalText("Hello World!")
 
   }
 
@@ -70,16 +70,16 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
     import Locale._
     import DemoMessages._
 
-    implicit val implicitLocale = EN
+    implicit val implicitLocale = en
     Greeting("Frank").asLocalText shouldBe LocalText("Greetings to Frank")
 
-    Greeting("Frank").in(EN_GB) shouldBe LocalText("Dear Frank")
+    Greeting("Frank").in(en_GB) shouldBe LocalText("Dear Frank")
 
-    Greeting("Frank") in DE shouldBe LocalText("Guten Tag Frank")
+    Greeting("Frank") in de shouldBe LocalText("Guten Tag Frank")
 
-    Greeting("Frank") in(DE_AT) shouldBe LocalText("Grüß Gott Frank")
+    Greeting("Frank") in(de_AT) shouldBe LocalText("Grüß Gott Frank")
 
-    Greeting("Frank").asLocalText(Locale("zu")) shouldBe LocalText("Hello Frank")
+    Greeting("Frank").asLocalText(Locale(Language("zu"))) shouldBe LocalText("Hello Frank")
 
   }
 
@@ -89,16 +89,16 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
     import Locale._
     import DemoMessages._
 
-    implicit val implicitLocale = EN
+    implicit val implicitLocale = en
     ProductsInShoppingCart("Paul", 0).asLocalText shouldBe LocalText("Paul has no items in the cart.")
 
-    ProductsInShoppingCart("Paul", 0) in EN_GB shouldBe LocalText("Paul has no products in the shopping cart.")
+    ProductsInShoppingCart("Paul", 0) in en_GB shouldBe LocalText("Paul has no products in the shopping cart.")
 
-    ProductsInShoppingCart("Paul", 0).in(DE) shouldBe LocalText("Paul hat keine Produkte im Einkaufskorb.")
+    ProductsInShoppingCart("Paul", 0).in(de) shouldBe LocalText("Paul hat keine Produkte im Einkaufskorb.")
 
-    ProductsInShoppingCart("Paul", 0) in(DE_AT) shouldBe LocalText("Paul hat keine Produkte im Einkaufskörberl.")
+    ProductsInShoppingCart("Paul", 0) in(de_AT) shouldBe LocalText("Paul hat keine Produkte im Einkaufskörberl.")
 
-    ProductsInShoppingCart("Paul", 0).in(Locale("zu")) shouldBe LocalText("Paul has no products in the cart.")
+    ProductsInShoppingCart("Paul", 0).in(Locale(Language("zu"))) shouldBe LocalText("Paul has no products in the cart.")
 
   }
 
@@ -107,7 +107,7 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
     import syntax._
     import DemoMessages._
 
-    implicit val implicitLocale = Locale.EN
+    implicit val implicitLocale = Locale.en
     ProductsInShoppingCart("Paul", 0).asLocalText shouldBe LocalText("Paul has no items in the cart.")
 
     ProductsInShoppingCart("Paul", 1).asLocalText shouldBe LocalText("Paul has one item in the cart.")
@@ -124,14 +124,14 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
     import Locale._
     import AllPossibleMessageVariations._
 
-    MyMessage0()        in EN shouldBe LocalText("My message without arguments")
-    MyMessage0()        in DE shouldBe LocalText("Meine Nachricht ohne Argumente")
+    MyMessage0()        in en shouldBe LocalText("My message without arguments")
+    MyMessage0()        in de shouldBe LocalText("Meine Nachricht ohne Argumente")
 
-    CustomKeyMessage0() in EN shouldBe LocalText("Custom key message without arguments")
-    CustomKeyMessage0() in DE shouldBe LocalText("Eigener Key Nachricht ohne Argumente")
+    CustomKeyMessage0() in en shouldBe LocalText("Custom key message without arguments")
+    CustomKeyMessage0() in de shouldBe LocalText("Eigener Key Nachricht ohne Argumente")
 
-    AllCustomMessage0() in EN shouldBe LocalText("All custom message without arguments")
-    AllCustomMessage0() in DE shouldBe LocalText("Total angepasste Nachricht ohne Argumente")
+    AllCustomMessage0() in en shouldBe LocalText("All custom message without arguments")
+    AllCustomMessage0() in de shouldBe LocalText("Total angepasste Nachricht ohne Argumente")
 
   }
 
@@ -141,14 +141,14 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
     import Locale._
     import AllPossibleMessageVariations._
 
-    MyMessage1(10L)        in EN shouldBe LocalText("My message with 1 argument: [ 10 ]")
-    MyMessage1(10L)        in DE shouldBe LocalText("Meine Nachricht mit 1 Argument: [ 10 ]")
+    MyMessage1(10L)        in en shouldBe LocalText("My message with 1 argument: [ 10 ]")
+    MyMessage1(10L)        in de shouldBe LocalText("Meine Nachricht mit 1 Argument: [ 10 ]")
 
-    CustomKeyMessage1(10L) in EN shouldBe LocalText("Custom key message with 1 argument: [ 10 ]")
-    CustomKeyMessage1(10L) in DE shouldBe LocalText("Eigener Key Nachricht mit 1 Argument: [ 10 ]")
+    CustomKeyMessage1(10L) in en shouldBe LocalText("Custom key message with 1 argument: [ 10 ]")
+    CustomKeyMessage1(10L) in de shouldBe LocalText("Eigener Key Nachricht mit 1 Argument: [ 10 ]")
 
-    AllCustomMessage1(10L) in EN shouldBe LocalText("All custom message with 1 argument: [ 10 ]")
-    AllCustomMessage1(10L) in DE shouldBe LocalText("Total angepasste Nachricht mit 1 Argument: [ 10 ]")
+    AllCustomMessage1(10L) in en shouldBe LocalText("All custom message with 1 argument: [ 10 ]")
+    AllCustomMessage1(10L) in de shouldBe LocalText("Total angepasste Nachricht mit 1 Argument: [ 10 ]")
 
   }
 
@@ -158,14 +158,14 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
     import Locale._
     import AllPossibleMessageVariations._
 
-    MyMessage2("Lion", "King")        in EN shouldBe LocalText("My message with 2 arguments: [ Lion, King ]")
-    MyMessage2("Lion", "King")        in DE shouldBe LocalText("Meine Nachricht mit 2 Argumenten: [ Lion, King ]")
+    MyMessage2("Lion", "King")        in en shouldBe LocalText("My message with 2 arguments: [ Lion, King ]")
+    MyMessage2("Lion", "King")        in de shouldBe LocalText("Meine Nachricht mit 2 Argumenten: [ Lion, King ]")
 
-    CustomKeyMessage2("Lion", "King") in EN shouldBe LocalText("Custom key message with 2 arguments: [ Lion, King ]")
-    CustomKeyMessage2("Lion", "King") in DE shouldBe LocalText("Eigener Key Nachricht mit 2 Argumenten: [ Lion, King ]")
+    CustomKeyMessage2("Lion", "King") in en shouldBe LocalText("Custom key message with 2 arguments: [ Lion, King ]")
+    CustomKeyMessage2("Lion", "King") in de shouldBe LocalText("Eigener Key Nachricht mit 2 Argumenten: [ Lion, King ]")
 
-    AllCustomMessage2("Lion", "King") in EN shouldBe LocalText("All custom message with 2 arguments: [ Lion, King ]")
-    AllCustomMessage2("Lion", "King") in DE shouldBe LocalText("Total angepasste Nachricht mit 2 Argumenten: [ Lion, King ]")
+    AllCustomMessage2("Lion", "King") in en shouldBe LocalText("All custom message with 2 arguments: [ Lion, King ]")
+    AllCustomMessage2("Lion", "King") in de shouldBe LocalText("Total angepasste Nachricht mit 2 Argumenten: [ Lion, King ]")
 
   }
 
@@ -175,14 +175,14 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
     import Locale._
     import AllPossibleMessageVariations._
 
-    MyMessage3(30, BigDecimal(31.23), "total")        in EN shouldBe LocalText("My message with 3 arguments: [ 30, 31.23, total ]")
-    MyMessage3(30, BigDecimal(31.23), "total")        in DE shouldBe LocalText("Meine Nachricht mit 3 Argumenten: [ 30, 31,23, total ]")
+    MyMessage3(30, BigDecimal(31.23), "total")        in en shouldBe LocalText("My message with 3 arguments: [ 30, 31.23, total ]")
+    MyMessage3(30, BigDecimal(31.23), "total")        in de shouldBe LocalText("Meine Nachricht mit 3 Argumenten: [ 30, 31,23, total ]")
 
-    CustomKeyMessage3(30, BigDecimal(31.23), "total") in EN shouldBe LocalText("Custom key message with 3 arguments: [ 30, 31.23, total ]")
-    CustomKeyMessage3(30, BigDecimal(31.23), "total") in DE shouldBe LocalText("Eigener Key Nachricht mit 3 Argumenten: [ 30, 31,23, total ]")
+    CustomKeyMessage3(30, BigDecimal(31.23), "total") in en shouldBe LocalText("Custom key message with 3 arguments: [ 30, 31.23, total ]")
+    CustomKeyMessage3(30, BigDecimal(31.23), "total") in de shouldBe LocalText("Eigener Key Nachricht mit 3 Argumenten: [ 30, 31,23, total ]")
 
-    AllCustomMessage3(30, BigDecimal(31.23), "total") in EN shouldBe LocalText("All custom message with 3 arguments: [ 30, 31.23, total ]")
-    AllCustomMessage3(30, BigDecimal(31.23), "total") in DE shouldBe LocalText("Total angepasste Nachricht mit 3 Argumenten: [ 30, 31,23, total ]")
+    AllCustomMessage3(30, BigDecimal(31.23), "total") in en shouldBe LocalText("All custom message with 3 arguments: [ 30, 31.23, total ]")
+    AllCustomMessage3(30, BigDecimal(31.23), "total") in de shouldBe LocalText("Total angepasste Nachricht mit 3 Argumenten: [ 30, 31,23, total ]")
 
   }
 
@@ -192,14 +192,14 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
     import Locale._
     import AllPossibleMessageVariations._
 
-    MyMessage4("Pos", 40, date(2016, 11, 18, 0, 0), "midnight")        in EN shouldBe LocalText("My message with 4 arguments: [ Pos, 40, Nov 18, 2016, midnight ]")
-    MyMessage4("Pos", 40, date(2016, 11, 18, 0, 0), "midnight")        in DE shouldBe LocalText("Meine Nachricht mit 4 Argumenten: [ Pos, 40, 18.11.2016, midnight ]")
+    MyMessage4("Pos", 40, date(2016, 11, 18, 0, 0), "midnight")        in en shouldBe LocalText("My message with 4 arguments: [ Pos, 40, Nov 18, 2016, midnight ]")
+    MyMessage4("Pos", 40, date(2016, 11, 18, 0, 0), "midnight")        in de shouldBe LocalText("Meine Nachricht mit 4 Argumenten: [ Pos, 40, 18.11.2016, midnight ]")
 
-    CustomKeyMessage4("Pos", 40, date(2016, 11, 18, 0, 0), "midnight") in EN shouldBe LocalText("Custom key message with 4 arguments: [ Pos, 40, Nov 18, 2016, midnight ]")
-    CustomKeyMessage4("Pos", 40, date(2016, 11, 18, 0, 0), "midnight") in DE shouldBe LocalText("Eigener Key Nachricht mit 4 Argumenten: [ Pos, 40, 18.11.2016, midnight ]")
+    CustomKeyMessage4("Pos", 40, date(2016, 11, 18, 0, 0), "midnight") in en shouldBe LocalText("Custom key message with 4 arguments: [ Pos, 40, Nov 18, 2016, midnight ]")
+    CustomKeyMessage4("Pos", 40, date(2016, 11, 18, 0, 0), "midnight") in de shouldBe LocalText("Eigener Key Nachricht mit 4 Argumenten: [ Pos, 40, 18.11.2016, midnight ]")
 
-    AllCustomMessage4("Pos", 40, date(2016, 11, 18, 0, 0), "midnight") in EN shouldBe LocalText("All custom message with 4 arguments: [ Pos, 40, Nov 18, 2016, midnight ]")
-    AllCustomMessage4("Pos", 40, date(2016, 11, 18, 0, 0), "midnight") in DE shouldBe LocalText("Total angepasste Nachricht mit 4 Argumenten: [ Pos, 40, 18.11.2016, midnight ]")
+    AllCustomMessage4("Pos", 40, date(2016, 11, 18, 0, 0), "midnight") in en shouldBe LocalText("All custom message with 4 arguments: [ Pos, 40, Nov 18, 2016, midnight ]")
+    AllCustomMessage4("Pos", 40, date(2016, 11, 18, 0, 0), "midnight") in de shouldBe LocalText("Total angepasste Nachricht mit 4 Argumenten: [ Pos, 40, 18.11.2016, midnight ]")
 
   }
 
@@ -209,14 +209,14 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
     import Locale._
     import AllPossibleMessageVariations._
 
-    MyMessage5(50, 51, 52, 53, 54)        in EN shouldBe LocalText("My message with 5 arguments: [ 50, 51, 52, 53, 54 ]")
-    MyMessage5(50, 51, 52, 53, 54)        in DE shouldBe LocalText("Meine Nachricht mit 5 Argumenten: [ 50, 51, 52, 53, 54 ]")
+    MyMessage5(50, 51, 52, 53, 54)        in en shouldBe LocalText("My message with 5 arguments: [ 50, 51, 52, 53, 54 ]")
+    MyMessage5(50, 51, 52, 53, 54)        in de shouldBe LocalText("Meine Nachricht mit 5 Argumenten: [ 50, 51, 52, 53, 54 ]")
 
-    CustomKeyMessage5(50, 51, 52, 53, 54) in EN shouldBe LocalText("Custom key message with 5 arguments: [ 50, 51, 52, 53, 54 ]")
-    CustomKeyMessage5(50, 51, 52, 53, 54) in DE shouldBe LocalText("Eigener Key Nachricht mit 5 Argumenten: [ 50, 51, 52, 53, 54 ]")
+    CustomKeyMessage5(50, 51, 52, 53, 54) in en shouldBe LocalText("Custom key message with 5 arguments: [ 50, 51, 52, 53, 54 ]")
+    CustomKeyMessage5(50, 51, 52, 53, 54) in de shouldBe LocalText("Eigener Key Nachricht mit 5 Argumenten: [ 50, 51, 52, 53, 54 ]")
 
-    AllCustomMessage5(50, 51, 52, 53, 54) in EN shouldBe LocalText("All custom message with 5 arguments: [ 50, 51, 52, 53, 54 ]")
-    AllCustomMessage5(50, 51, 52, 53, 54) in DE shouldBe LocalText("Total angepasste Nachricht mit 5 Argumenten: [ 50, 51, 52, 53, 54 ]")
+    AllCustomMessage5(50, 51, 52, 53, 54) in en shouldBe LocalText("All custom message with 5 arguments: [ 50, 51, 52, 53, 54 ]")
+    AllCustomMessage5(50, 51, 52, 53, 54) in de shouldBe LocalText("Total angepasste Nachricht mit 5 Argumenten: [ 50, 51, 52, 53, 54 ]")
 
   }
 
@@ -226,14 +226,14 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
     import Locale._
     import AllPossibleMessageVariations._
 
-    MyMessage6(60L, "record", 61, 62, "first", "last")        in EN shouldBe LocalText("My message with 6 arguments: [ 60, record, 61, 62, first, last ]")
-    MyMessage6(60L, "record", 61, 62, "first", "last")        in DE shouldBe LocalText("Meine Nachricht mit 6 Argumenten: [ 60, record, 61, 62, first, last ]")
+    MyMessage6(60L, "record", 61, 62, "first", "last")        in en shouldBe LocalText("My message with 6 arguments: [ 60, record, 61, 62, first, last ]")
+    MyMessage6(60L, "record", 61, 62, "first", "last")        in de shouldBe LocalText("Meine Nachricht mit 6 Argumenten: [ 60, record, 61, 62, first, last ]")
 
-    CustomKeyMessage6(60L, "record", 61, 62, "first", "last") in EN shouldBe LocalText("Custom key message with 6 arguments: [ 60, record, 61, 62, first, last ]")
-    CustomKeyMessage6(60L, "record", 61, 62, "first", "last") in DE shouldBe LocalText("Eigener Key Nachricht mit 6 Argumenten: [ 60, record, 61, 62, first, last ]")
+    CustomKeyMessage6(60L, "record", 61, 62, "first", "last") in en shouldBe LocalText("Custom key message with 6 arguments: [ 60, record, 61, 62, first, last ]")
+    CustomKeyMessage6(60L, "record", 61, 62, "first", "last") in de shouldBe LocalText("Eigener Key Nachricht mit 6 Argumenten: [ 60, record, 61, 62, first, last ]")
 
-    AllCustomMessage6(60L, "record", 61, 62, "first", "last") in EN shouldBe LocalText("All custom message with 6 arguments: [ 60, record, 61, 62, first, last ]")
-    AllCustomMessage6(60L, "record", 61, 62, "first", "last") in DE shouldBe LocalText("Total angepasste Nachricht mit 6 Argumenten: [ 60, record, 61, 62, first, last ]")
+    AllCustomMessage6(60L, "record", 61, 62, "first", "last") in en shouldBe LocalText("All custom message with 6 arguments: [ 60, record, 61, 62, first, last ]")
+    AllCustomMessage6(60L, "record", 61, 62, "first", "last") in de shouldBe LocalText("Total angepasste Nachricht mit 6 Argumenten: [ 60, record, 61, 62, first, last ]")
 
   }
 
@@ -243,14 +243,14 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
     import Locale._
     import AllPossibleMessageVariations._
 
-    MyMessage7(date(2016, 11, 17, 12, 59), 70L, "points", 71, 72, "round", "one")        in EN shouldBe LocalText("My message with 7 arguments: [ Nov 17, 2016, 70, points, 71, 72, round, one ]")
-    MyMessage7(date(2016, 11, 17, 12, 59), 70L, "points", 71, 72, "round", "one")        in DE shouldBe LocalText("Meine Nachricht mit 7 Argumenten: [ 17.11.2016, 70, points, 71, 72, round, one ]")
+    MyMessage7(date(2016, 11, 17, 12, 59), 70L, "points", 71, 72, "round", "one")        in en shouldBe LocalText("My message with 7 arguments: [ Nov 17, 2016, 70, points, 71, 72, round, one ]")
+    MyMessage7(date(2016, 11, 17, 12, 59), 70L, "points", 71, 72, "round", "one")        in de shouldBe LocalText("Meine Nachricht mit 7 Argumenten: [ 17.11.2016, 70, points, 71, 72, round, one ]")
 
-    CustomKeyMessage7(date(2016, 11, 17, 12, 59), 70L, "points", 71, 72, "round", "one") in EN shouldBe LocalText("Custom key message with 7 arguments: [ Nov 17, 2016, 70, points, 71, 72, round, one ]")
-    CustomKeyMessage7(date(2016, 11, 17, 12, 59), 70L, "points", 71, 72, "round", "one") in DE shouldBe LocalText("Eigener Key Nachricht mit 7 Argumenten: [ 17.11.2016, 70, points, 71, 72, round, one ]")
+    CustomKeyMessage7(date(2016, 11, 17, 12, 59), 70L, "points", 71, 72, "round", "one") in en shouldBe LocalText("Custom key message with 7 arguments: [ Nov 17, 2016, 70, points, 71, 72, round, one ]")
+    CustomKeyMessage7(date(2016, 11, 17, 12, 59), 70L, "points", 71, 72, "round", "one") in de shouldBe LocalText("Eigener Key Nachricht mit 7 Argumenten: [ 17.11.2016, 70, points, 71, 72, round, one ]")
 
-    AllCustomMessage7(date(2016, 11, 17, 12, 59), 70L, "points", 71, 72, "round", "one") in EN shouldBe LocalText("All custom message with 7 arguments: [ Nov 17, 2016, 70, points, 71, 72, round, one ]")
-    AllCustomMessage7(date(2016, 11, 17, 12, 59), 70L, "points", 71, 72, "round", "one") in DE shouldBe LocalText("Total angepasste Nachricht mit 7 Argumenten: [ 17.11.2016, 70, points, 71, 72, round, one ]")
+    AllCustomMessage7(date(2016, 11, 17, 12, 59), 70L, "points", 71, 72, "round", "one") in en shouldBe LocalText("All custom message with 7 arguments: [ Nov 17, 2016, 70, points, 71, 72, round, one ]")
+    AllCustomMessage7(date(2016, 11, 17, 12, 59), 70L, "points", 71, 72, "round", "one") in de shouldBe LocalText("Total angepasste Nachricht mit 7 Argumenten: [ 17.11.2016, 70, points, 71, 72, round, one ]")
 
   }
 
@@ -260,14 +260,14 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
     import Locale._
     import AllPossibleMessageVariations._
 
-    MyMessage8(80L, 81L, 82L, 83L, 84L, 85L, 86L, 87L)        in EN shouldBe LocalText("My message with 8 arguments: [ 80, 81, 82, 83, 84, 85, 86, 87 ]")
-    MyMessage8(80L, 81L, 82L, 83L, 84L, 85L, 86L, 87L)        in DE shouldBe LocalText("Meine Nachricht mit 8 Argumenten: [ 80, 81, 82, 83, 84, 85, 86, 87 ]")
+    MyMessage8(80L, 81L, 82L, 83L, 84L, 85L, 86L, 87L)        in en shouldBe LocalText("My message with 8 arguments: [ 80, 81, 82, 83, 84, 85, 86, 87 ]")
+    MyMessage8(80L, 81L, 82L, 83L, 84L, 85L, 86L, 87L)        in de shouldBe LocalText("Meine Nachricht mit 8 Argumenten: [ 80, 81, 82, 83, 84, 85, 86, 87 ]")
 
-    CustomKeyMessage8(80L, 81L, 82L, 83L, 84L, 85L, 86L, 87L) in EN shouldBe LocalText("Custom key message with 8 arguments: [ 80, 81, 82, 83, 84, 85, 86, 87 ]")
-    CustomKeyMessage8(80L, 81L, 82L, 83L, 84L, 85L, 86L, 87L) in DE shouldBe LocalText("Eigener Key Nachricht mit 8 Argumenten: [ 80, 81, 82, 83, 84, 85, 86, 87 ]")
+    CustomKeyMessage8(80L, 81L, 82L, 83L, 84L, 85L, 86L, 87L) in en shouldBe LocalText("Custom key message with 8 arguments: [ 80, 81, 82, 83, 84, 85, 86, 87 ]")
+    CustomKeyMessage8(80L, 81L, 82L, 83L, 84L, 85L, 86L, 87L) in de shouldBe LocalText("Eigener Key Nachricht mit 8 Argumenten: [ 80, 81, 82, 83, 84, 85, 86, 87 ]")
 
-    AllCustomMessage8(80L, 81L, 82L, 83L, 84L, 85L, 86L, 87L) in EN shouldBe LocalText("All custom message with 8 arguments: [ 80, 81, 82, 83, 84, 85, 86, 87 ]")
-    AllCustomMessage8(80L, 81L, 82L, 83L, 84L, 85L, 86L, 87L) in DE shouldBe LocalText("Total angepasste Nachricht mit 8 Argumenten: [ 80, 81, 82, 83, 84, 85, 86, 87 ]")
+    AllCustomMessage8(80L, 81L, 82L, 83L, 84L, 85L, 86L, 87L) in en shouldBe LocalText("All custom message with 8 arguments: [ 80, 81, 82, 83, 84, 85, 86, 87 ]")
+    AllCustomMessage8(80L, 81L, 82L, 83L, 84L, 85L, 86L, 87L) in de shouldBe LocalText("Total angepasste Nachricht mit 8 Argumenten: [ 80, 81, 82, 83, 84, 85, 86, 87 ]")
 
   }
 
@@ -277,14 +277,14 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
     import Locale._
     import AllPossibleMessageVariations._
 
-    MyMessage9(90, 91, 92, 93, 94, 95, 96, 97, 98)        in EN shouldBe LocalText("My message with 9 arguments: [ 90, 91, 92, 93, 94, 95, 96, 97, 98 ]")
-    MyMessage9(90, 91, 92, 93, 94, 95, 96, 97, 98)        in DE shouldBe LocalText("Meine Nachricht mit 9 Argumenten: [ 90, 91, 92, 93, 94, 95, 96, 97, 98 ]")
+    MyMessage9(90, 91, 92, 93, 94, 95, 96, 97, 98)        in en shouldBe LocalText("My message with 9 arguments: [ 90, 91, 92, 93, 94, 95, 96, 97, 98 ]")
+    MyMessage9(90, 91, 92, 93, 94, 95, 96, 97, 98)        in de shouldBe LocalText("Meine Nachricht mit 9 Argumenten: [ 90, 91, 92, 93, 94, 95, 96, 97, 98 ]")
 
-    CustomKeyMessage9(90, 91, 92, 93, 94, 95, 96, 97, 98) in EN shouldBe LocalText("Custom key message with 9 arguments: [ 90, 91, 92, 93, 94, 95, 96, 97, 98 ]")
-    CustomKeyMessage9(90, 91, 92, 93, 94, 95, 96, 97, 98) in DE shouldBe LocalText("Eigener Key Nachricht mit 9 Argumenten: [ 90, 91, 92, 93, 94, 95, 96, 97, 98 ]")
+    CustomKeyMessage9(90, 91, 92, 93, 94, 95, 96, 97, 98) in en shouldBe LocalText("Custom key message with 9 arguments: [ 90, 91, 92, 93, 94, 95, 96, 97, 98 ]")
+    CustomKeyMessage9(90, 91, 92, 93, 94, 95, 96, 97, 98) in de shouldBe LocalText("Eigener Key Nachricht mit 9 Argumenten: [ 90, 91, 92, 93, 94, 95, 96, 97, 98 ]")
 
-    AllCustomMessage9(90, 91, 92, 93, 94, 95, 96, 97, 98) in EN shouldBe LocalText("All custom message with 9 arguments: [ 90, 91, 92, 93, 94, 95, 96, 97, 98 ]")
-    AllCustomMessage9(90, 91, 92, 93, 94, 95, 96, 97, 98) in DE shouldBe LocalText("Total angepasste Nachricht mit 9 Argumenten: [ 90, 91, 92, 93, 94, 95, 96, 97, 98 ]")
+    AllCustomMessage9(90, 91, 92, 93, 94, 95, 96, 97, 98) in en shouldBe LocalText("All custom message with 9 arguments: [ 90, 91, 92, 93, 94, 95, 96, 97, 98 ]")
+    AllCustomMessage9(90, 91, 92, 93, 94, 95, 96, 97, 98) in de shouldBe LocalText("Total angepasste Nachricht mit 9 Argumenten: [ 90, 91, 92, 93, 94, 95, 96, 97, 98 ]")
 
   }
 

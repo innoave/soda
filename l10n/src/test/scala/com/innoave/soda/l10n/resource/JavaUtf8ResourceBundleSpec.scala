@@ -22,6 +22,7 @@ import com.innoave.soda.l10n.DemoMessages._
 import com.innoave.soda.l10n.DemoTypes._
 import com.innoave.soda.l10n.DemoTypesLocalizer
 import com.innoave.soda.l10n.DemoTypesLocalizer._
+import com.innoave.soda.l10n.Language
 import com.innoave.soda.l10n.Locale
 import com.innoave.soda.l10n.Locale._
 import java.util.MissingResourceException
@@ -32,7 +33,7 @@ class JavaUtf8ResourceBundleSpec extends FlatSpec with Matchers with BeforeAndAf
   override def beforeAll(): Unit = {
     //set default Locale to language for which there is no resource file available
     //only needed for tests!!!
-    Locale.default = Locale("aa")
+    Locale.default = Locale(Language("aa"))
   }
 
   def bundleFor(bundleName: BundleName, locale: Locale): ResourceBundle =
@@ -41,9 +42,9 @@ class JavaUtf8ResourceBundleSpec extends FlatSpec with Matchers with BeforeAndAf
 
   "ResourceBundle" should "return a pattern string for given message" in {
 
-    bundleFor(HelloWorld.bundleName, EN).stringFor(HelloWorld) shouldBe "Hello World!"
-    bundleFor(Greeting.bundleName, EN).stringFor(Greeting) shouldBe "Greetings to {0}"
-    bundleFor(Greeting.bundleName, DE_AT).stringFor(Greeting) shouldBe "Grüß Gott {0}"
+    bundleFor(HelloWorld.bundleName, en).stringFor(HelloWorld) shouldBe "Hello World!"
+    bundleFor(Greeting.bundleName, en).stringFor(Greeting) shouldBe "Greetings to {0}"
+    bundleFor(Greeting.bundleName, de_AT).stringFor(Greeting) shouldBe "Grüß Gott {0}"
 
   }
 
@@ -51,30 +52,30 @@ class JavaUtf8ResourceBundleSpec extends FlatSpec with Matchers with BeforeAndAf
 
     val card = Card(Spades, Jack)
 
-    bundleFor(DemoTypesLocalizer.bundleName, EN).stringFor(card) shouldBe "{1} of {0}"
-    bundleFor(DemoTypesLocalizer.bundleName, DE_AT).stringFor(card) shouldBe "{0} {1}"
+    bundleFor(DemoTypesLocalizer.bundleName, en).stringFor(card) shouldBe "{1} of {0}"
+    bundleFor(DemoTypesLocalizer.bundleName, de_AT).stringFor(card) shouldBe "{0} {1}"
 
   }
 
   it should "return the key surrounded by exclamation marks if the key is not found in the bundle" in {
 
-    bundleFor(DemoTypesLocalizer.bundleName, EN).stringFor(HelloWorld) shouldBe "!!!hello.world!!!"
+    bundleFor(DemoTypesLocalizer.bundleName, en).stringFor(HelloWorld) shouldBe "!!!hello.world!!!"
 
   }
 
   it should "return the bundle for the default locale if there is no bundle for the given locale" in {
 
-    Locale.default = DE
+    Locale.default = de
 
-    bundleFor(Greeting.bundleName, Locale("zu")).stringFor(Greeting) shouldBe "Guten Tag {0}"
+    bundleFor(Greeting.bundleName, Locale(Language("zu"))).stringFor(Greeting) shouldBe "Guten Tag {0}"
 
   }
 
   it should "return the default bundle if there is no bundle for the given locale and no bundle for the default locale" in {
 
-    Locale.default = Locale("aa")
+    Locale.default = Locale(Language("aa"))
 
-    bundleFor(Greeting.bundleName, Locale("zu")).stringFor(Greeting) shouldBe "Hello {0}"
+    bundleFor(Greeting.bundleName, Locale(Language("zu"))).stringFor(Greeting) shouldBe "Hello {0}"
 
   }
 
@@ -82,7 +83,7 @@ class JavaUtf8ResourceBundleSpec extends FlatSpec with Matchers with BeforeAndAf
 
     the [MissingResourceException] thrownBy {
 
-      bundleFor(BundleName("ooooops"), EN)
+      bundleFor(BundleName("ooooops"), en)
 
     } should have message "Can't find bundle for base name ooooops, locale en"
 

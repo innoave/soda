@@ -18,7 +18,7 @@ package com.innoave.soda.l10n
 import java.util.{Locale => JLocale}
 import scala.collection.mutable
 
-class Locale private[Locale](
+final class Locale private[Locale](
     val language: Language,
     val country: Country,
     val variant: Variant
@@ -97,21 +97,18 @@ class Locale private[Locale](
 
 }
 
-class Language private[Language](val code: String) extends Equals with Ordered[Language] {
+object LocaleOrdering extends Ordering[Locale] {
+
+  override def compare(x: Locale, y: Locale): Int =
+    x compare y
+
+}
+
+final case class Language private[Language](val code: String) extends AnyVal
+    with Equals with Ordered[Language] {
 
   override def canEqual(other: Any): Boolean =
     other.isInstanceOf[Language]
-
-  override def equals(other: Any): Boolean =
-    other match {
-      case that: Language => that.canEqual(Language.this) && this.code == that.code
-      case _ => false
-    }
-
-  override def hashCode(): Int = {
-    val prime = 41
-    prime + code.hashCode
-  }
 
   override def toString(): String =
     s"Language($code)"
@@ -121,21 +118,18 @@ class Language private[Language](val code: String) extends Equals with Ordered[L
 
 }
 
-class Country private[Country](val code: String) extends Equals with Ordered[Country] {
+object LanguageOrdering extends Ordering[Language] {
+
+  override def compare(x: Language, y: Language): Int =
+    x compare y
+
+}
+
+final case class Country private[Country](val code: String) extends AnyVal
+    with Equals with Ordered[Country] {
 
   override def canEqual(other: Any): Boolean =
     other.isInstanceOf[Country]
-
-  override def equals(other: Any): Boolean =
-    other match {
-      case that: Country => that.canEqual(Country.this) && this.code == that.code
-      case _ => false
-    }
-
-  override def hashCode(): Int = {
-    val prime = 41
-    prime + code.hashCode
-  }
 
   override def toString(): String =
     s"Country($code)"
@@ -145,27 +139,31 @@ class Country private[Country](val code: String) extends Equals with Ordered[Cou
 
 }
 
-class Variant private[Variant](val code: String) extends Equals with Ordered[Variant] {
+object CountryOrdering extends Ordering[Country] {
+
+  override def compare(x: Country, y: Country): Int =
+    x compare y
+
+}
+
+final case class Variant private[Variant](val code: String) extends AnyVal
+    with Equals with Ordered[Variant] {
 
   override def canEqual(other: Any): Boolean =
     other.isInstanceOf[Variant]
-
-  override def equals(other: Any): Boolean =
-    other match {
-      case that: Variant => that.canEqual(Variant.this) && this.code == that.code
-      case _ => false
-    }
-
-  override def hashCode(): Int = {
-    val prime = 41
-    prime + code.hashCode
-  }
 
   override def toString(): String =
     s"Variant($code)"
 
   override def compare(that: Variant): Int =
     this.code.compare(that.code)
+
+}
+
+object VariantOrdering extends Ordering[Variant] {
+
+  override def compare(x: Variant, y: Variant): Int =
+    x compare y
 
 }
 
@@ -180,102 +178,67 @@ final private[l10n] class Cache[K, V] {
 
 object Language {
 
-  private[this] val cache: Cache[String, Language] = new Cache()
+  val Any = Language("")
 
-  final private def languageOf(code: String): Language =
-    cache.getOrElseUpdate(code, new Language(code))
-
-  def apply(code: String): Language =
-    languageOf(code)
-
-  val Any = languageOf("")
-
-  def DE = languageOf("de")
-  def EN = languageOf("en")
-  def ES = languageOf("es")
-  def FR = languageOf("fr")
-  def IT = languageOf("it")
-  def PT = languageOf("pt")
-  def ZH = languageOf("zh")
+  def de = Language("de")
+  def en = Language("en")
+  def es = Language("es")
+  def fr = Language("fr")
+  def it = Language("it")
+  def pt = Language("pt")
+  def zh = Language("zh")
 
 }
 
 object Country {
 
-  private[this] val cache: Cache[String, Country] = new Cache()
+  val Any = Country("")
 
-  final private def countryOf(code: String): Country =
-    cache.getOrElseUpdate(code, new Country(code))
-
-  def apply(code: String): Country =
-    countryOf(code)
-
-  val Any = countryOf("")
-
-  def AT = countryOf("AT")
-  def AU = countryOf("AU")
-  def BE = countryOf("BE")
-  def BR = countryOf("BR")
-  def CA = countryOf("CA")
-  def CH = countryOf("CH")
-  def CN = countryOf("CN")
-  def DE = countryOf("DE")
-  def ES = countryOf("ES")
-  def FR = countryOf("FR")
-  def GB = countryOf("GB")
-  def HK = countryOf("HK")
-  def IT = countryOf("IT")
-  def MX = countryOf("MX")
-  def SG = countryOf("SG")
-  def US = countryOf("US")
-  def TW = countryOf("TW")
+  def AT = Country("AT")
+  def AU = Country("AU")
+  def BE = Country("BE")
+  def BR = Country("BR")
+  def CA = Country("CA")
+  def CH = Country("CH")
+  def CN = Country("CN")
+  def DE = Country("DE")
+  def ES = Country("ES")
+  def FR = Country("FR")
+  def GB = Country("GB")
+  def HK = Country("HK")
+  def IT = Country("IT")
+  def MX = Country("MX")
+  def PT = Country("PT")
+  def SG = Country("SG")
+  def US = Country("US")
+  def TW = Country("TW")
 
 }
 
 object Variant {
 
-  private[this] val cache: Cache[String, Variant] = new Cache()
-
-  final private def variantOf(code: String): Variant =
-    cache.getOrElseUpdate(code, new Variant(code))
-
-  def apply(code: String): Variant =
-    variantOf(code)
-
-  val Any = variantOf("")
+  val Any = Variant("")
 
 }
 
 object Locale {
 
-  private[this] val cache: Cache[(String, String, String), Locale] = new Cache()
+  private[this] val cache: Cache[(Language, Country, Variant), Locale] = new Cache()
 
   final private def localeOf(language: Language): Locale =
-    cache.getOrElseUpdate((language.code, Country.Any.code, Variant.Any.code),
+    cache.getOrElseUpdate((language, Country.Any, Variant.Any),
         new Locale(language, Country.Any, Variant.Any))
 
   final private def localeOf(language: Language, country: Country): Locale =
-    cache.getOrElseUpdate((language.code, country.code, Variant.Any.code),
+    cache.getOrElseUpdate((language, country, Variant.Any),
         new Locale(language, country, Variant.Any))
 
   final private def localeOf(language: Language, country: Country, variant: Variant): Locale =
-    cache.getOrElseUpdate((language.code, country.code, variant.code),
+    cache.getOrElseUpdate((language, country, variant),
         new Locale(language, country, variant))
 
-  final private def localeOf(language: String): Locale =
-    cache.getOrElseUpdate((language, Country.Any.code, Variant.Any.code),
-        new Locale(Language(language), Country.Any, Variant.Any))
-
-  final private def localeOf(language: String, country: String): Locale =
-    cache.getOrElseUpdate((language, country, Variant.Any.code),
-        new Locale(Language(language), Country(country), Variant.Any))
-
-  final private def localeOf(language: String, country: String, variant: String): Locale =
-    cache.getOrElseUpdate((language, country, variant),
-        new Locale(Language(language), Country(country), Variant(variant)))
-
   final private def javaLocale2Locale(jLocale: JLocale): Locale =
-    localeOf(jLocale.getLanguage, jLocale.getCountry, jLocale.getVariant)
+    localeOf(Language(jLocale.getLanguage), Country(jLocale.getCountry), Variant(jLocale.getVariant))
 
   def apply(language: Language): Locale =
     localeOf(language)
@@ -286,14 +249,17 @@ object Locale {
   def apply(language: Language, country: Country, variant: Variant): Locale =
     localeOf(language, country, variant)
 
-  def apply(language: String): Locale =
-    localeOf(language)
+  def of(language: String): Locale =
+    localeOf(Language(language))
 
-  def apply(language: String, country: String): Locale =
-    localeOf(language, country)
+  def of(language: String, country: String): Locale =
+    localeOf(Language(language), Country(country))
 
-  def apply(language: String, country: String, variant: String): Locale =
-    localeOf(language, country, variant)
+  def of(language: String, country: String, variant: String): Locale =
+    localeOf(Language(language), Country(country), Variant(variant))
+
+  def unapply(locale: Locale): Option[(Language, Country, Variant)] =
+    Some((locale.language, locale.country, locale.variant))
 
   def forLanguageTag(languageTag: String): Locale =
     javaLocale2Locale(JLocale.forLanguageTag(languageTag))
@@ -322,34 +288,38 @@ object Locale {
   def availableLocales(): Seq[Locale] =
     JLocale.getAvailableLocales.map(javaLocale2Locale(_))
 
-  def EN = localeOf(Language.EN)
-  def EN_US = localeOf(Language.EN, Country.US)
-  def EN_GB = localeOf(Language.EN, Country.GB)
-  def EN_AU = localeOf(Language.EN, Country.AU)
+  def de = localeOf(Language.de)
+  def de_DE = localeOf(Language.de, Country.DE)
+  def de_AT = localeOf(Language.de, Country.AT)
+  def de_CH = localeOf(Language.de, Country.CH)
 
-  def DE = localeOf(Language.DE)
-  def DE_DE = localeOf(Language.DE, Country.DE)
-  def DE_AT = localeOf(Language.DE, Country.AT)
-  def DE_CH = localeOf(Language.DE, Country.CH)
+  def en = localeOf(Language.en)
+  def en_US = localeOf(Language.en, Country.US)
+  def en_GB = localeOf(Language.en, Country.GB)
+  def en_AU = localeOf(Language.en, Country.AU)
 
-  def FR = localeOf(Language.FR)
-  def FR_BE = localeOf(Language.FR, Country.BE)
-  def FR_CA = localeOf(Language.FR, Country.CA)
-  def FR_CH = localeOf(Language.FR, Country.CH)
-  def FR_FR = localeOf(Language.FR, Country.FR)
+  def es = localeOf(Language.es)
+  def es_ES = localeOf(Language.es, Country.ES)
+  def es_MX = localeOf(Language.es, Country.MX)
 
-  def IT = localeOf(Language.IT)
-  def IT_IT = localeOf(Language.IT, Country.IT)
-  def IT_CH = localeOf(Language.IT, Country.CH)
+  def fr = localeOf(Language.fr)
+  def fr_BE = localeOf(Language.fr, Country.BE)
+  def fr_CA = localeOf(Language.fr, Country.CA)
+  def fr_CH = localeOf(Language.fr, Country.CH)
+  def fr_FR = localeOf(Language.fr, Country.FR)
 
-  def ES = localeOf(Language.ES)
-  def ES_ES = localeOf(Language.ES, Country.ES)
-  def ES_MX = localeOf(Language.ES, Country.MX)
+  def it = localeOf(Language.it)
+  def it_IT = localeOf(Language.it, Country.IT)
+  def it_CH = localeOf(Language.it, Country.CH)
 
-  def ZH = localeOf(Language.ZH)
-  def ZH_CN = localeOf(Language.ZH, Country.CN)
-  def ZH_HK = localeOf(Language.ZH, Country.HK)
-  def ZH_SG = localeOf(Language.ZH, Country.SG)
-  def ZH_TW = localeOf(Language.ZH, Country.TW)
+  def pt = localeOf(Language.pt)
+  def pt_BR = localeOf(Language.pt, Country.BR)
+  def pt_PT = localeOf(Language.pt, Country.PT)
+
+  def zh = localeOf(Language.zh)
+  def zh_CN = localeOf(Language.zh, Country.CN)
+  def zh_HK = localeOf(Language.zh, Country.HK)
+  def zh_SG = localeOf(Language.zh, Country.SG)
+  def zh_TW = localeOf(Language.zh, Country.TW)
 
 }
