@@ -107,12 +107,6 @@ object LocaleOrdering extends Ordering[Locale] {
 final case class Language private[Language](val code: String) extends AnyVal
     with Equals with Ordered[Language] {
 
-  override def canEqual(other: Any): Boolean =
-    other.isInstanceOf[Language]
-
-  override def toString(): String =
-    s"Language($code)"
-
   override def compare(that: Language): Int =
     this.code.compare(that.code)
 
@@ -128,12 +122,6 @@ object LanguageOrdering extends Ordering[Language] {
 final case class Country private[Country](val code: String) extends AnyVal
     with Equals with Ordered[Country] {
 
-  override def canEqual(other: Any): Boolean =
-    other.isInstanceOf[Country]
-
-  override def toString(): String =
-    s"Country($code)"
-
   override def compare(that: Country): Int =
     this.code.compare(that.code)
 
@@ -148,12 +136,6 @@ object CountryOrdering extends Ordering[Country] {
 
 final case class Variant private[Variant](val code: String) extends AnyVal
     with Equals with Ordered[Variant] {
-
-  override def canEqual(other: Any): Boolean =
-    other.isInstanceOf[Variant]
-
-  override def toString(): String =
-    s"Variant($code)"
 
   override def compare(that: Variant): Int =
     this.code.compare(that.code)

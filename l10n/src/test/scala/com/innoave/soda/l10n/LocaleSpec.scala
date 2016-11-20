@@ -15,6 +15,7 @@
  */
 package com.innoave.soda.l10n
 
+import scala.util.Sorting
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
 
@@ -41,6 +42,16 @@ class LocaleSpec extends FlatSpec with Matchers {
     Language("en").compare(Language("de")) should be > 0
     Language("en").compare(Language("es")) should be < 0
     Language("en").compare(Language("en")) shouldBe 0
+
+  }
+
+  it should "be sorted by the order of the code" in {
+
+    val languages = Array(Language.es, Language.it, Language.fr, Language.de)
+
+    Sorting.quickSort(languages)(LanguageOrdering)
+
+    languages shouldBe Array(Language.de, Language.es, Language.fr, Language.it)
 
   }
 
@@ -79,6 +90,16 @@ class LocaleSpec extends FlatSpec with Matchers {
 
   }
 
+  it should "be sorted by the order of the code" in {
+
+    val countries = Array(Country.MX, Country.IT, Country.FR, Country.BE, Country.CN)
+
+    Sorting.quickSort(countries)(CountryOrdering)
+
+    countries shouldBe Array(Country.BE, Country.CN, Country.FR, Country.IT, Country.MX)
+
+  }
+
   it should "return a human readable string on #toString" in {
 
     Country("US").toString shouldBe "Country(US)"
@@ -111,6 +132,16 @@ class LocaleSpec extends FlatSpec with Matchers {
     Variant("polyton").compare(Variant("traditional")) should be < 0
     Variant("traditional").compare(Variant("polyton")) should be > 0
     Variant("polyton").compare(Variant("polyton")) shouldBe 0
+
+  }
+
+  it should "be sorted by the order of the code" in {
+
+    val variants = Array(Variant(""), Variant("lskf"), Variant("wosa"), Variant("ksoe"))
+
+    Sorting.quickSort(variants)(VariantOrdering)
+
+    variants shouldBe Array(Variant(""), Variant("ksoe"), Variant("lskf"), Variant("wosa"))
 
   }
 
@@ -245,6 +276,24 @@ class LocaleSpec extends FlatSpec with Matchers {
 
   }
 
+  it should "be usable in pattern matching" in {
+
+    def test(locale: Locale): (Language, Country, Variant) =
+      locale match {
+        case Locale(language, Country.Any, Variant.Any) =>
+          (language, Country.Any, Variant.Any)
+        case Locale(language, country, Variant.Any) =>
+          (language, country, Variant.Any)
+        case Locale(language, country, variant) =>
+          (language, country, variant)
+      }
+
+    test(Locale.fr) shouldBe ((Language.fr, Country.Any, Variant.Any))
+    test(Locale.fr_CH) shouldBe ((Language.fr, Country.CH, Variant.Any))
+    test(Locale(Language.it, Country.CH, Variant("latin"))) shouldBe ((Language.it, Country.CH, Variant("latin")))
+
+  }
+
   it should "be equal when language, country and variant are equal" in {
 
     Locale(Language("en")) == Locale(Language("en")) shouldBe true
@@ -267,7 +316,7 @@ class LocaleSpec extends FlatSpec with Matchers {
 
   }
 
-  it should "be compared by the order of the code" in {
+  it should "be compared by the order of language, country and variant" in {
 
     Locale.en compare Locale.es should be < 0
     Locale.en compare Locale.de should be > 0
@@ -286,6 +335,30 @@ class LocaleSpec extends FlatSpec with Matchers {
 
     Locale(Language.Any, Country.PT, Variant("polyton")) compare Locale(Language.pt, Country.BR, Variant.Any) should be < 0
     Locale(Language.pt, Country.BR, Variant.Any) compare Locale(Language.Any, Country.PT, Variant("polyton")) should be > 0
+
+  }
+
+  it should "be sorted by the order of language, country and variant" in {
+
+    val locales1 = Array(Locale.fr_FR, Locale.en_AU, Locale.de_CH, Locale.es_MX, Locale.zh_HK, Locale.de_AT)
+    Sorting.quickSort(locales1)(LocaleOrdering)
+    locales1 shouldBe Array(Locale.de_AT, Locale.de_CH, Locale.en_AU, Locale.es_MX, Locale.fr_FR, Locale.zh_HK)
+
+    val locales2 = Array(Locale.zh_CN, Locale.zh_SG, Locale.zh_TW, Locale.zh_HK, Locale.zh)
+    Sorting.quickSort(locales2)(LocaleOrdering)
+    locales2 shouldBe Array(Locale.zh, Locale.zh_CN, Locale.zh_HK, Locale.zh_SG, Locale.zh_TW)
+
+    val locales3 = Array(
+        Locale(Language.pt, Country.BR, Variant("polyton")),
+        Locale(Language.pt, Country.BR, Variant.Any),
+        Locale(Language.pt, Country.PT)
+        )
+    Sorting.quickSort(locales3)(LocaleOrdering)
+    locales3 shouldBe Array(
+        Locale(Language.pt, Country.BR, Variant.Any),
+        Locale(Language.pt, Country.BR, Variant("polyton")),
+        Locale(Language.pt, Country.PT)
+        )
 
   }
 
