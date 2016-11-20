@@ -27,7 +27,7 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
   override def beforeAll(): Unit = {
     //set default Locale to language for which there is no resource file available
     //only needed for tests!!!
-    Locale.default = Locale("XX")
+    Locale.default = Locale("aa")
   }
 
   def date(year: Int, month: Int, day: Int, hour: Int, minute: Int): Date = {
@@ -60,7 +60,7 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
 
     HelloWorld() in DE_AT shouldBe LocalText("Servus Welt!")
 
-    HelloWorld() in(Locale("MM")) shouldBe LocalText("Hello World!")
+    HelloWorld() in(Locale("zu")) shouldBe LocalText("Hello World!")
 
   }
 
@@ -79,7 +79,7 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
 
     Greeting("Frank") in(DE_AT) shouldBe LocalText("Grüß Gott Frank")
 
-    Greeting("Frank").asLocalText(Locale("MM")) shouldBe LocalText("Hello Frank")
+    Greeting("Frank").asLocalText(Locale("zu")) shouldBe LocalText("Hello Frank")
 
   }
 
@@ -98,7 +98,7 @@ class RenderMessageSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
 
     ProductsInShoppingCart("Paul", 0) in(DE_AT) shouldBe LocalText("Paul hat keine Produkte im Einkaufskörberl.")
 
-    ProductsInShoppingCart("Paul", 0).in(Locale("MM")) shouldBe LocalText("Paul has no products in the cart.")
+    ProductsInShoppingCart("Paul", 0).in(Locale("zu")) shouldBe LocalText("Paul has no products in the cart.")
 
   }
 

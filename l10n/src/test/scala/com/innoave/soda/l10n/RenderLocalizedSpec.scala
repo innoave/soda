@@ -24,7 +24,7 @@ class RenderLocalizedSpec extends FlatSpec with Matchers with BeforeAndAfterAll 
   override def beforeAll(): Unit = {
     //set default Locale to language for which there is no resource file available
     //only needed for tests!!!
-    Locale.default = Locale("XX")
+    Locale.default = Locale("aa")
   }
 
   "RenderLocalized" should "render a text for a case class in different languages" in {
@@ -41,7 +41,7 @@ class RenderLocalizedSpec extends FlatSpec with Matchers with BeforeAndAfterAll 
 
     render(queenOfHearts).in(DE_AT) shouldBe LocalText("Herz Dame")
 
-    render(queenOfHearts) in Locale("MM") shouldBe LocalText("['Queen' of 'Hearts']")
+    render(queenOfHearts) in Locale("zu") shouldBe LocalText("['Queen' of 'Hearts']")
 
   }
 
@@ -57,7 +57,7 @@ class RenderLocalizedSpec extends FlatSpec with Matchers with BeforeAndAfterAll 
 
     render(King) in DE_AT shouldBe LocalText("König")
 
-    render(King).in(Locale("MM")) shouldBe LocalText("'King'")
+    render(King).in(Locale("zu")) shouldBe LocalText("'King'")
 
   }
 
@@ -75,7 +75,7 @@ class RenderLocalizedSpec extends FlatSpec with Matchers with BeforeAndAfterAll 
 
     render(playedCard).in(DE) shouldBe LocalText("Spieler Frank hat Pik König ausgespielt")
 
-    render(playedCard) in Locale("MM") shouldBe LocalText("['Player Frank' played ['King' of 'Clubs']]")
+    render(playedCard) in Locale("zu") shouldBe LocalText("['Player Frank' played ['King' of 'Clubs']]")
 
   }
 
@@ -93,7 +93,7 @@ class RenderLocalizedSpec extends FlatSpec with Matchers with BeforeAndAfterAll 
 
     render(cards) in DE shouldBe LocalText("Karo König, Pik Zehn, Herz Ass, Kreuz Bube")
 
-    render(cards) in Locale("MM") shouldBe LocalText("['King' of 'Diamonds'], ['Ten' of 'Clubs'], ['Ace' of 'Hearts'], ['Jack' of 'Spades']")
+    render(cards) in Locale("zu") shouldBe LocalText("['King' of 'Diamonds'], ['Ten' of 'Clubs'], ['Ace' of 'Hearts'], ['Jack' of 'Spades']")
 
   }
 
@@ -111,7 +111,7 @@ class RenderLocalizedSpec extends FlatSpec with Matchers with BeforeAndAfterAll 
 
     render(faces).in(DE) shouldBe LocalText("Zehn, Bube, Dame, König, Ass")
 
-    render(faces).in(Locale("MM")) shouldBe LocalText("'Ten', 'Jack', 'Queen', 'King', 'Ace'")
+    render(faces).in(Locale("zu")) shouldBe LocalText("'Ten', 'Jack', 'Queen', 'King', 'Ace'")
 
   }
 

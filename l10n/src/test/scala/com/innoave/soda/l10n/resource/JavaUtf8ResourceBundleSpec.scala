@@ -32,7 +32,7 @@ class JavaUtf8ResourceBundleSpec extends FlatSpec with Matchers with BeforeAndAf
   override def beforeAll(): Unit = {
     //set default Locale to language for which there is no resource file available
     //only needed for tests!!!
-    Locale.default = Locale("XX")
+    Locale.default = Locale("aa")
   }
 
   def bundleFor(bundleName: BundleName, locale: Locale): ResourceBundle =
@@ -66,15 +66,15 @@ class JavaUtf8ResourceBundleSpec extends FlatSpec with Matchers with BeforeAndAf
 
     Locale.default = DE
 
-    bundleFor(Greeting.bundleName, Locale("mm")).stringFor(Greeting) shouldBe "Guten Tag {0}"
+    bundleFor(Greeting.bundleName, Locale("zu")).stringFor(Greeting) shouldBe "Guten Tag {0}"
 
   }
 
   it should "return the default bundle if there is no bundle for the given locale and no bundle for the default locale" in {
 
-    Locale.default = Locale("XX")
+    Locale.default = Locale("aa")
 
-    bundleFor(Greeting.bundleName, Locale("mm")).stringFor(Greeting) shouldBe "Hello {0}"
+    bundleFor(Greeting.bundleName, Locale("zu")).stringFor(Greeting) shouldBe "Hello {0}"
 
   }
 
