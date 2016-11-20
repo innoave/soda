@@ -169,6 +169,8 @@ lazy val buildSettings = Seq(
   }},
   javaVersionPrefix in javaVersionCheck := Some("1.8"),
   sourcesInBase := false,
+  parallelExecution := true,
+  fork in Test := true,
 //  unmanagedSourceDirectories in Compile := List((scalaSource in Compile).value),
 //  unmanagedSourceDirectories in Test := List((scalaSource in Test).value),
 //  libraryDependencies <+= scalaVersion("org.scala-lang" % "scala-reflect" % _),
