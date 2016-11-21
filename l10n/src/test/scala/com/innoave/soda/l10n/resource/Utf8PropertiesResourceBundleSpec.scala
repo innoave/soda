@@ -15,9 +15,12 @@
  */
 package com.innoave.soda.l10n.resource
 
+import java.util.MissingResourceException
+import org.scalatest.BeforeAndAfterAll
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
 import com.innoave.soda.l10n.BundleName
+import com.innoave.soda.l10n.DemoMessages
 import com.innoave.soda.l10n.DemoMessages._
 import com.innoave.soda.l10n.DemoTypes._
 import com.innoave.soda.l10n.DemoTypesLocalizer
@@ -25,8 +28,7 @@ import com.innoave.soda.l10n.DemoTypesLocalizer._
 import com.innoave.soda.l10n.Language
 import com.innoave.soda.l10n.Locale
 import com.innoave.soda.l10n.Locale._
-import java.util.MissingResourceException
-import org.scalatest.BeforeAndAfterAll
+import com.innoave.soda.l10n.ResourceBundle
 
 class JavaUtf8ResourceBundleSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
 
@@ -37,7 +39,7 @@ class JavaUtf8ResourceBundleSpec extends FlatSpec with Matchers with BeforeAndAf
   }
 
   def bundleFor(bundleName: BundleName, locale: Locale): ResourceBundle =
-    new JavaUtf8ResourceBundle(bundleName, locale)
+    Utf8PropertiesResourceBundle(bundleName, locale)
 
 
   "ResourceBundle" should "return a pattern string for given message" in {
@@ -86,6 +88,19 @@ class JavaUtf8ResourceBundleSpec extends FlatSpec with Matchers with BeforeAndAf
       bundleFor(BundleName("ooooops"), en)
 
     } should have message "Can't find bundle for base name ooooops, locale en"
+
+  }
+
+  "Utf8PropertiesResourceBundle" should "generate text that can be used as a stub for message bundle files" in {
+
+    Utf8PropertiesResourceBundle.stubFor(DemoMessages) shouldBe """#
+        |# DemoMessages : Message definitions
+        |#
+        |hello.world=
+        |greeting=
+        |products.in.shopping.cart=
+        |greeting.play.card=
+        |""".stripMargin
 
   }
 

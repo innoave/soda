@@ -19,5 +19,5 @@ import com.innoave.soda.l10n.RenderLocalized
 import com.innoave.soda.l10n.format.JavaMessageFormatProducer
 
 object ResourceBundleRenderLocalized extends RenderLocalized
-    with JavaUtf8ResourceBundleProducer
+    with Utf8PropertiesResourceBundleProducer
     with JavaMessageFormatProducer

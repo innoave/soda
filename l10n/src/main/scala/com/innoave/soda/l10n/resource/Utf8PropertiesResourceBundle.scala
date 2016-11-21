@@ -21,22 +21,24 @@ import com.innoave.soda.l10n.BundleName
 import com.innoave.soda.l10n.Locale
 import com.innoave.soda.l10n.Message
 import com.innoave.soda.l10n.Localized
+import com.innoave.soda.l10n.ResourceBundle
+import com.innoave.soda.l10n.DefineMessage
+import com.innoave.soda.l10n.KeyNamingStrategy
 
-trait JavaUtf8ResourceBundleProducer {
+trait Utf8PropertiesResourceBundleProducer {
 
   final def resourceBundleFor(bundleName: BundleName, locale: Locale): ResourceBundle =
-    new JavaUtf8ResourceBundle(bundleName, locale)
+    Utf8PropertiesResourceBundle(bundleName, locale)
 
 }
 
-final class JavaUtf8ResourceBundle(
-    override val bundleName: BundleName,
-    override val locale: Locale
-    ) extends ResourceBundle {
+final class Utf8PropertiesResourceBundle private[resource](val delegate: JResourceBundle) extends ResourceBundle {
 
-  val delegate: JResourceBundle = JResourceBundle.getBundle(
-      bundleName.value, locale.asJavaLocale,
-      Utf8ResourceBundleControl)
+  override def bundleName: BundleName =
+    BundleName(delegate.getBaseBundleName)
+
+  override def locale: Locale =
+    Locale.fromJavaLocale(delegate.getLocale)
 
   override def stringFor(message: Message): String =
     _stringFor(message.key())
@@ -51,5 +53,19 @@ final class JavaUtf8ResourceBundle(
       case NonFatal(error) =>
         s"!!!$key!!!"
     }
+
+}
+
+object Utf8PropertiesResourceBundle {
+
+  def apply(bundleName: BundleName, locale: Locale): Utf8PropertiesResourceBundle =
+    new Utf8PropertiesResourceBundle(JResourceBundle.getBundle(bundleName.value, locale.asJavaLocale, Utf8ResourceBundleControl))
+
+  def stubFor(messages: DefineMessage): String =
+    s"""#
+      |# ${KeyNamingStrategy.simpleTypeName(messages.getClass)} : Message definitions
+      |#
+      |""".stripMargin +
+    messages.values.iterator.map(m => m.key + "=\n").mkString
 
 }

@@ -22,21 +22,26 @@ import com.innoave.soda.l10n.MessageFormat
 trait JavaMessageFormatProducer {
 
   final def messageFormatFor(pattern: String, locale: Locale): MessageFormat =
-    new JavaMessageFormat(pattern, locale)
+    JavaMessageFormat(pattern, locale)
 
 }
 
-final class JavaMessageFormat(
-    override val pattern: String,
-    override val locale: Locale
-    ) extends MessageFormat {
+final class JavaMessageFormat(val delegate: JMessageFormat) extends MessageFormat {
 
-  private val delegate: JMessageFormat = new JMessageFormat(pattern, locale.asJavaLocale)
+  override def locale: Locale =
+    Locale.fromJavaLocale(delegate.getLocale)
 
-  def format(args: Any*): String =
+  override def format(args: Any*): String =
     delegate.format(args.map(_.asInstanceOf[java.lang.Object]).toArray, new StringBuffer(), null).toString
 
   override def format(args: Array[_]): String =
     delegate.format(args.map(_.asInstanceOf[java.lang.Object]), new StringBuffer(), null).toString
+
+}
+
+object JavaMessageFormat {
+
+  def apply(pattern: String, locale: Locale): JavaMessageFormat =
+    new JavaMessageFormat(new JMessageFormat(pattern, locale.asJavaLocale))
 
 }

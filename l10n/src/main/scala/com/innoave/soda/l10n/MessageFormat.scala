@@ -17,8 +17,6 @@ package com.innoave.soda.l10n
 
 trait MessageFormat {
 
-  def pattern: String
-
   def locale: Locale
 
   def format(args: Any*): String

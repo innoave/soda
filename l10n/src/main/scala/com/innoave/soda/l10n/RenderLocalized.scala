@@ -16,7 +16,6 @@
 package com.innoave.soda.l10n
 
 import scala.util.control.TailCalls._
-import com.innoave.soda.l10n.resource.ResourceBundle
 
 trait RenderLocalized {
 

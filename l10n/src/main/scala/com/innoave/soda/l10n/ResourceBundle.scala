@@ -13,14 +13,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.innoave.soda.l10n.resource
-
-import com.innoave.soda.l10n.BundleName
-import com.innoave.soda.l10n.DefineMessage
-import com.innoave.soda.l10n.KeyNamingStrategy
-import com.innoave.soda.l10n.Locale
-import com.innoave.soda.l10n.Localized
-import com.innoave.soda.l10n.Message
+package com.innoave.soda.l10n
 
 trait ResourceBundle {
 
@@ -31,16 +24,5 @@ trait ResourceBundle {
   def stringFor(message: Message): String
 
   def stringFor[T](localized: Localized[T]): String
-
-}
-
-object ResourceBundle {
-
-  def stubFor(messages: DefineMessage): String =
-    s"""#
-      |# ${KeyNamingStrategy.simpleTypeName(messages.getClass)} : Message definitions
-      |#
-      |""".stripMargin +
-    messages.values.iterator.map(m => m.key + "=\n").mkString
 
 }
