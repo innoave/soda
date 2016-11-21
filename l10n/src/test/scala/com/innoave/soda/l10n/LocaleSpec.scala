@@ -421,11 +421,13 @@ class LocaleSpec extends FlatSpec with Matchers {
     locale.displayLanguage() shouldBe "Französisch"
     locale.displayCountry() shouldBe "Belgien"
     locale.displayVariant() shouldBe ""
+    locale.displayScript() shouldBe ""
 
     locale.displayName(Locale.en_AU) shouldBe "French (Belgium)"
     locale.displayLanguage(Locale.fr_CA) shouldBe "français"
     locale.displayCountry(Locale.fr_CA) shouldBe "Belgique"
     locale.displayVariant(Locale.fr_CA) shouldBe ""
+    locale.displayScript(Locale.en_CA) shouldBe ""
 
   }
 
@@ -435,6 +437,20 @@ class LocaleSpec extends FlatSpec with Matchers {
 
     locale.iso3Language() shouldBe "fra"
     locale.iso3Country() shouldBe "CHE"
+
+  }
+
+  "Locale.default(Category)" should "get and set the default for the specified category" in {
+
+    import Locale._
+
+    Locale.default = es_ES
+    Locale.setDefaultFor(Locale.Category.Display) := it_CH
+    Locale.setDefaultFor(Locale.Category.Format) := en_CA
+
+    Locale.defaultFor(Locale.Category.Display) shouldBe it_CH
+    Locale.defaultFor(Locale.Category.Format) shouldBe en_CA
+    Locale.default shouldBe es_ES
 
   }
 

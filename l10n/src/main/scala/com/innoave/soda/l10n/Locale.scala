@@ -156,17 +156,19 @@ object Locale extends PredefinedLocales {
     JLocale.getAvailableLocales.map(new Locale(_))
 
   sealed trait Category
-  case object Display extends Category
-  case object Format extends Category
+  object Category {
+    case object Display extends Category
+    case object Format extends Category
+  }
 
   implicit final private def category2JavaCategory(category: Category): JLocale.Category =
     category match {
-      case Display => JLocale.Category.DISPLAY
-      case Format => JLocale.Category.FORMAT
+      case Category.Display => JLocale.Category.DISPLAY
+      case Category.Format => JLocale.Category.FORMAT
     }
 
   class DefaultSetter private[Locale](category: Category) {
-    def this_=(locale: Locale): Unit =
+    def :=(locale: Locale): Unit =
       JLocale.setDefault(category, locale.asJavaLocale)
   }
 
