@@ -312,7 +312,7 @@ class LocaleSpec extends FlatSpec with Matchers {
     Locale(Language("pt"), Country("BR"), Variant("polyton")) == Locale(Language("pt"), Country("PT"), Variant("polyton")) shouldBe false
     Locale(Language("pt"), Country("BR"), Variant("polyton")) == Locale(Language("pt"), Country("BR"), Variant("")) shouldBe false
 
-    Locale(Language("en")) == new java.util.Locale("en") shouldBe false
+    Locale(Language("en")) equals new java.util.Locale("en") shouldBe false
 
   }
 
@@ -373,10 +373,8 @@ class LocaleSpec extends FlatSpec with Matchers {
   it should "be equal with predefined constant values" in {
 
     Locale(Language("fr")) shouldBe Locale.fr
-    Locale(Language("fr")) should be theSameInstanceAs Locale.fr
 
     Locale(Language("de"), Country("CH")) shouldBe Locale.de_CH
-    Locale(Language("de"), Country("CH")) should be theSameInstanceAs Locale.de_CH
 
   }
 
