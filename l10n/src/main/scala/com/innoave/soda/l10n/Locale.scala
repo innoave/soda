@@ -16,6 +16,8 @@
 package com.innoave.soda.l10n
 
 import java.util.{Locale => JLocale}
+import scala.collection.JavaConverters._
+import enumeratum._
 
 final class Locale private[Locale](val asJavaLocale: JLocale) extends AnyVal with Equals with Ordered[Locale] {
 
@@ -155,22 +157,89 @@ object Locale extends PredefinedLocales {
   def availableLocales(): Seq[Locale] =
     JLocale.getAvailableLocales.map(new Locale(_))
 
-  sealed trait Category
-  object Category {
+  def filter(priorityList: Seq[JLocale.LanguageRange], locales: Seq[Locale]): Seq[Locale] =
+    JLocale.filter(priorityList.asJava, locales.map(_.asJavaLocale).asJava).asScala.map(new Locale(_))
+
+  def filter(priorityList: Seq[JLocale.LanguageRange], locales: Seq[Locale], filteringMode: FilteringMode): Seq[Locale] =
+    JLocale.filter(priorityList.asJava, locales.map(_.asJavaLocale).asJava, filteringMode).asScala.map(new Locale(_))
+
+  def filterTags(priorityList: Seq[JLocale.LanguageRange], languageTags: Seq[String]): Seq[String] =
+    JLocale.filterTags(priorityList.asJava, languageTags.asJavaCollection).asScala
+
+  def filterTags(priorityList: Seq[JLocale.LanguageRange], languageTags: Seq[String], filteringMode: FilteringMode): Seq[String] =
+    JLocale.filterTags(priorityList.asJava, languageTags.asJavaCollection, filteringMode).asScala
+
+  def lookup(priorityList: Seq[LanguageRange], locales: Seq[Locale]): Option[Locale] =
+    Option(JLocale.lookup(priorityList.map(_.asJava).asJava, locales.map(_.asJavaLocale).asJavaCollection)).map(new Locale(_))
+
+  def lookupTag(priorityList: Seq[LanguageRange], languageTags: Seq[String]): Option[String] =
+    Option(JLocale.lookupTag(priorityList.map(_.asJava).asJava, languageTags.asJava))
+
+  sealed trait Category extends EnumEntry
+  object Category extends Enum[Category] {
+    val values = findValues
     case object Display extends Category
     case object Format extends Category
   }
 
-  implicit final private def category2JavaCategory(category: Category): JLocale.Category =
+  sealed trait FilteringMode extends EnumEntry
+  object FilteringMode extends Enum[FilteringMode] {
+    val values = findValues
+    case object AutoselectFiltering extends FilteringMode
+    case object ExtendedFiltering extends FilteringMode
+    case object IgnoreExtendedRanges extends FilteringMode
+    case object MapExtendedRanges extends FilteringMode
+    case object RejectExtendedRanges extends FilteringMode
+  }
+
+  implicit final private def asJavaCategory(category: Category): JLocale.Category =
     category match {
       case Category.Display => JLocale.Category.DISPLAY
       case Category.Format => JLocale.Category.FORMAT
+    }
+
+  implicit final private def asJavaFilteringMode(filteringMode: FilteringMode): JLocale.FilteringMode =
+    filteringMode match {
+      case FilteringMode.AutoselectFiltering => JLocale.FilteringMode.AUTOSELECT_FILTERING
+      case FilteringMode.ExtendedFiltering => JLocale.FilteringMode.EXTENDED_FILTERING
+      case FilteringMode.IgnoreExtendedRanges => JLocale.FilteringMode.IGNORE_EXTENDED_RANGES
+      case FilteringMode.MapExtendedRanges => JLocale.FilteringMode.MAP_EXTENDED_RANGES
+      case FilteringMode.RejectExtendedRanges => JLocale.FilteringMode.REJECT_EXTENDED_RANGES
     }
 
   class DefaultSetter private[Locale](category: Category) {
     def :=(locale: Locale): Unit =
       JLocale.setDefault(category, locale.asJavaLocale)
   }
+
+}
+
+final class LanguageRange private[LanguageRange](val asJava: JLocale.LanguageRange) extends AnyVal {
+
+  def range(): String =
+    asJava.getRange
+
+  def weight(): Double =
+    asJava.getWeight
+
+}
+
+object LanguageRange {
+
+  val MaxWeight: Double = JLocale.LanguageRange.MAX_WEIGHT
+  val MinWeight: Double = JLocale.LanguageRange.MIN_WEIGHT
+
+  def apply(range: String): LanguageRange =
+    new LanguageRange(new JLocale.LanguageRange(range))
+
+  def apply(range: String, weight: Double): LanguageRange =
+    new LanguageRange(new JLocale.LanguageRange(range, weight))
+
+  def parse(ranges: String): Seq[LanguageRange] =
+    JLocale.LanguageRange.parse(ranges).asScala.map(new LanguageRange(_))
+
+  def parse(ranges: String, map: Map[String, List[String]]): Seq[LanguageRange] =
+    JLocale.LanguageRange.parse(ranges, map.map(x => (x._1, x._2.asJava)).asJava).asScala.map(new LanguageRange(_))
 
 }
 

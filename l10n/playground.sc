@@ -1,4 +1,4 @@
-import com.innoave.soda.l10n.resource.ResourceBundle
+import com.innoave.soda.l10n.resource.Utf8PropertiesResourceBundle
 import scala.reflect.NameTransformer._
 import scala.util.matching.Regex
 import java.util.{Locale => JLocale}
@@ -14,13 +14,13 @@ object playground {
 	  override val bundleName = BundleName("l10n.DemoMessages")
 	
 	  // message with no parameters
-	  val helloWorld = Message0
+	  val HelloWorld = message0
 	
 	  // message with one parameter of type string
-	  val greeting = Message1[String]
+	  val Greeting = message1[String]
 	
 	  // message with two parameters of type string and integer
-	  val productsInShoppingCart = Message2[String, Int]
+	  val ProductsInShoppingCart = message2[String, Int]
 
 	}
 	
@@ -29,17 +29,17 @@ object playground {
 	import DemoMessages._
 
   //render message localized in specified language
-  helloWorld().in(EN).value                       //> res0: String = Hello World!
+  HelloWorld().in(en).value                       //> res0: String = Hello World!
   
   //render message with parameter in specified language
-  greeting("Frank").in(DE).value                  //> res1: String = Guten Tag Frank
+  Greeting("Frank").in(de).value                  //> res1: String = Guten Tag Frank
   
   //define implicit locale to be used
-  implicit val locale = EN                        //> locale  : com.innoave.soda.l10n.Locale = Locale(Language(en), Country(), Va
+  implicit val locale = en                        //> locale  : com.innoave.soda.l10n.Locale = Locale(Language(en), Country(), Va
                                                   //| riant())
 
   //render message localized in the implicitly set language
-  productsInShoppingCart("Paul", 0).asLocalText.value
+  ProductsInShoppingCart("Paul", 0).asLocalText.value
                                                   //> res2: String = Paul has no items in the cart.
 
    
@@ -74,12 +74,18 @@ object playground {
   JLocale.US.getDisplayCountry                    //> res16: String = Vereinigte Staaten von Amerika
  
 
+  JLocale.getAvailableLocales.filter(_.getScript != "")
+                                                  //> res17: Array[java.util.Locale] = Array(sr_BA_#Latn, sr_ME_#Latn, sr__#Latn,
+                                                  //|  sr_RS_#Latn)
+  new JLocale("sr").getScript                     //> res18: String = ""
+
                                                     
-  ResourceBundle.stubFor(DemoMessages)            //> res17: String = "#
+  Utf8PropertiesResourceBundle.stubFor(DemoMessages)
+                                                  //> res19: String = "#
                                                   //| # DemoMessages : Message definitions
                                                   //| #
-                                                  //| greeting=
                                                   //| hello.world=
+                                                  //| greeting=
                                                   //| products.in.shopping.cart=
                                                   //| "
 
@@ -92,26 +98,26 @@ object playground {
 
   val queenOfHearts = Card(Hearts, Queen)         //> queenOfHearts  : com.innoave.soda.l10n.DemoTypes.Card = Card(Hearts,Queen)
                                                   //| 
-  renderLocalized(queenOfHearts)(EN)              //> res18: com.innoave.soda.l10n.LocalText = LocalText(Queen of Hearts)
-  renderLocalized(queenOfHearts)(DE)              //> res19: com.innoave.soda.l10n.LocalText = LocalText(Herz Dame)
+  renderLocalized(queenOfHearts)(en)              //> res20: com.innoave.soda.l10n.LocalText = LocalText(Queen of Hearts)
+  renderLocalized(queenOfHearts)(de)              //> res21: com.innoave.soda.l10n.LocalText = LocalText(Herz Dame)
 
   (1, "2").productIterator.map({case x: Int => x.toString case a => a}).toArray
-                                                  //> res20: Array[Any] = Array(1, 2)
-  s"text test $queenOfHearts"                     //> res21: String = text test Card(Hearts,Queen)
+                                                  //> res22: Array[Any] = Array(1, 2)
+  s"text test $queenOfHearts"                     //> res23: String = text test Card(Hearts,Queen)
 
   def simpleTypeName(clazz: Class[_]): String =
     ((clazz.getName stripSuffix MODULE_SUFFIX_STRING split '.').last split
       Regex.quote(NAME_JOIN_STRING)).last         //> simpleTypeName: (clazz: Class[_])String
       
-  queenOfHearts.getClass.getName                  //> res22: String = com.innoave.soda.l10n.DemoTypes$Card
-  Hearts.getClass.getName                         //> res23: String = com.innoave.soda.l10n.DemoTypes$Hearts$
+  queenOfHearts.getClass.getName                  //> res24: String = com.innoave.soda.l10n.DemoTypes$Card
+  Hearts.getClass.getName                         //> res25: String = com.innoave.soda.l10n.DemoTypes$Hearts$
   
   val suit: Suit = Hearts                         //> suit  : com.innoave.soda.l10n.DemoTypes.Suit = Hearts
 
-  simpleTypeName(queenOfHearts.getClass)          //> res24: String = Card
-  simpleTypeName(Hearts.getClass)                 //> res25: String = Hearts
-  simpleTypeName(suit.getClass)                   //> res26: String = Hearts
+  simpleTypeName(queenOfHearts.getClass)          //> res26: String = Card
+  simpleTypeName(Hearts.getClass)                 //> res27: String = Hearts
+  simpleTypeName(suit.getClass)                   //> res28: String = Hearts
   
-  List(2,1,5,3,4).sorted == List(1,2,3,4,5)       //> res27: Boolean = true
+  List(2,1,5,3,4).sorted == List(1,2,3,4,5)       //> res29: Boolean = true
 
 }

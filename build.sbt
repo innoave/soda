@@ -34,7 +34,8 @@ lazy val sodaL10n = Project(
   settings = commonSettings ++ docsSettings ++ publishSettings ++ Seq(
     description := "Soda Localization",
     libraryDependencies ++= Seq(
-      scalatest % "test"
+      scalatest % "test",
+      enumeratum
     )
   )
 ).enablePlugins(
@@ -82,6 +83,8 @@ lazy val sodaMvvm = Project(
 // Dependencies
 //
 lazy val scalatest = "org.scalatest" %% "scalatest" % "3.0.1"
+val enumeratumVersion = "1.5.1"
+lazy val enumeratum = "com.beachape" %% "enumeratum" % enumeratumVersion
 lazy val slf4jApi = "org.slf4j" % "slf4j-api" % "1.7.21"
 lazy val logback = "ch.qos.logback" % "logback-classic" % "1.1.7"
 
