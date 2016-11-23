@@ -19,7 +19,7 @@ import java.util.{Locale => JLocale}
 import scala.collection.JavaConverters._
 import enumeratum._
 
-final class Locale private[Locale](val asJavaLocale: JLocale) extends AnyVal with Equals with Ordered[Locale] {
+final class Locale private[Locale](val asJavaLocale: JLocale) extends AnyVal with Equals {
 
   def language(): Language =
     Language(asJavaLocale.getLanguage)
@@ -30,28 +30,17 @@ final class Locale private[Locale](val asJavaLocale: JLocale) extends AnyVal wit
   def variant(): Variant =
     Variant(asJavaLocale.getVariant)
 
-  override def toString(): String =
-    s"Locale($language, $country, $variant)"
+  def script(): Script =
+    Script(asJavaLocale.getScript)
 
-  override def compare(that: Locale): Int = {
-    val languageCompared = this.language compare that.language
-    if (languageCompared == 0) {
-      val countryCompared = this.country compare that.country
-      if (countryCompared == 0) {
-        this.variant compare that.variant
-      } else {
-        countryCompared
-      }
-    } else {
-      languageCompared
-    }
-  }
+  override def toString(): String =
+    s"Locale($language, $country, $variant, $script)"
 
   override def canEqual(other: Any): Boolean =
     other.isInstanceOf[Locale]
 
-  def asLanguageTag(): String =
-    asJavaLocale.toLanguageTag
+  def asLanguageTag(): LanguageTag =
+    LanguageTag(asJavaLocale.toLanguageTag)
 
   def displayName(): String =
     asJavaLocale.getDisplayName
@@ -77,9 +66,6 @@ final class Locale private[Locale](val asJavaLocale: JLocale) extends AnyVal wit
   def displayVariant(inLocale: Locale): String =
     asJavaLocale.getDisplayVariant(inLocale.asJavaLocale)
 
-  def script(): String =
-    asJavaLocale.getScript
-
   def displayScript(): String =
     asJavaLocale.getDisplayScript
 
@@ -94,35 +80,25 @@ final class Locale private[Locale](val asJavaLocale: JLocale) extends AnyVal wit
 
 }
 
-object LocaleOrdering extends Ordering[Locale] {
-
-  override def compare(x: Locale, y: Locale): Int =
-    x compare y
-
-}
-
 object Locale extends PredefinedLocales {
 
-  def apply(language: Language): Locale =
-    new Locale(new JLocale(language.code))
+  def apply(languageTag: LanguageTag): Locale =
+    new Locale(JLocale.forLanguageTag(languageTag.value))
 
-  def apply(language: Language, country: Country): Locale =
-    new Locale(new JLocale(language.code, country.code))
+  def apply(language: Language,
+      country: Country = Country.Any,
+      variant: Variant = Variant.Any,
+      script: Script = Script.Any
+      ): Locale =
+    new Locale(new JLocale.Builder()
+        .setLanguage(language.code)
+        .setRegion(country.code)
+        .setVariant(variant.code)
+        .setScript(script.code)
+        .build)
 
-  def apply(language: Language, country: Country, variant: Variant): Locale =
-    new Locale(new JLocale(language.code, country.code, variant.code))
-
-  def unapply(locale: Locale): Option[(Language, Country, Variant)] =
-    Some((locale.language, locale.country, locale.variant))
-
-  def of(language: String): Locale =
-    new Locale(new JLocale(language))
-
-  def of(language: String, country: String): Locale =
-    new Locale(new JLocale(language, country))
-
-  def of(language: String, country: String, variant: String): Locale =
-    new Locale(new JLocale(language, country, variant))
+  def unapply(locale: Locale): Option[(Language, Country, Variant, Script)] =
+    Some((locale.language, locale.country, locale.variant, locale.script))
 
   def forLanguageTag(languageTag: String): Locale =
     new Locale(JLocale.forLanguageTag(languageTag))
@@ -243,56 +219,23 @@ object LanguageRange {
 
 }
 
+final case class LanguageTag private[LanguageTag](val value: String) extends AnyVal
+
 final case class Language private[Language](val code: String) extends AnyVal
-    with Equals with Ordered[Language] {
-
-  override def compare(that: Language): Int =
-    this.code.compare(that.code)
-
-}
-
-object LanguageOrdering extends Ordering[Language] {
-
-  override def compare(x: Language, y: Language): Int =
-    x compare y
-
-}
 
 object Language extends PredefinedLanguages
 
 final case class Country private[Country](val code: String) extends AnyVal
-    with Equals with Ordered[Country] {
-
-  override def compare(that: Country): Int =
-    this.code.compare(that.code)
-
-}
-
-object CountryOrdering extends Ordering[Country] {
-
-  override def compare(x: Country, y: Country): Int =
-    x compare y
-
-}
 
 object Country extends PredefinedCountries
 
 final case class Variant private[Variant](val code: String) extends AnyVal
-    with Equals with Ordered[Variant] {
-
-  override def compare(that: Variant): Int =
-    this.code.compare(that.code)
-
-}
-
-object VariantOrdering extends Ordering[Variant] {
-
-  override def compare(x: Variant, y: Variant): Int =
-    x compare y
-
-}
 
 object Variant extends PredefinedVariants
+
+final case class Script private[Script](val code: String) extends AnyVal
+
+object Script extends PredefinedScripts
 
 trait PredefinedLanguages {
 
@@ -336,6 +279,15 @@ trait PredefinedCountries {
 trait PredefinedVariants {
 
   val Any = Variant("")
+
+}
+
+trait PredefinedScripts {
+
+  val Any = Script("")
+
+  def Latn = Script("Latn")
+  def Cyrl = Script("Cyrl")
 
 }
 

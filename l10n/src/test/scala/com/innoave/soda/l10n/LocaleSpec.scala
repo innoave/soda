@@ -15,7 +15,6 @@
  */
 package com.innoave.soda.l10n
 
-import scala.util.Sorting
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
 
@@ -33,25 +32,6 @@ class LocaleSpec extends FlatSpec with Matchers {
     Language("en") == Language("en") shouldBe true
     Language("pt") == Language("pt") shouldBe true
     Language("en") == Language("es") shouldBe false
-
-  }
-
-  it should "be compared by the order of the code" in {
-
-    Language("en").compare(Language("pt")) should be < 0
-    Language("en").compare(Language("de")) should be > 0
-    Language("en").compare(Language("es")) should be < 0
-    Language("en").compare(Language("en")) shouldBe 0
-
-  }
-
-  it should "be sorted by the order of the code" in {
-
-    val languages = Array(Language.es, Language.it, Language.fr, Language.de)
-
-    Sorting.quickSort(languages)(LanguageOrdering)
-
-    languages shouldBe Array(Language.de, Language.es, Language.fr, Language.it)
 
   }
 
@@ -82,24 +62,6 @@ class LocaleSpec extends FlatSpec with Matchers {
 
   }
 
-  it should "be compared by the order of the code" in {
-
-    Country("DE").compare(Country("FR")) should be < 0
-    Country("DE").compare(Country("CH")) should be > 0
-    Country("DE").compare(Country("DE")) shouldBe 0
-
-  }
-
-  it should "be sorted by the order of the code" in {
-
-    val countries = Array(Country.MX, Country.IT, Country.FR, Country.BE, Country.CN)
-
-    Sorting.quickSort(countries)(CountryOrdering)
-
-    countries shouldBe Array(Country.BE, Country.CN, Country.FR, Country.IT, Country.MX)
-
-  }
-
   it should "return a human readable string on #toString" in {
 
     Country("US").toString shouldBe "Country(US)"
@@ -127,24 +89,6 @@ class LocaleSpec extends FlatSpec with Matchers {
 
   }
 
-  it should "be compared by the order of the code" in {
-
-    Variant("polyton").compare(Variant("traditional")) should be < 0
-    Variant("traditional").compare(Variant("polyton")) should be > 0
-    Variant("polyton").compare(Variant("polyton")) shouldBe 0
-
-  }
-
-  it should "be sorted by the order of the code" in {
-
-    val variants = Array(Variant(""), Variant("lskf"), Variant("wosa"), Variant("ksoe"))
-
-    Sorting.quickSort(variants)(VariantOrdering)
-
-    variants shouldBe Array(Variant(""), Variant("ksoe"), Variant("lskf"), Variant("wosa"))
-
-  }
-
   it should "return a human readable string on #toString" in {
 
     Variant("polyton").toString shouldBe "Variant(polyton)"
@@ -159,31 +103,34 @@ class LocaleSpec extends FlatSpec with Matchers {
 
   "Locale" should "be defined by given ISO code for language" in {
 
-    val locale = Locale.of("en")
+    val locale = Locale(LanguageTag("en"))
 
     locale.language shouldBe Language("en")
     locale.country  shouldBe Country.Any
     locale.variant  shouldBe Variant.Any
+    locale.script   shouldBe Script.Any
 
   }
 
   it should "be defined by given ISO code for language and country" in {
 
-    val locale = Locale.of("en", "US")
+    val locale = Locale(LanguageTag("en-US"))
 
     locale.language shouldBe Language("en")
     locale.country  shouldBe Country("US")
     locale.variant  shouldBe Variant.Any
+    locale.script   shouldBe Script.Any
 
   }
 
   it should "be defined by given ISO code for language and country and a variant" in {
 
-    val locale = Locale.of("pt", "BR", "polyton")
+    val locale = Locale(LanguageTag("pt-BR-polyton"))
 
     locale.language shouldBe Language("pt")
     locale.country  shouldBe Country("BR")
     locale.variant  shouldBe Variant("polyton")
+    locale.script   shouldBe Script.Any
 
   }
 
@@ -192,8 +139,9 @@ class LocaleSpec extends FlatSpec with Matchers {
     val locale = Locale(Language.it)
 
     locale.language shouldBe Language.it
-    locale.country shouldBe Country.Any
-    locale.variant shouldBe Variant.Any
+    locale.country  shouldBe Country.Any
+    locale.variant  shouldBe Variant.Any
+    locale.script   shouldBe Script.Any
 
   }
 
@@ -202,8 +150,9 @@ class LocaleSpec extends FlatSpec with Matchers {
     val locale = Locale(Language.es, Country.US)
 
     locale.language shouldBe Language.es
-    locale.country shouldBe Country.US
-    locale.variant shouldBe Variant.Any
+    locale.country  shouldBe Country.US
+    locale.variant  shouldBe Variant.Any
+    locale.script   shouldBe Script.Any
 
   }
 
@@ -212,8 +161,9 @@ class LocaleSpec extends FlatSpec with Matchers {
     val locale = Locale(Language.en, Country.AU, Variant.Any)
 
     locale.language shouldBe Language.en
-    locale.country shouldBe Country.AU
-    locale.variant shouldBe Variant.Any
+    locale.country  shouldBe Country.AU
+    locale.variant  shouldBe Variant.Any
+    locale.script   shouldBe Script.Any
 
   }
 
@@ -222,16 +172,18 @@ class LocaleSpec extends FlatSpec with Matchers {
     val locale1 = Locale.forLanguageTag("zh-TW")
 
     locale1.language shouldBe Language.zh
-    locale1.country shouldBe Country.TW
-    locale1.variant shouldBe Variant.Any
+    locale1.country  shouldBe Country.TW
+    locale1.variant  shouldBe Variant.Any
+    locale1.script   shouldBe Script.Any
 
     locale1 shouldBe Locale.zh_TW
 
     val locale2 = Locale.forLanguageTag("de-AT")
 
     locale2.language shouldBe Language.de
-    locale2.country shouldBe Country.AT
-    locale2.variant shouldBe Variant.Any
+    locale2.country  shouldBe Country.AT
+    locale2.variant  shouldBe Variant.Any
+    locale2.script   shouldBe Script.Any
 
     locale2 shouldBe Locale.de_AT
 
@@ -241,56 +193,64 @@ class LocaleSpec extends FlatSpec with Matchers {
 
     val locale1 = Locale.fromJavaLocale(java.util.Locale.ENGLISH)
     locale1.language shouldBe Language.en
-    locale1.country shouldBe Country.Any
-    locale1.variant shouldBe Variant.Any
+    locale1.country  shouldBe Country.Any
+    locale1.variant  shouldBe Variant.Any
+    locale1.script   shouldBe Script.Any
 
     val locale2 = Locale.fromJavaLocale(new java.util.Locale("zh", "SG"))
     locale2.language shouldBe Language.zh
-    locale2.country shouldBe Country.SG
-    locale2.variant shouldBe Variant.Any
+    locale2.country  shouldBe Country.SG
+    locale2.variant  shouldBe Variant.Any
+    locale2.script   shouldBe Script.Any
 
     val locale3 = Locale.fromJavaLocale(new java.util.Locale("pt", "BR", "polyton"))
     locale3.language shouldBe Language.pt
-    locale3.country shouldBe Country.BR
-    locale3.variant shouldBe Variant("polyton")
+    locale3.country  shouldBe Country.BR
+    locale3.variant  shouldBe Variant("polyton")
+    locale3.script   shouldBe Script.Any
 
   }
 
   it should "allow an empty language, empty country and empty variant" in {
 
-    val locale = Locale.of("", "", "")
+    val locale = Locale(LanguageTag(""))
 
     locale.language shouldBe Language.Any
     locale.country  shouldBe Country.Any
     locale.variant  shouldBe Variant.Any
+    locale.script   shouldBe Script.Any
 
   }
 
   it should "allow any language, any country and any variant" in {
 
-    val locale = Locale(Language.Any, Country.Any, Variant.Any)
+    val locale = Locale(Language.Any, Country.Any, Variant.Any, Script.Any)
 
     locale.language shouldBe Language.Any
     locale.country  shouldBe Country.Any
     locale.variant  shouldBe Variant.Any
+    locale.script   shouldBe Script.Any
 
   }
 
   it should "be usable in pattern matching" in {
 
-    def test(locale: Locale): (Language, Country, Variant) =
+    def test(locale: Locale): (Language, Country, Variant, Script) =
       locale match {
-        case Locale(language, Country.Any, Variant.Any) =>
-          (language, Country.Any, Variant.Any)
-        case Locale(language, country, Variant.Any) =>
-          (language, country, Variant.Any)
-        case Locale(language, country, variant) =>
-          (language, country, variant)
+        case Locale(language, Country.Any, Variant.Any, Script.Any) =>
+          (language, Country.Any, Variant.Any, Script.Any)
+        case Locale(language, country, Variant.Any, Script.Any) =>
+          (language, country, Variant.Any, Script.Any)
+        case Locale(language, country, variant, Script.Any) =>
+          (language, country, variant, Script.Any)
+        case Locale(language, country, variant, script) =>
+          (language, country, variant, script)
       }
 
-    test(Locale.fr) shouldBe ((Language.fr, Country.Any, Variant.Any))
-    test(Locale.fr_CH) shouldBe ((Language.fr, Country.CH, Variant.Any))
-    test(Locale(Language.it, Country.CH, Variant("latin"))) shouldBe ((Language.it, Country.CH, Variant("latin")))
+    test(Locale.fr) shouldBe ((Language.fr, Country.Any, Variant.Any, Script.Any))
+    test(Locale.fr_CH) shouldBe ((Language.fr, Country.CH, Variant.Any, Script.Any))
+    test(Locale(Language.it, Country.CH, Variant("polyton"))) shouldBe ((Language.it, Country.CH, Variant("polyton"), Script.Any))
+    test(Locale(Language.pt, Country.GB, Variant("polyton"), Script.Cyrl)) shouldBe ((Language.pt, Country.GB, Variant("polyton"), Script.Cyrl))
 
   }
 
@@ -316,57 +276,12 @@ class LocaleSpec extends FlatSpec with Matchers {
 
   }
 
-  it should "be compared by the order of language, country and variant" in {
-
-    Locale.en compare Locale.es should be < 0
-    Locale.en compare Locale.de should be > 0
-    Locale.en compare Locale.en shouldBe 0
-
-    Locale.pt_BR compare Locale.pt_PT should be < 0
-    Locale.pt_PT compare Locale.pt_BR should be > 0
-    Locale.de_AT compare Locale.de_AT shouldBe 0
-
-    Locale(Language.pt, Country.BR, Variant.Any) compare Locale(Language.pt, Country.BR, Variant("polyton")) should be < 0
-    Locale(Language.pt, Country.BR, Variant("polyton")) compare Locale(Language.pt, Country.BR, Variant.Any) should be > 0
-    Locale(Language.pt, Country.BR, Variant("polyton")) compare Locale(Language.pt, Country.BR, Variant("polyton")) shouldBe 0
-
-    Locale(Language("pt"), Country("BR"), Variant("polyton")) compare Locale(Language("pt"), Country("PT"), Variant("")) should be < 0
-    Locale(Language("pt"), Country("PT"), Variant("")) compare Locale(Language("pt"), Country("BR"), Variant("polyton")) should be > 0
-
-    Locale(Language.Any, Country.PT, Variant("polyton")) compare Locale(Language.pt, Country.BR, Variant.Any) should be < 0
-    Locale(Language.pt, Country.BR, Variant.Any) compare Locale(Language.Any, Country.PT, Variant("polyton")) should be > 0
-
-  }
-
-  it should "be sorted by the order of language, country and variant" in {
-
-    val locales1 = Array(Locale.fr_FR, Locale.en_AU, Locale.de_CH, Locale.es_MX, Locale.zh_HK, Locale.de_AT)
-    Sorting.quickSort(locales1)(LocaleOrdering)
-    locales1 shouldBe Array(Locale.de_AT, Locale.de_CH, Locale.en_AU, Locale.es_MX, Locale.fr_FR, Locale.zh_HK)
-
-    val locales2 = Array(Locale.zh_CN, Locale.zh_SG, Locale.zh_TW, Locale.zh_HK, Locale.zh)
-    Sorting.quickSort(locales2)(LocaleOrdering)
-    locales2 shouldBe Array(Locale.zh, Locale.zh_CN, Locale.zh_HK, Locale.zh_SG, Locale.zh_TW)
-
-    val locales3 = Array(
-        Locale(Language.pt, Country.BR, Variant("polyton")),
-        Locale(Language.pt, Country.BR, Variant.Any),
-        Locale(Language.pt, Country.PT)
-        )
-    Sorting.quickSort(locales3)(LocaleOrdering)
-    locales3 shouldBe Array(
-        Locale(Language.pt, Country.BR, Variant.Any),
-        Locale(Language.pt, Country.BR, Variant("polyton")),
-        Locale(Language.pt, Country.PT)
-        )
-
-  }
-
   it should "return a human readable string on #toString" in {
 
-    Locale.en.toString shouldBe "Locale(Language(en), Country(), Variant())"
-    Locale.pt_PT.toString shouldBe "Locale(Language(pt), Country(PT), Variant())"
-    Locale(Language.pt, Country.BR, Variant("polyton")).toString shouldBe "Locale(Language(pt), Country(BR), Variant(polyton))"
+    Locale.en.toString shouldBe "Locale(Language(en), Country(), Variant(), Script())"
+    Locale.pt_PT.toString shouldBe "Locale(Language(pt), Country(PT), Variant(), Script())"
+    Locale(Language.pt, Country.BR, Variant("polyton")).toString shouldBe "Locale(Language(pt), Country(BR), Variant(polyton), Script())"
+    Locale(Language.pt, Country.BR, Variant("polyton"), Script.Latn).toString shouldBe "Locale(Language(pt), Country(BR), Variant(polyton), Script(Latn))"
 
   }
 
@@ -380,11 +295,14 @@ class LocaleSpec extends FlatSpec with Matchers {
 
   "Locale#asLanguageTag" should "return the language tag of the locale" in {
 
-    Locale.en.asLanguageTag shouldBe "en"
-    Locale.de_CH.asLanguageTag shouldBe "de-CH"
-    Locale.zh_SG.asLanguageTag shouldBe "zh-SG"
+    Locale.en.asLanguageTag shouldBe LanguageTag("en")
 
-    Locale(Language.pt, Country.BR, Variant("polyton")).asLanguageTag shouldBe "pt-BR-polyton"
+    Locale.de_CH.asLanguageTag shouldBe LanguageTag("de-CH")
+    Locale.zh_SG.asLanguageTag shouldBe LanguageTag("zh-SG")
+
+    Locale(Language.pt, Country.BR, Variant("polyton")).asLanguageTag shouldBe LanguageTag("pt-BR-polyton")
+
+    Locale(Language.pt, Country.BR, Variant("polyton"), Script.Latn).asLanguageTag shouldBe LanguageTag("pt-Latn-BR-polyton")
 
   }
 
