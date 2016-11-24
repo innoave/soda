@@ -286,8 +286,10 @@ trait PredefinedScripts {
 
   val Any = Script("")
 
-  def Latn = Script("Latn")
   def Cyrl = Script("Cyrl")
+  def Hans = Script("Hans")
+  def Hant = Script("Hant")
+  def Latn = Script("Latn")
 
 }
 
