@@ -21,7 +21,7 @@ import scala.reflect.ClassTag
 import scala.reflect.classTag
 import org.slf4j.Marker
 
-class Logger private(underlying: SLF4JLogger) {
+class Logger private(private[logging] val underlying: SLF4JLogger) {
 
   @inline final def name(): String = underlying.getName
 

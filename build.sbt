@@ -49,6 +49,7 @@ lazy val sodaLogging = Project(
     description := "Soda Logging",
     libraryDependencies ++= Seq(
       scalatest % "test",
+      mockito % "test",
       logback % "test",
       slf4jApi
     )
@@ -83,10 +84,11 @@ lazy val sodaMvvm = Project(
 // Dependencies
 //
 lazy val scalatest = "org.scalatest" %% "scalatest" % "3.0.1"
+lazy val mockito = "org.mockito" % "mockito-core" % "2.2.22"
+lazy val logback = "ch.qos.logback" % "logback-classic" % "1.1.7"
 val enumeratumVersion = "1.5.1"
 lazy val enumeratum = "com.beachape" %% "enumeratum" % enumeratumVersion
 lazy val slf4jApi = "org.slf4j" % "slf4j-api" % "1.7.21"
-lazy val logback = "ch.qos.logback" % "logback-classic" % "1.1.7"
 
 //
 // Plugins
@@ -126,16 +128,16 @@ lazy val buildSettings = Seq(
       "-encoding", "utf8",
       "-unchecked",
       "-deprecation",
-  //    "-optimise",
+//      "-optimise",
       "-feature",
       "-language:_",
       "-Xfatal-warnings",
       "-Xlint:_",
       "-Yno-adapted-args",
-//        "-Yinline-warnings",       // seems to be not supported in 2.12
+//      "-Yinline-warnings",       // seems to be not supported in 2.12
       "-Ywarn-dead-code",        // N.B. doesn't work well with the ??? hole
       "-Ywarn-numeric-widen",
-      "-Ywarn-value-discard",
+//      "-Ywarn-value-discard",
       "-Ywarn-unused",
       "-Ywarn-unused-import"     // 2.11+ only      
       )
@@ -144,7 +146,7 @@ lazy val buildSettings = Seq(
       "-encoding", "utf8",
       "-unchecked",
       "-deprecation",
-  //    "-optimise",
+//      "-optimise",
       "-feature",
       "-language:_",
       "-Xfatal-warnings",
@@ -153,7 +155,7 @@ lazy val buildSettings = Seq(
       "-Yinline-warnings",
       "-Ywarn-dead-code",        // N.B. doesn't work well with the ??? hole
       "-Ywarn-numeric-widen",
-      "-Ywarn-value-discard",
+//      "-Ywarn-value-discard",
       "-Ywarn-unused",
       "-Ywarn-unused-import"     // 2.11+ only      
       )
