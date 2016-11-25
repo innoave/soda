@@ -84,7 +84,7 @@ lazy val sodaMvvm = Project(
 // Dependencies
 //
 lazy val scalatest = "org.scalatest" %% "scalatest" % "3.0.1"
-lazy val mockito = "org.mockito" % "mockito-core" % "2.2.22"
+lazy val mockito = "org.mockito" % "mockito-core" % "2.2.25"
 lazy val logback = "ch.qos.logback" % "logback-classic" % "1.1.7"
 val enumeratumVersion = "1.5.1"
 lazy val enumeratum = "com.beachape" %% "enumeratum" % enumeratumVersion
