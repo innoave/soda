@@ -45,13 +45,13 @@ class LoggerSpec extends FlatSpec with Matchers with MockitoSugar with LoggerHel
   def withCapturingAppender(testCode: (Appender[ILoggingEvent], ArgumentCaptor[ILoggingEvent]) => Any): Unit = {
     val mockAppender = mock[Appender[ILoggingEvent]]
     val captorLoggingEvent = ArgumentCaptor.forClass(classOf[ILoggingEvent])
-    val logger = Logger(Logger.RootLoggerName)
+    val logger = Logger.rootLogger
     logger.underlying.asInstanceOf[LbLogger].addAppender(mockAppender)
     try {
       testCode(mockAppender, captorLoggingEvent)
     }
     finally {
-      val logger = Logger(Logger.RootLoggerName)
+      val logger = Logger.rootLogger
       logger.underlying.asInstanceOf[LbLogger].detachAppender(mockAppender)
     }
   }
@@ -66,6 +66,7 @@ class LoggerSpec extends FlatSpec with Matchers with MockitoSugar with LoggerHel
     verify(mockAppender).doAppend(captorLoggingEvent.capture())
     val loggingEvent = captorLoggingEvent.getValue
 
+    log.name() shouldBe "Test101"
     loggingEvent.getLoggerName shouldBe "Test101"
 
   }
@@ -80,6 +81,7 @@ class LoggerSpec extends FlatSpec with Matchers with MockitoSugar with LoggerHel
     verify(mockAppender).doAppend(captorLoggingEvent.capture())
     val loggingEvent = captorLoggingEvent.getValue
 
+    log.name() shouldBe "com.innoave.soda.logging.MyServiceClass"
     loggingEvent.getLoggerName shouldBe "com.innoave.soda.logging.MyServiceClass"
 
   }
@@ -96,6 +98,7 @@ class LoggerSpec extends FlatSpec with Matchers with MockitoSugar with LoggerHel
     verify(mockAppender).doAppend(captorLoggingEvent.capture())
     val loggingEvent = captorLoggingEvent.getValue
 
+    log.name() shouldBe "com.innoave.soda.logging.MyCodecClass"
     loggingEvent.getLoggerName shouldBe "com.innoave.soda.logging.MyCodecClass"
 
   }
