@@ -15,7 +15,6 @@
  */
 package com.innoave.soda.logging
 
-import scala.reflect.classTag
 import scala.collection.JavaConverters._
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
@@ -64,6 +63,12 @@ class LoggerSpec extends FlatSpec with Matchers with MockitoSugar with LoggerHel
 
   }
 
+  "The Logger object" should "return the slf4j.ILoggerFactory instance in use" in {
+
+    Logger.underlying.getClass shouldBe classOf[ch.qos.logback.classic.LoggerContext]
+
+  }
+
   "A Logger for given name" should "log events under this name" in withCapturingAppender {
     (mockAppender, captorLoggingEvent) =>
 
@@ -94,12 +99,10 @@ class LoggerSpec extends FlatSpec with Matchers with MockitoSugar with LoggerHel
 
   }
 
-  "A Logger for this class" should "log events under the full qualified name of this class" in withCapturingAppender {
+  "A Logger for a given type" should "log events under the full qualified name of this class" in withCapturingAppender {
     (mockAppender, captorLoggingEvent) =>
 
-    implicit val classtag = classTag[MyCodecClass]
-
-    val log = Logger()
+    val log = Logger[MyCodecClass]
 
     log.info("Hello World!")
 

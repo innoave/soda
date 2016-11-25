@@ -15,13 +15,13 @@
  */
 package com.innoave.soda.logging
 
-import org.slf4j.{Logger => SLF4JLogger}
-import org.slf4j.{LoggerFactory => SLF4JLoggerFactory}
 import scala.reflect.ClassTag
 import scala.reflect.classTag
-import org.slf4j.Marker
+import org.slf4j.{Logger => SLF4JLogger}
+import org.slf4j.{ILoggerFactory => SLF4JILoggerFactory}
+import org.slf4j.{LoggerFactory => SLF4JLoggerFactory}
 
-class Logger private(private[logging] val underlying: SLF4JLogger) {
+final class Logger private(val underlying: SLF4JLogger) extends AnyVal {
 
   @inline final def name(): String = underlying.getName
 
@@ -32,10 +32,10 @@ class Logger private(private[logging] val underlying: SLF4JLogger) {
     if (underlying.isTraceEnabled) underlying.trace(message, throwable)
 
   @inline final def trace(marker: Marker, message: => String): Unit =
-    if (underlying.isTraceEnabled(marker)) underlying.trace(marker, message)
+    if (underlying.isTraceEnabled(marker.asSlf4j)) underlying.trace(marker.asSlf4j, message)
 
   @inline final def trace(marker: Marker, message: => String, throwable: Throwable): Unit =
-    if (underlying.isTraceEnabled(marker)) underlying.trace(marker, message, throwable)
+    if (underlying.isTraceEnabled(marker.asSlf4j)) underlying.trace(marker.asSlf4j, message, throwable)
 
   @inline final def debug(message: => String): Unit =
     if (underlying.isDebugEnabled) underlying.debug(message)
@@ -44,10 +44,10 @@ class Logger private(private[logging] val underlying: SLF4JLogger) {
     if (underlying.isDebugEnabled) underlying.debug(message, throwable)
 
   @inline final def debug(marker: Marker, message: => String): Unit =
-    if (underlying.isDebugEnabled(marker)) underlying.debug(marker, message)
+    if (underlying.isDebugEnabled(marker.asSlf4j)) underlying.debug(marker.asSlf4j, message)
 
   @inline final def debug(marker: Marker, message: => String, throwable: Throwable): Unit =
-    if (underlying.isDebugEnabled(marker)) underlying.debug(marker, message, throwable)
+    if (underlying.isDebugEnabled(marker.asSlf4j)) underlying.debug(marker.asSlf4j, message, throwable)
 
   @inline final def info(message: => String): Unit =
     if (underlying.isInfoEnabled) underlying.info(message)
@@ -56,10 +56,10 @@ class Logger private(private[logging] val underlying: SLF4JLogger) {
     if (underlying.isInfoEnabled) underlying.info(message, throwable)
 
   @inline final def info(marker: Marker, message: => String): Unit =
-    if (underlying.isInfoEnabled(marker)) underlying.info(marker, message)
+    if (underlying.isInfoEnabled(marker.asSlf4j)) underlying.info(marker.asSlf4j, message)
 
   @inline final def info(marker: Marker, message: => String, throwable: Throwable): Unit =
-    if (underlying.isInfoEnabled(marker)) underlying.info(marker, message, throwable)
+    if (underlying.isInfoEnabled(marker.asSlf4j)) underlying.info(marker.asSlf4j, message, throwable)
 
   @inline final def warn(message: => String): Unit =
     if (underlying.isWarnEnabled) underlying.warn(message)
@@ -68,10 +68,10 @@ class Logger private(private[logging] val underlying: SLF4JLogger) {
     if (underlying.isWarnEnabled) underlying.warn(message, throwable)
 
   @inline final def warn(marker: Marker, message: => String): Unit =
-    if (underlying.isWarnEnabled(marker)) underlying.warn(marker, message)
+    if (underlying.isWarnEnabled(marker.asSlf4j)) underlying.warn(marker.asSlf4j, message)
 
   @inline final def warn(marker: Marker, message: => String, throwable: Throwable): Unit =
-    if (underlying.isWarnEnabled(marker)) underlying.warn(marker, message, throwable)
+    if (underlying.isWarnEnabled(marker.asSlf4j)) underlying.warn(marker.asSlf4j, message, throwable)
 
   @inline final def error(message: => String): Unit =
     if (underlying.isErrorEnabled) underlying.error(message)
@@ -80,16 +80,22 @@ class Logger private(private[logging] val underlying: SLF4JLogger) {
     if (underlying.isErrorEnabled) underlying.error(message, throwable)
 
   @inline final def error(marker: Marker, message: => String): Unit =
-    if (underlying.isErrorEnabled(marker)) underlying.error(marker, message)
+    if (underlying.isErrorEnabled(marker.asSlf4j)) underlying.error(marker.asSlf4j, message)
 
   @inline final def error(marker: Marker, message: => String, throwable: Throwable): Unit =
-    if (underlying.isErrorEnabled(marker)) underlying.error(marker, message, throwable)
+    if (underlying.isErrorEnabled(marker.asSlf4j)) underlying.error(marker.asSlf4j, message, throwable)
 
 }
 
 object Logger {
 
   val RootLoggerName = SLF4JLogger.ROOT_LOGGER_NAME
+
+  def underlying: SLF4JILoggerFactory =
+    SLF4JLoggerFactory.getILoggerFactory()
+
+  def rootLogger(): Logger =
+    new Logger(SLF4JLoggerFactory.getLogger(RootLoggerName))
 
   def apply(name: String): Logger =
     new Logger(SLF4JLoggerFactory.getLogger(name))
@@ -98,9 +104,6 @@ object Logger {
     new Logger(SLF4JLoggerFactory.getLogger(clazz))
 
   def apply[C: ClassTag](): Logger =
-    apply(classTag[C].runtimeClass)
-
-  def rootLogger =
-    apply(RootLoggerName)
+    new Logger(SLF4JLoggerFactory.getLogger(classTag[C].runtimeClass))
 
 }
