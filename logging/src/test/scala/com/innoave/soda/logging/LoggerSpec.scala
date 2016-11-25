@@ -56,6 +56,14 @@ class LoggerSpec extends FlatSpec with Matchers with MockitoSugar with LoggerHel
     }
   }
 
+  "The root logger" should "have a logger the predefined logger name" in {
+
+    Logger.rootLogger.name() shouldBe Logger.RootLoggerName
+
+    Logger(Logger.RootLoggerName).name() shouldBe org.slf4j.Logger.ROOT_LOGGER_NAME
+
+  }
+
   "A Logger for given name" should "log events under this name" in withCapturingAppender {
     (mockAppender, captorLoggingEvent) =>
 
