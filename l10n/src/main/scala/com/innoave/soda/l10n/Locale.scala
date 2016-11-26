@@ -133,17 +133,17 @@ object Locale extends PredefinedLocales {
   def availableLocales(): Seq[Locale] =
     JLocale.getAvailableLocales.map(new Locale(_))
 
-  def filter(priorityList: Seq[JLocale.LanguageRange], locales: Seq[Locale]): Seq[Locale] =
-    JLocale.filter(priorityList.asJava, locales.map(_.asJavaLocale).asJava).asScala.map(new Locale(_))
+  def filter(priorityList: Seq[LanguageRange], locales: Seq[Locale]): Seq[Locale] =
+    JLocale.filter(priorityList.map(_.asJava).asJava, locales.map(_.asJavaLocale).asJava).asScala.map(new Locale(_))
 
-  def filter(priorityList: Seq[JLocale.LanguageRange], locales: Seq[Locale], filteringMode: FilteringMode): Seq[Locale] =
-    JLocale.filter(priorityList.asJava, locales.map(_.asJavaLocale).asJava, filteringMode).asScala.map(new Locale(_))
+  def filter(priorityList: Seq[LanguageRange], locales: Seq[Locale], filteringMode: FilteringMode): Seq[Locale] =
+    JLocale.filter(priorityList.map(_.asJava).asJava, locales.map(_.asJavaLocale).asJava, filteringMode).asScala.map(new Locale(_))
 
-  def filterTags(priorityList: Seq[JLocale.LanguageRange], languageTags: Seq[String]): Seq[String] =
-    JLocale.filterTags(priorityList.asJava, languageTags.asJavaCollection).asScala
+  def filterTags(priorityList: Seq[LanguageRange], languageTags: Seq[String]): Seq[String] =
+    JLocale.filterTags(priorityList.map(_.asJava).asJava, languageTags.asJavaCollection).asScala
 
-  def filterTags(priorityList: Seq[JLocale.LanguageRange], languageTags: Seq[String], filteringMode: FilteringMode): Seq[String] =
-    JLocale.filterTags(priorityList.asJava, languageTags.asJavaCollection, filteringMode).asScala
+  def filterTags(priorityList: Seq[LanguageRange], languageTags: Seq[String], filteringMode: FilteringMode): Seq[String] =
+    JLocale.filterTags(priorityList.map(_.asJava).asJava, languageTags.asJavaCollection, filteringMode).asScala
 
   def lookup(priorityList: Seq[LanguageRange], locales: Seq[Locale]): Option[Locale] =
     Option(JLocale.lookup(priorityList.map(_.asJava).asJava, locales.map(_.asJavaLocale).asJavaCollection)).map(new Locale(_))

@@ -17,6 +17,7 @@ package com.innoave.soda.l10n
 
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
+import com.innoave.soda.l10n.Locale.FilteringMode
 
 class LocaleSpec extends FlatSpec with Matchers {
 
@@ -134,6 +135,17 @@ class LocaleSpec extends FlatSpec with Matchers {
 
   }
 
+  it should "be defined by given ISO code for language and country and a variant and script" in {
+
+    val locale = Locale(LanguageTag("pt-Latn-BR-polyton"))
+
+    locale.language shouldBe Language("pt")
+    locale.country  shouldBe Country("BR")
+    locale.variant  shouldBe Variant("polyton")
+    locale.script   shouldBe Script("Latn")
+
+  }
+
   it should "be defined by given language" in {
 
     val locale = Locale(Language.it)
@@ -164,6 +176,17 @@ class LocaleSpec extends FlatSpec with Matchers {
     locale.country  shouldBe Country.AU
     locale.variant  shouldBe Variant.Any
     locale.script   shouldBe Script.Any
+
+  }
+
+  it should "be defined by given language, country, variant and script" in {
+
+    val locale = Locale(Language.zh, Country.TW, Variant.Any, Script.Hant)
+
+    locale.language shouldBe Language.zh
+    locale.country  shouldBe Country.TW
+    locale.variant  shouldBe Variant.Any
+    locale.script   shouldBe Script.Hant
 
   }
 
@@ -211,7 +234,7 @@ class LocaleSpec extends FlatSpec with Matchers {
 
   }
 
-  it should "allow an empty language, empty country and empty variant" in {
+  it should "allow an empty language, empty country, empty variant and empty script" in {
 
     val locale = Locale(LanguageTag(""))
 
@@ -222,7 +245,7 @@ class LocaleSpec extends FlatSpec with Matchers {
 
   }
 
-  it should "allow any language, any country and any variant" in {
+  it should "allow any language, any country, any variant and any script" in {
 
     val locale = Locale(Language.Any, Country.Any, Variant.Any, Script.Any)
 
@@ -254,7 +277,7 @@ class LocaleSpec extends FlatSpec with Matchers {
 
   }
 
-  it should "be equal when language, country and variant are equal" in {
+  it should "be equal when language, country, variant and script are equal" in {
 
     Locale(Language("en")) == Locale(Language("en")) shouldBe true
     Locale(Language("en")) == Locale(Language("es")) shouldBe false
@@ -271,6 +294,13 @@ class LocaleSpec extends FlatSpec with Matchers {
     Locale(Language("pt"), Country("BR"), Variant("polyton")) == Locale(Language("es"), Country("BR"), Variant("polyton")) shouldBe false
     Locale(Language("pt"), Country("BR"), Variant("polyton")) == Locale(Language("pt"), Country("PT"), Variant("polyton")) shouldBe false
     Locale(Language("pt"), Country("BR"), Variant("polyton")) == Locale(Language("pt"), Country("BR"), Variant("")) shouldBe false
+
+    Locale(Language.pt, Country.BR, Variant("polyton"), Script.Latn) == Locale(Language("pt"), Country("BR"), Variant("polyton"), Script("Latn")) shouldBe true
+
+    Locale(Language.pt, Country.BR, Variant("polyton"), Script.Latn) == Locale(Language.es, Country("BR"), Variant("polyton"), Script("Latn")) shouldBe false
+    Locale(Language.pt, Country.BR, Variant("polyton"), Script.Latn) == Locale(Language("pt"), Country("US"), Variant("polyton"), Script("Latn")) shouldBe false
+    Locale(Language.pt, Country.BR, Variant("polyton"), Script.Latn) == Locale(Language("pt"), Country("BR"), Variant.Any, Script("Latn")) shouldBe false
+    Locale(Language.pt, Country.BR, Variant("polyton"), Script.Latn) == Locale(Language("pt"), Country("BR"), Variant("polyton"), Script("Cyrl")) shouldBe false
 
     Locale(Language("en")) equals new java.util.Locale("en") shouldBe false
 
@@ -349,7 +379,7 @@ class LocaleSpec extends FlatSpec with Matchers {
 
   }
 
-  "A Locale" should "return the ISO3 language code and ISO3 country code" in {
+  it should "return the ISO3 language code and ISO3 country code" in {
 
     val locale = Locale.fr_CH
 
@@ -369,6 +399,135 @@ class LocaleSpec extends FlatSpec with Matchers {
     Locale.defaultFor(Locale.Category.Display) shouldBe it_CH
     Locale.defaultFor(Locale.Category.Format) shouldBe en_CA
     Locale.default shouldBe es_ES
+
+  }
+
+  "Locale.filter" should "return all matching Locales" in {
+
+    val locales = Seq(
+        Locale.de, Locale.de_AT, Locale.de_CH, Locale.de_DE,
+        Locale.en, Locale.en_AU, Locale.en_CA, Locale.en_GB, Locale.en_US,
+        Locale.fr, Locale.fr_FR, Locale.fr_BE, Locale.fr_CA, Locale.fr_CH,
+        Locale.es, Locale.es_ES, Locale.es_MX,
+        Locale.it, Locale.it_IT, Locale.it_CH,
+        Locale.pt, Locale.pt_BR, Locale.pt_PT,
+        Locale.zh, Locale.zh_CN, Locale.zh_HK, Locale.zh_SG, Locale.zh_TW
+        )
+
+    val priorityList = LanguageRange("*-AT") :: LanguageRange("en") :: Nil
+
+    val matchingLocales = Locale.filter(priorityList, locales)
+
+    matchingLocales should contain allOf (
+        Locale.de_AT,
+        Locale.en_US, Locale.en, Locale.en_AU, Locale.en_CA, Locale.en_GB
+        )
+
+  }
+
+  it should "return all matching Locales according to given filtering mode" in {
+
+    val locales = Seq(
+        Locale.de, Locale.de_AT, Locale.de_CH, Locale.de_DE,
+        Locale.en, Locale.en_AU, Locale.en_CA, Locale.en_GB, Locale.en_US,
+        Locale.fr, Locale.fr_FR, Locale.fr_BE, Locale.fr_CA, Locale.fr_CH,
+        Locale.es, Locale.es_ES, Locale.es_MX,
+        Locale.it, Locale.it_IT, Locale.it_CH,
+        Locale.pt, Locale.pt_BR, Locale.pt_PT,
+        Locale.zh, Locale.zh_CN, Locale.zh_HK, Locale.zh_SG, Locale.zh_TW
+        )
+
+    val priorityList = LanguageRange("*-AT") :: LanguageRange("en") :: Nil
+
+    val matchingLocales = Locale.filter(priorityList, locales, FilteringMode.IgnoreExtendedRanges)
+
+    matchingLocales should contain allOf (
+        Locale.en_US, Locale.en, Locale.en_AU, Locale.en_CA, Locale.en_GB
+        )
+
+  }
+
+  "Locale.filterTags" should "return all matching language tags" in {
+
+    val languageTags = Seq(
+        "de", "de-DE", "de-AT", "de-CH",
+        "en", "en-AU", "en-CA", "en-GB", "en-US",
+        "fr", "fr-FR", "fr-BE", "fr-CA", "fr-CH",
+        "es", "es-ES", "es-MX",
+        "it", "it-IT", "it-CH",
+        "pt", "pt-PT", "pt-BR",
+        "zh", "zh-CN", "zh-HK", "zh-SG", "zh-TW"
+        )
+
+    val priorityList = LanguageRange("*-AT") :: LanguageRange("en") :: Nil
+
+    val matchingLanguageTags = Locale.filterTags(priorityList, languageTags)
+
+    matchingLanguageTags should contain allOf (
+        "de-at", "en-us", "en", "en-au", "en-ca", "en-gb"
+        )
+
+  }
+
+  it should "return all matching language tags according to given filtering mode" in {
+
+    val languageTags = Seq(
+        "de", "de-DE", "de-AT", "de-CH",
+        "en", "en-AU", "en-CA", "en-GB", "en-US",
+        "fr", "fr-FR", "fr-BE", "fr-CA", "fr-CH",
+        "es", "es-ES", "es-MX",
+        "it", "it-IT", "it-CH",
+        "pt", "pt-PT", "pt-BR",
+        "zh", "zh-CN", "zh-HK", "zh-SG", "zh-TW"
+        )
+
+    val priorityList = LanguageRange("*-AT") :: LanguageRange("en") :: Nil
+
+    val matchingLanguageTags = Locale.filterTags(priorityList, languageTags, FilteringMode.IgnoreExtendedRanges)
+
+    matchingLanguageTags should contain allOf (
+        "en-us", "en", "en-au", "en-ca", "en-gb"
+        )
+
+  }
+
+  "Locale.lookup" should "return the best matching Locale" in {
+
+    val locales = Seq(
+        Locale.de, Locale.de_AT, Locale.de_CH, Locale.de_DE,
+        Locale.en, Locale.en_AU, Locale.en_CA, Locale.en_GB, Locale.en_US,
+        Locale.fr, Locale.fr_FR, Locale.fr_BE, Locale.fr_CA, Locale.fr_CH,
+        Locale.es, Locale.es_ES, Locale.es_MX,
+        Locale.it, Locale.it_IT, Locale.it_CH,
+        Locale.pt, Locale.pt_BR, Locale.pt_PT,
+        Locale.zh, Locale.zh_CN, Locale.zh_HK, Locale.zh_SG, Locale.zh_TW
+        )
+
+    val priorityList = LanguageRange("zh-Hant-TW") :: LanguageRange("en-US") :: Nil
+
+    val matchingLocale = Locale.lookup(priorityList, locales)
+
+    matchingLocale shouldBe Some(Locale.zh)
+
+  }
+
+  "Locale.lookupTag" should "return the best matching language tag" in {
+
+    val languageTags = Seq(
+        "de", "de-DE", "de-AT", "de-CH",
+        "en", "en-AU", "en-CA", "en-GB", "en-US",
+        "fr", "fr-FR", "fr-BE", "fr-CA", "fr-CH",
+        "es", "es-ES", "es-MX",
+        "it", "it-IT", "it-CH",
+        "pt", "pt-PT", "pt-BR",
+        "zh", "zh-CN", "zh-HK", "zh-SG", "zh-TW"
+        )
+
+    val priorityList = LanguageRange("zh-Hant-TW") :: LanguageRange("en-US") :: Nil
+
+    val matchingLanguageTag = Locale.lookupTag(priorityList, languageTags)
+
+    matchingLanguageTag shouldBe Some("zh")
 
   }
 
