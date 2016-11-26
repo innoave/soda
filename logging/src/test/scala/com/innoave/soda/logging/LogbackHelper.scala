@@ -15,16 +15,11 @@
  */
 package com.innoave.soda.logging
 
-import org.scalatest.mockito.MockitoSugar
-import org.mockito.ArgumentCaptor
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.{Logger => LbLogger}
-import ch.qos.logback.classic.spi.ILoggingEvent
-import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.classic.turbo.TurboFilter
-import ch.qos.logback.core.Appender
 
-trait LogbackHelper extends MockitoSugar {
+trait LogbackHelper {
 
   implicit class LogbackLoggerSetter(logger: Logger) {
     val lbl = logger.underlying.asInstanceOf[LbLogger]
@@ -32,20 +27,6 @@ trait LogbackHelper extends MockitoSugar {
       lbl.setLevel(level)
     def addTurboFilter(newFilter: TurboFilter): Unit = {
       lbl.getLoggerContext.addTurboFilter(newFilter)
-    }
-  }
-
-  def withCapturingAppender(testCode: (Appender[ILoggingEvent], ArgumentCaptor[ILoggingEvent]) => Any): Unit = {
-    val mockAppender = mock[Appender[ILoggingEvent]]
-    val captorLoggingEvent = ArgumentCaptor.forClass(classOf[ILoggingEvent])
-    val logger = Logger.rootLogger
-    logger.underlying.asInstanceOf[LbLogger].addAppender(mockAppender)
-    try {
-      testCode(mockAppender, captorLoggingEvent)
-    }
-    finally {
-      val logger = Logger.rootLogger
-      logger.underlying.asInstanceOf[LbLogger].detachAppender(mockAppender)
     }
   }
 

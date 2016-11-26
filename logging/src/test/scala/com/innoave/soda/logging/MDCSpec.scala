@@ -22,17 +22,17 @@ class MDCSpec extends FlatSpec with Matchers {
 
   "MDC" should "contain added key/value pair" in {
 
+    MDC.clear()
     MDC.put("clientId", "Susan")
 
     MDC.contextMap should contain ("clientId" -> "Susan")
     MDC.contextMap.size shouldBe 1
 
-    MDC.clear()
-
   }
 
-  it should "no contain a removed key" in {
+  it should "not contain a removed key" in {
 
+    MDC.clear()
     MDC.put("clientId", "Susan")
     MDC.put("token", "lkw91n2ir5on")
 
@@ -45,23 +45,22 @@ class MDCSpec extends FlatSpec with Matchers {
     MDC.contextMap should not contain ("clientId" -> "Susan")
     MDC.contextMap.size shouldBe 1
 
-    MDC.clear()
-
   }
 
   it should "return the value for a given key" in {
 
+    MDC.clear()
     MDC.put("clientId", "Susan")
     MDC.put("token", "lkw91n2ir5on")
 
     MDC.get("clientId") shouldBe Some("Susan")
     MDC.get("token") shouldBe Some("lkw91n2ir5on")
 
-    MDC.clear()
-
   }
 
   it should "return None if it does not contain the given key" in {
+
+    MDC.clear()
 
     MDC.get("clientId") shouldBe None
 
@@ -69,7 +68,24 @@ class MDCSpec extends FlatSpec with Matchers {
 
   it should "return the given default if it does not contain the given key" in {
 
+    MDC.clear()
+
     MDC.getOrElse("clientId", "guest") shouldBe "guest"
+
+  }
+
+  it should "contain no key/value pairs after clear" in {
+
+    MDC.clear()
+    MDC.put("clientId", "Susan")
+    MDC.put("token", "lkw91n2ir5on")
+
+    MDC.contextMap should contain allOf ("clientId" -> "Susan", "token" -> "lkw91n2ir5on")
+    MDC.contextMap.size shouldBe 2
+
+    MDC.clear()
+
+    MDC.contextMap.isEmpty shouldBe true
 
   }
 

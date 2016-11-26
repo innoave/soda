@@ -39,7 +39,7 @@ object MDC {
     SLF4JMDC.clear()
 
   def contextMap: Map[String, String] =
-    SLF4JMDC.getCopyOfContextMap.asScala.toMap
+    Option(SLF4JMDC.getCopyOfContextMap).map(_.asScala.toMap).getOrElse(Map())
 
   def contextMap_=(value: Map[String, String]): Unit =
     SLF4JMDC.setContextMap(value.asJava)

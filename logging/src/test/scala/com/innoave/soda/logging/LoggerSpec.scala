@@ -15,17 +15,33 @@
  */
 package com.innoave.soda.logging
 
-import scala.collection.JavaConverters._
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
-import org.mockito.Mockito._
+import org.scalamock.scalatest.MockFactory
 import ch.qos.logback.classic.Level
+import ch.qos.logback.classic.{Logger => LbLogger}
+import ch.qos.logback.classic.spi.ILoggingEvent
+import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.classic.turbo.MarkerFilter
+import ch.qos.logback.core.Appender
 
 private class MyServiceClass
 private class MyCodecClass
 
-class LoggerSpec extends FlatSpec with Matchers with LogbackHelper {
+class LoggerSpec extends FlatSpec with Matchers with MockFactory with LogbackHelper {
+
+  def withMockAppender(testCode: (Appender[ILoggingEvent]) => Any): Unit = {
+    val mockAppender = stub[Appender[ILoggingEvent]]
+    val logger = Logger.rootLogger.underlying.asInstanceOf[LbLogger]
+    logger.addAppender(mockAppender)
+    try {
+      testCode(mockAppender)
+    }
+    finally {
+      val logger = Logger.rootLogger.underlying.asInstanceOf[LbLogger]
+      logger.detachAppender(mockAppender)
+    }
+  }
 
   "The root logger" should "have a logger the predefined logger name" in {
 
@@ -42,52 +58,52 @@ class LoggerSpec extends FlatSpec with Matchers with LogbackHelper {
   }
 
   "A Logger for given name" should "log events under this name" in
-      withCapturingAppender { (mockAppender, captorLoggingEvent) =>
+      withMockAppender { (mockAppender) =>
 
     val log = Logger("Test101")
 
+    log.name() shouldBe "Test101"
+
     log.info("Hello World!")
 
-    verify(mockAppender).doAppend(captorLoggingEvent.capture())
-    val loggingEvent = captorLoggingEvent.getValue
-
-    log.name() shouldBe "Test101"
-    loggingEvent.getLoggerName shouldBe "Test101"
+    (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+      loggingEvent.getLoggerName == "Test101"
+    })
 
   }
 
   "A Logger for a given class" should "log events under the full qualified name of the given class" in
-      withCapturingAppender { (mockAppender, captorLoggingEvent) =>
+      withMockAppender { (mockAppender) =>
 
     val log = Logger(classOf[MyServiceClass])
 
+    log.name() shouldBe "com.innoave.soda.logging.MyServiceClass"
+
     log.info("Hello World!")
 
-    verify(mockAppender).doAppend(captorLoggingEvent.capture())
-    val loggingEvent = captorLoggingEvent.getValue
-
-    log.name() shouldBe "com.innoave.soda.logging.MyServiceClass"
-    loggingEvent.getLoggerName shouldBe "com.innoave.soda.logging.MyServiceClass"
+    (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+      loggingEvent.getLoggerName == "com.innoave.soda.logging.MyServiceClass"
+    })
 
   }
 
   "A Logger for a given type" should "log events under the full qualified name of this type" in
-      withCapturingAppender { (mockAppender, captorLoggingEvent) =>
+      withMockAppender { (mockAppender) =>
 
     val log = Logger[MyCodecClass]
 
+    log.name() shouldBe "com.innoave.soda.logging.MyCodecClass"
+
     log.info("Hello World!")
 
-    verify(mockAppender).doAppend(captorLoggingEvent.capture())
-    val loggingEvent = captorLoggingEvent.getValue
-
-    log.name() shouldBe "com.innoave.soda.logging.MyCodecClass"
-    loggingEvent.getLoggerName shouldBe "com.innoave.soda.logging.MyCodecClass"
+    (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+      loggingEvent.getLoggerName == "com.innoave.soda.logging.MyCodecClass"
+    })
 
   }
 
   "A Logger with Level set to Error" should "log a message for level Error only" in
-      withCapturingAppender { (mockAppender, captorLoggingEvent) =>
+      withMockAppender { (mockAppender) =>
 
     val log = Logger("ErrorTestLogger")
     log.setLevel(Level.ERROR)
@@ -98,18 +114,17 @@ class LoggerSpec extends FlatSpec with Matchers with LogbackHelper {
     log.debug("I did it")
     log.trace("Here are all the details")
 
-    verify(mockAppender, times(1)).doAppend(captorLoggingEvent.capture())
-    val loggingEvents = captorLoggingEvent.getAllValues.asScala
-
-    loggingEvents(0).getLoggerName shouldBe "ErrorTestLogger"
-    loggingEvents(0).getLevel shouldBe Level.ERROR
-    loggingEvents(0).getMessage shouldBe "Oh what an error"
-    loggingEvents(0).getThrowableProxy shouldBe null
+    (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+      loggingEvent.getLoggerName == "ErrorTestLogger" &&
+      loggingEvent.getLevel == Level.ERROR &&
+      loggingEvent.getMessage == "Oh what an error" &&
+      loggingEvent.getThrowableProxy == null
+    })
 
   }
 
   it should "log a message and an exception for level Error only" in
-      withCapturingAppender { (mockAppender, captorLoggingEvent) =>
+      withMockAppender { (mockAppender) =>
 
     val log = Logger("ErrorTestLogger")
     log.setLevel(Level.ERROR)
@@ -120,19 +135,18 @@ class LoggerSpec extends FlatSpec with Matchers with LogbackHelper {
     log.debug("I did it", new RuntimeException("Houston we have a problem"))
     log.trace("Here are all the details", new RuntimeException("Houston we have a problem"))
 
-    verify(mockAppender, times(1)).doAppend(captorLoggingEvent.capture())
-    val loggingEvents = captorLoggingEvent.getAllValues.asScala
-
-    loggingEvents(0).getLoggerName shouldBe "ErrorTestLogger"
-    loggingEvents(0).getLevel shouldBe Level.ERROR
-    loggingEvents(0).getMessage shouldBe "Oh what an error"
-    loggingEvents(0).getThrowableProxy.getClassName shouldBe "java.lang.RuntimeException"
-    loggingEvents(0).getThrowableProxy.getMessage shouldBe "Houston we have a problem"
+    (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+      loggingEvent.getLoggerName == "ErrorTestLogger" &&
+      loggingEvent.getLevel == Level.ERROR &&
+      loggingEvent.getMessage == "Oh what an error" &&
+      loggingEvent.getThrowableProxy.getClassName == "java.lang.RuntimeException" &&
+      loggingEvent.getThrowableProxy.getMessage == "Houston we have a problem"
+    })
 
   }
 
   "A Logger with Level set to Warn" should "log a message for level Warning and Error" in
-      withCapturingAppender { (mockAppender, captorLoggingEvent) =>
+      withMockAppender { (mockAppender) =>
 
     val log = Logger("WarnTestLogger")
     log.setLevel(Level.WARN)
@@ -143,23 +157,28 @@ class LoggerSpec extends FlatSpec with Matchers with LogbackHelper {
     log.debug("I did it")
     log.trace("Here are all the details")
 
-    verify(mockAppender, times(2)).doAppend(captorLoggingEvent.capture())
-    val loggingEvents = captorLoggingEvent.getAllValues.asScala
+    inSequence {
 
-    loggingEvents(0).getLoggerName shouldBe "WarnTestLogger"
-    loggingEvents(0).getLevel shouldBe Level.ERROR
-    loggingEvents(0).getMessage shouldBe "Oh what an error"
-    loggingEvents(0).getThrowableProxy shouldBe null
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "WarnTestLogger" &&
+        loggingEvent.getLevel == Level.ERROR &&
+        loggingEvent.getMessage == "Oh what an error" &&
+        loggingEvent.getThrowableProxy == null
+      })
 
-    loggingEvents(1).getLoggerName shouldBe "WarnTestLogger"
-    loggingEvents(1).getLevel shouldBe Level.WARN
-    loggingEvents(1).getMessage shouldBe "I've warned you"
-    loggingEvents(1).getThrowableProxy shouldBe null
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "WarnTestLogger" &&
+        loggingEvent.getLevel == Level.WARN &&
+        loggingEvent.getMessage == "I've warned you" &&
+        loggingEvent.getThrowableProxy == null
+      })
+
+    }
 
   }
 
   it should "log a message and an exception for level Warning and Error" in
-      withCapturingAppender { (mockAppender, captorLoggingEvent) =>
+      withMockAppender { (mockAppender) =>
 
     val log = Logger("WarnTestLogger")
     log.setLevel(Level.WARN)
@@ -170,25 +189,30 @@ class LoggerSpec extends FlatSpec with Matchers with LogbackHelper {
     log.debug("I did it", new RuntimeException("Houston we have a problem"))
     log.trace("Here are all the details", new RuntimeException("Houston we have a problem"))
 
-    verify(mockAppender, times(2)).doAppend(captorLoggingEvent.capture())
-    val loggingEvents = captorLoggingEvent.getAllValues.asScala
+    inSequence {
 
-    loggingEvents(0).getLoggerName shouldBe "WarnTestLogger"
-    loggingEvents(0).getLevel shouldBe Level.ERROR
-    loggingEvents(0).getMessage shouldBe "Oh what an error"
-    loggingEvents(0).getThrowableProxy.getClassName shouldBe "java.lang.RuntimeException"
-    loggingEvents(0).getThrowableProxy.getMessage shouldBe "Houston we have a problem"
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "WarnTestLogger" &&
+        loggingEvent.getLevel == Level.ERROR &&
+        loggingEvent.getMessage == "Oh what an error" &&
+        loggingEvent.getThrowableProxy.getClassName == "java.lang.RuntimeException" &&
+        loggingEvent.getThrowableProxy.getMessage == "Houston we have a problem"
+      })
 
-    loggingEvents(1).getLoggerName shouldBe "WarnTestLogger"
-    loggingEvents(1).getLevel shouldBe Level.WARN
-    loggingEvents(1).getMessage shouldBe "I've warned you"
-    loggingEvents(1).getThrowableProxy.getClassName shouldBe "java.lang.RuntimeException"
-    loggingEvents(1).getThrowableProxy.getMessage shouldBe "Houston we have a problem"
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "WarnTestLogger" &&
+        loggingEvent.getLevel == Level.WARN &&
+        loggingEvent.getMessage == "I've warned you" &&
+        loggingEvent.getThrowableProxy.getClassName == "java.lang.RuntimeException" &&
+        loggingEvent.getThrowableProxy.getMessage == "Houston we have a problem"
+      })
+
+    }
 
   }
 
   "A Logger with Level set to Info" should "log a message for level Info, Warning and Error" in
-      withCapturingAppender { (mockAppender, captorLoggingEvent) =>
+      withMockAppender { (mockAppender) =>
 
     val log = Logger("InfoTestLogger")
     log.setLevel(Level.INFO)
@@ -199,28 +223,35 @@ class LoggerSpec extends FlatSpec with Matchers with LogbackHelper {
     log.debug("I did it")
     log.trace("Here are all the details")
 
-    verify(mockAppender, times(3)).doAppend(captorLoggingEvent.capture())
-    val loggingEvents = captorLoggingEvent.getAllValues.asScala
+    inSequence {
 
-    loggingEvents(0).getLoggerName shouldBe "InfoTestLogger"
-    loggingEvents(0).getLevel shouldBe Level.ERROR
-    loggingEvents(0).getMessage shouldBe "Oh what an error"
-    loggingEvents(0).getThrowableProxy shouldBe null
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "InfoTestLogger" &&
+        loggingEvent.getLevel == Level.ERROR &&
+        loggingEvent.getMessage == "Oh what an error" &&
+        loggingEvent.getThrowableProxy == null
+      })
 
-    loggingEvents(1).getLoggerName shouldBe "InfoTestLogger"
-    loggingEvents(1).getLevel shouldBe Level.WARN
-    loggingEvents(1).getMessage shouldBe "I've warned you"
-    loggingEvents(1).getThrowableProxy shouldBe null
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "InfoTestLogger" &&
+        loggingEvent.getLevel == Level.WARN &&
+        loggingEvent.getMessage == "I've warned you" &&
+        loggingEvent.getThrowableProxy == null
+      })
 
-    loggingEvents(2).getLoggerName shouldBe "InfoTestLogger"
-    loggingEvents(2).getLevel shouldBe Level.INFO
-    loggingEvents(2).getMessage shouldBe "Hello World"
-    loggingEvents(2).getThrowableProxy shouldBe null
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "InfoTestLogger" &&
+        loggingEvent.getLevel == Level.INFO &&
+        loggingEvent.getMessage == "Hello World" &&
+        loggingEvent.getThrowableProxy == null
+      })
+
+    }
 
   }
 
   it should "log a message and an exception for level Info, Warning and Error" in
-      withCapturingAppender { (mockAppender, captorLoggingEvent) =>
+      withMockAppender { (mockAppender) =>
 
     val log = Logger("InfoTestLogger")
     log.setLevel(Level.INFO)
@@ -231,31 +262,38 @@ class LoggerSpec extends FlatSpec with Matchers with LogbackHelper {
     log.debug("I did it", new RuntimeException("Houston we have a problem"))
     log.trace("Here are all the details", new RuntimeException("Houston we have a problem"))
 
-    verify(mockAppender, times(3)).doAppend(captorLoggingEvent.capture())
-    val loggingEvents = captorLoggingEvent.getAllValues.asScala
+    inSequence {
 
-    loggingEvents(0).getLoggerName shouldBe "InfoTestLogger"
-    loggingEvents(0).getLevel shouldBe Level.ERROR
-    loggingEvents(0).getMessage shouldBe "Oh what an error"
-    loggingEvents(0).getThrowableProxy.getClassName shouldBe "java.lang.RuntimeException"
-    loggingEvents(0).getThrowableProxy.getMessage shouldBe "Houston we have a problem"
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "InfoTestLogger" &&
+        loggingEvent.getLevel == Level.ERROR &&
+        loggingEvent.getMessage == "Oh what an error" &&
+        loggingEvent.getThrowableProxy.getClassName == "java.lang.RuntimeException" &&
+        loggingEvent.getThrowableProxy.getMessage == "Houston we have a problem"
+      })
 
-    loggingEvents(1).getLoggerName shouldBe "InfoTestLogger"
-    loggingEvents(1).getLevel shouldBe Level.WARN
-    loggingEvents(1).getMessage shouldBe "I've warned you"
-    loggingEvents(1).getThrowableProxy.getClassName shouldBe "java.lang.RuntimeException"
-    loggingEvents(1).getThrowableProxy.getMessage shouldBe "Houston we have a problem"
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "InfoTestLogger" &&
+        loggingEvent.getLevel == Level.WARN &&
+        loggingEvent.getMessage == "I've warned you" &&
+        loggingEvent.getThrowableProxy.getClassName == "java.lang.RuntimeException" &&
+        loggingEvent.getThrowableProxy.getMessage == "Houston we have a problem"
+      })
 
-    loggingEvents(2).getLoggerName shouldBe "InfoTestLogger"
-    loggingEvents(2).getLevel shouldBe Level.INFO
-    loggingEvents(2).getMessage shouldBe "Hello World"
-    loggingEvents(2).getThrowableProxy.getClassName shouldBe "java.lang.RuntimeException"
-    loggingEvents(2).getThrowableProxy.getMessage shouldBe "Houston we have a problem"
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "InfoTestLogger" &&
+        loggingEvent.getLevel == Level.INFO &&
+        loggingEvent.getMessage == "Hello World" &&
+        loggingEvent.getThrowableProxy.getClassName == "java.lang.RuntimeException" &&
+        loggingEvent.getThrowableProxy.getMessage == "Houston we have a problem"
+      })
+
+    }
 
   }
 
   "A Logger with Level set to Debug" should "log a message for level Debug, Info, Warning and Error" in
-      withCapturingAppender { (mockAppender, captorLoggingEvent) =>
+      withMockAppender { (mockAppender) =>
 
     val log = Logger("DebugTestLogger")
     log.setLevel(Level.DEBUG)
@@ -266,33 +304,42 @@ class LoggerSpec extends FlatSpec with Matchers with LogbackHelper {
     log.debug("I did it")
     log.trace("Here are all the details")
 
-    verify(mockAppender, times(4)).doAppend(captorLoggingEvent.capture())
-    val loggingEvents = captorLoggingEvent.getAllValues.asScala
+    inSequence {
 
-    loggingEvents(0).getLoggerName shouldBe "DebugTestLogger"
-    loggingEvents(0).getLevel shouldBe Level.ERROR
-    loggingEvents(0).getMessage shouldBe "Oh what an error"
-    loggingEvents(0).getThrowableProxy shouldBe null
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "DebugTestLogger" &&
+        loggingEvent.getLevel == Level.ERROR &&
+        loggingEvent.getMessage == "Oh what an error" &&
+        loggingEvent.getThrowableProxy == null
+      })
 
-    loggingEvents(1).getLoggerName shouldBe "DebugTestLogger"
-    loggingEvents(1).getLevel shouldBe Level.WARN
-    loggingEvents(1).getMessage shouldBe "I've warned you"
-    loggingEvents(1).getThrowableProxy shouldBe null
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "DebugTestLogger" &&
+        loggingEvent.getLevel == Level.WARN &&
+        loggingEvent.getMessage == "I've warned you" &&
+        loggingEvent.getThrowableProxy == null
+      })
 
-    loggingEvents(2).getLoggerName shouldBe "DebugTestLogger"
-    loggingEvents(2).getLevel shouldBe Level.INFO
-    loggingEvents(2).getMessage shouldBe "Hello World"
-    loggingEvents(2).getThrowableProxy shouldBe null
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "DebugTestLogger" &&
+        loggingEvent.getLevel == Level.INFO &&
+        loggingEvent.getMessage == "Hello World" &&
+        loggingEvent.getThrowableProxy == null
+      })
 
-    loggingEvents(3).getLoggerName shouldBe "DebugTestLogger"
-    loggingEvents(3).getLevel shouldBe Level.DEBUG
-    loggingEvents(3).getMessage shouldBe "I did it"
-    loggingEvents(3).getThrowableProxy shouldBe null
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "DebugTestLogger" &&
+        loggingEvent.getLevel == Level.DEBUG &&
+        loggingEvent.getMessage == "I did it" &&
+        loggingEvent.getThrowableProxy == null
+      })
+
+    }
 
   }
 
   it should "log a message and an exception for level Debug, Info, Warning and Error" in
-      withCapturingAppender { (mockAppender, captorLoggingEvent) =>
+      withMockAppender { (mockAppender) =>
 
     val log = Logger("DebugTestLogger")
     log.setLevel(Level.DEBUG)
@@ -303,37 +350,46 @@ class LoggerSpec extends FlatSpec with Matchers with LogbackHelper {
     log.debug("I did it", new RuntimeException("Houston we have a problem"))
     log.trace("Here are all the details", new RuntimeException("Houston we have a problem"))
 
-    verify(mockAppender, times(4)).doAppend(captorLoggingEvent.capture())
-    val loggingEvents = captorLoggingEvent.getAllValues.asScala
+    inSequence {
 
-    loggingEvents(0).getLoggerName shouldBe "DebugTestLogger"
-    loggingEvents(0).getLevel shouldBe Level.ERROR
-    loggingEvents(0).getMessage shouldBe "Oh what an error"
-    loggingEvents(0).getThrowableProxy.getClassName shouldBe "java.lang.RuntimeException"
-    loggingEvents(0).getThrowableProxy.getMessage shouldBe "Houston we have a problem"
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "DebugTestLogger" &&
+        loggingEvent.getLevel == Level.ERROR &&
+        loggingEvent.getMessage == "Oh what an error" &&
+        loggingEvent.getThrowableProxy.getClassName == "java.lang.RuntimeException" &&
+        loggingEvent.getThrowableProxy.getMessage == "Houston we have a problem"
+      })
 
-    loggingEvents(1).getLoggerName shouldBe "DebugTestLogger"
-    loggingEvents(1).getLevel shouldBe Level.WARN
-    loggingEvents(1).getMessage shouldBe "I've warned you"
-    loggingEvents(1).getThrowableProxy.getClassName shouldBe "java.lang.RuntimeException"
-    loggingEvents(1).getThrowableProxy.getMessage shouldBe "Houston we have a problem"
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "DebugTestLogger" &&
+        loggingEvent.getLevel == Level.WARN &&
+        loggingEvent.getMessage == "I've warned you" &&
+        loggingEvent.getThrowableProxy.getClassName == "java.lang.RuntimeException" &&
+        loggingEvent.getThrowableProxy.getMessage == "Houston we have a problem"
+      })
 
-    loggingEvents(2).getLoggerName shouldBe "DebugTestLogger"
-    loggingEvents(2).getLevel shouldBe Level.INFO
-    loggingEvents(2).getMessage shouldBe "Hello World"
-    loggingEvents(2).getThrowableProxy.getClassName shouldBe "java.lang.RuntimeException"
-    loggingEvents(2).getThrowableProxy.getMessage shouldBe "Houston we have a problem"
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "DebugTestLogger" &&
+        loggingEvent.getLevel == Level.INFO &&
+        loggingEvent.getMessage == "Hello World" &&
+        loggingEvent.getThrowableProxy.getClassName == "java.lang.RuntimeException" &&
+        loggingEvent.getThrowableProxy.getMessage == "Houston we have a problem"
+      })
 
-    loggingEvents(3).getLoggerName shouldBe "DebugTestLogger"
-    loggingEvents(3).getLevel shouldBe Level.DEBUG
-    loggingEvents(3).getMessage shouldBe "I did it"
-    loggingEvents(3).getThrowableProxy.getClassName shouldBe "java.lang.RuntimeException"
-    loggingEvents(3).getThrowableProxy.getMessage shouldBe "Houston we have a problem"
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "DebugTestLogger" &&
+        loggingEvent.getLevel == Level.DEBUG &&
+        loggingEvent.getMessage == "I did it" &&
+        loggingEvent.getThrowableProxy.getClassName == "java.lang.RuntimeException" &&
+        loggingEvent.getThrowableProxy.getMessage == "Houston we have a problem"
+      })
+
+    }
 
   }
 
   "A Logger with Level set to Trace" should "log a message for level Trace, Debug, Info, Warning and Error" in
-      withCapturingAppender { (mockAppender, captorLoggingEvent) =>
+      withMockAppender { (mockAppender) =>
 
     val log = Logger("TraceTestLogger")
     log.setLevel(Level.TRACE)
@@ -344,38 +400,49 @@ class LoggerSpec extends FlatSpec with Matchers with LogbackHelper {
     log.debug("I did it")
     log.trace("Here are all the details")
 
-    verify(mockAppender, times(5)).doAppend(captorLoggingEvent.capture())
-    val loggingEvents = captorLoggingEvent.getAllValues.asScala
+    inSequence {
 
-    loggingEvents(0).getLoggerName shouldBe "TraceTestLogger"
-    loggingEvents(0).getLevel shouldBe Level.ERROR
-    loggingEvents(0).getMessage shouldBe "Oh what an error"
-    loggingEvents(0).getThrowableProxy shouldBe null
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "TraceTestLogger" &&
+        loggingEvent.getLevel == Level.ERROR &&
+        loggingEvent.getMessage == "Oh what an error" &&
+        loggingEvent.getThrowableProxy == null
+      })
 
-    loggingEvents(1).getLoggerName shouldBe "TraceTestLogger"
-    loggingEvents(1).getLevel shouldBe Level.WARN
-    loggingEvents(1).getMessage shouldBe "I've warned you"
-    loggingEvents(1).getThrowableProxy shouldBe null
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "TraceTestLogger" &&
+        loggingEvent.getLevel == Level.WARN &&
+        loggingEvent.getMessage == "I've warned you" &&
+        loggingEvent.getThrowableProxy == null
+      })
 
-    loggingEvents(2).getLoggerName shouldBe "TraceTestLogger"
-    loggingEvents(2).getLevel shouldBe Level.INFO
-    loggingEvents(2).getMessage shouldBe "Hello World"
-    loggingEvents(2).getThrowableProxy shouldBe null
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "TraceTestLogger" &&
+        loggingEvent.getLevel == Level.INFO &&
+        loggingEvent.getMessage == "Hello World" &&
+        loggingEvent.getThrowableProxy == null
+      })
 
-    loggingEvents(3).getLoggerName shouldBe "TraceTestLogger"
-    loggingEvents(3).getLevel shouldBe Level.DEBUG
-    loggingEvents(3).getMessage shouldBe "I did it"
-    loggingEvents(3).getThrowableProxy shouldBe null
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "TraceTestLogger" &&
+        loggingEvent.getLevel == Level.DEBUG &&
+        loggingEvent.getMessage == "I did it" &&
+        loggingEvent.getThrowableProxy == null
+      })
 
-    loggingEvents(4).getLoggerName shouldBe "TraceTestLogger"
-    loggingEvents(4).getLevel shouldBe Level.TRACE
-    loggingEvents(4).getMessage shouldBe "Here are all the details"
-    loggingEvents(4).getThrowableProxy shouldBe null
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "TraceTestLogger" &&
+        loggingEvent.getLevel == Level.TRACE &&
+        loggingEvent.getMessage == "Here are all the details" &&
+        loggingEvent.getThrowableProxy == null
+      })
+
+    }
 
   }
 
   it should "log a message and an exception for level Trace, Debug, Info, Warning and Error" in
-      withCapturingAppender { (mockAppender, captorLoggingEvent) =>
+      withMockAppender { (mockAppender) =>
 
     val log = Logger("TraceTestLogger")
     log.setLevel(Level.TRACE)
@@ -386,43 +453,54 @@ class LoggerSpec extends FlatSpec with Matchers with LogbackHelper {
     log.debug("I did it", new RuntimeException("Houston we have a problem"))
     log.trace("Here are all the details", new RuntimeException("Houston we have a problem"))
 
-    verify(mockAppender, times(5)).doAppend(captorLoggingEvent.capture())
-    val loggingEvents = captorLoggingEvent.getAllValues.asScala
+    inSequence {
 
-    loggingEvents(0).getLoggerName shouldBe "TraceTestLogger"
-    loggingEvents(0).getLevel shouldBe Level.ERROR
-    loggingEvents(0).getMessage shouldBe "Oh what an error"
-    loggingEvents(0).getThrowableProxy.getClassName shouldBe "java.lang.RuntimeException"
-    loggingEvents(0).getThrowableProxy.getMessage shouldBe "Houston we have a problem"
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "TraceTestLogger" &&
+        loggingEvent.getLevel == Level.ERROR &&
+        loggingEvent.getMessage == "Oh what an error" &&
+        loggingEvent.getThrowableProxy.getClassName == "java.lang.RuntimeException" &&
+        loggingEvent.getThrowableProxy.getMessage == "Houston we have a problem"
+      })
 
-    loggingEvents(1).getLoggerName shouldBe "TraceTestLogger"
-    loggingEvents(1).getLevel shouldBe Level.WARN
-    loggingEvents(1).getMessage shouldBe "I've warned you"
-    loggingEvents(1).getThrowableProxy.getClassName shouldBe "java.lang.RuntimeException"
-    loggingEvents(1).getThrowableProxy.getMessage shouldBe "Houston we have a problem"
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "TraceTestLogger" &&
+        loggingEvent.getLevel == Level.WARN &&
+        loggingEvent.getMessage == "I've warned you" &&
+        loggingEvent.getThrowableProxy.getClassName == "java.lang.RuntimeException" &&
+        loggingEvent.getThrowableProxy.getMessage == "Houston we have a problem"
+      })
 
-    loggingEvents(2).getLoggerName shouldBe "TraceTestLogger"
-    loggingEvents(2).getLevel shouldBe Level.INFO
-    loggingEvents(2).getMessage shouldBe "Hello World"
-    loggingEvents(2).getThrowableProxy.getClassName shouldBe "java.lang.RuntimeException"
-    loggingEvents(2).getThrowableProxy.getMessage shouldBe "Houston we have a problem"
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "TraceTestLogger" &&
+        loggingEvent.getLevel == Level.INFO &&
+        loggingEvent.getMessage == "Hello World" &&
+        loggingEvent.getThrowableProxy.getClassName == "java.lang.RuntimeException" &&
+        loggingEvent.getThrowableProxy.getMessage == "Houston we have a problem"
+      })
 
-    loggingEvents(3).getLoggerName shouldBe "TraceTestLogger"
-    loggingEvents(3).getLevel shouldBe Level.DEBUG
-    loggingEvents(3).getMessage shouldBe "I did it"
-    loggingEvents(3).getThrowableProxy.getClassName shouldBe "java.lang.RuntimeException"
-    loggingEvents(3).getThrowableProxy.getMessage shouldBe "Houston we have a problem"
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "TraceTestLogger" &&
+        loggingEvent.getLevel == Level.DEBUG &&
+        loggingEvent.getMessage == "I did it" &&
+        loggingEvent.getThrowableProxy.getClassName == "java.lang.RuntimeException" &&
+        loggingEvent.getThrowableProxy.getMessage == "Houston we have a problem"
+      })
 
-    loggingEvents(4).getLoggerName shouldBe "TraceTestLogger"
-    loggingEvents(4).getLevel shouldBe Level.TRACE
-    loggingEvents(4).getMessage shouldBe "Here are all the details"
-    loggingEvents(4).getThrowableProxy.getClassName shouldBe "java.lang.RuntimeException"
-    loggingEvents(4).getThrowableProxy.getMessage shouldBe "Houston we have a problem"
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "TraceTestLogger" &&
+        loggingEvent.getLevel == Level.TRACE &&
+        loggingEvent.getMessage == "Here are all the details" &&
+        loggingEvent.getThrowableProxy.getClassName == "java.lang.RuntimeException" &&
+        loggingEvent.getThrowableProxy.getMessage == "Houston we have a problem"
+      })
+
+    }
 
   }
 
   "A Logger with Level set to All" should "log a message for level Trace, Debug, Info, Warning and Error" in
-      withCapturingAppender { (mockAppender, captorLoggingEvent) =>
+      withMockAppender { (mockAppender) =>
 
     val log = Logger("AllTestLogger")
     log.setLevel(Level.ALL)
@@ -433,38 +511,49 @@ class LoggerSpec extends FlatSpec with Matchers with LogbackHelper {
     log.debug("I did it")
     log.trace("Here are all the details")
 
-    verify(mockAppender, times(5)).doAppend(captorLoggingEvent.capture())
-    val loggingEvents = captorLoggingEvent.getAllValues.asScala
+    inSequence {
 
-    loggingEvents(0).getLoggerName shouldBe "AllTestLogger"
-    loggingEvents(0).getLevel shouldBe Level.ERROR
-    loggingEvents(0).getMessage shouldBe "Oh what an error"
-    loggingEvents(0).getThrowableProxy shouldBe null
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "AllTestLogger" &&
+        loggingEvent.getLevel == Level.ERROR &&
+        loggingEvent.getMessage == "Oh what an error" &&
+        loggingEvent.getThrowableProxy == null
+      })
 
-    loggingEvents(1).getLoggerName shouldBe "AllTestLogger"
-    loggingEvents(1).getLevel shouldBe Level.WARN
-    loggingEvents(1).getMessage shouldBe "I've warned you"
-    loggingEvents(1).getThrowableProxy shouldBe null
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "AllTestLogger" &&
+        loggingEvent.getLevel == Level.WARN &&
+        loggingEvent.getMessage == "I've warned you" &&
+        loggingEvent.getThrowableProxy == null
+      })
 
-    loggingEvents(2).getLoggerName shouldBe "AllTestLogger"
-    loggingEvents(2).getLevel shouldBe Level.INFO
-    loggingEvents(2).getMessage shouldBe "Hello World"
-    loggingEvents(2).getThrowableProxy shouldBe null
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "AllTestLogger" &&
+        loggingEvent.getLevel == Level.INFO &&
+        loggingEvent.getMessage == "Hello World" &&
+        loggingEvent.getThrowableProxy == null
+      })
 
-    loggingEvents(3).getLoggerName shouldBe "AllTestLogger"
-    loggingEvents(3).getLevel shouldBe Level.DEBUG
-    loggingEvents(3).getMessage shouldBe "I did it"
-    loggingEvents(3).getThrowableProxy shouldBe null
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "AllTestLogger" &&
+        loggingEvent.getLevel == Level.DEBUG &&
+        loggingEvent.getMessage == "I did it" &&
+        loggingEvent.getThrowableProxy == null
+      })
 
-    loggingEvents(4).getLoggerName shouldBe "AllTestLogger"
-    loggingEvents(4).getLevel shouldBe Level.TRACE
-    loggingEvents(4).getMessage shouldBe "Here are all the details"
-    loggingEvents(4).getThrowableProxy shouldBe null
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "AllTestLogger" &&
+        loggingEvent.getLevel == Level.TRACE &&
+        loggingEvent.getMessage == "Here are all the details" &&
+        loggingEvent.getThrowableProxy == null
+      })
+
+    }
 
   }
 
   it should "log a message and an exception for level Trace, Debug, Info, Warning and Error" in
-      withCapturingAppender { (mockAppender, captorLoggingEvent) =>
+      withMockAppender { (mockAppender) =>
 
     val log = Logger("AllTestLogger")
     log.setLevel(Level.ALL)
@@ -475,44 +564,55 @@ class LoggerSpec extends FlatSpec with Matchers with LogbackHelper {
     log.debug("I did it", new RuntimeException("Houston we have a problem"))
     log.trace("Here are all the details", new RuntimeException("Houston we have a problem"))
 
-    verify(mockAppender, times(5)).doAppend(captorLoggingEvent.capture())
-    val loggingEvents = captorLoggingEvent.getAllValues.asScala
+    inSequence {
 
-    loggingEvents(0).getLoggerName shouldBe "AllTestLogger"
-    loggingEvents(0).getLevel shouldBe Level.ERROR
-    loggingEvents(0).getMessage shouldBe "Oh what an error"
-    loggingEvents(0).getThrowableProxy.getClassName shouldBe "java.lang.RuntimeException"
-    loggingEvents(0).getThrowableProxy.getMessage shouldBe "Houston we have a problem"
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "AllTestLogger" &&
+        loggingEvent.getLevel == Level.ERROR &&
+        loggingEvent.getMessage == "Oh what an error" &&
+        loggingEvent.getThrowableProxy.getClassName == "java.lang.RuntimeException" &&
+        loggingEvent.getThrowableProxy.getMessage == "Houston we have a problem"
+      })
 
-    loggingEvents(1).getLoggerName shouldBe "AllTestLogger"
-    loggingEvents(1).getLevel shouldBe Level.WARN
-    loggingEvents(1).getMessage shouldBe "I've warned you"
-    loggingEvents(1).getThrowableProxy.getClassName shouldBe "java.lang.RuntimeException"
-    loggingEvents(1).getThrowableProxy.getMessage shouldBe "Houston we have a problem"
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "AllTestLogger" &&
+        loggingEvent.getLevel == Level.WARN &&
+        loggingEvent.getMessage == "I've warned you" &&
+        loggingEvent.getThrowableProxy.getClassName == "java.lang.RuntimeException" &&
+        loggingEvent.getThrowableProxy.getMessage == "Houston we have a problem"
+      })
 
-    loggingEvents(2).getLoggerName shouldBe "AllTestLogger"
-    loggingEvents(2).getLevel shouldBe Level.INFO
-    loggingEvents(2).getMessage shouldBe "Hello World"
-    loggingEvents(2).getThrowableProxy.getClassName shouldBe "java.lang.RuntimeException"
-    loggingEvents(2).getThrowableProxy.getMessage shouldBe "Houston we have a problem"
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "AllTestLogger" &&
+        loggingEvent.getLevel == Level.INFO &&
+        loggingEvent.getMessage == "Hello World" &&
+        loggingEvent.getThrowableProxy.getClassName == "java.lang.RuntimeException" &&
+        loggingEvent.getThrowableProxy.getMessage == "Houston we have a problem"
+      })
 
-    loggingEvents(3).getLoggerName shouldBe "AllTestLogger"
-    loggingEvents(3).getLevel shouldBe Level.DEBUG
-    loggingEvents(3).getMessage shouldBe "I did it"
-    loggingEvents(3).getThrowableProxy.getClassName shouldBe "java.lang.RuntimeException"
-    loggingEvents(3).getThrowableProxy.getMessage shouldBe "Houston we have a problem"
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "AllTestLogger" &&
+        loggingEvent.getLevel == Level.DEBUG &&
+        loggingEvent.getMessage == "I did it" &&
+        loggingEvent.getThrowableProxy.getClassName == "java.lang.RuntimeException" &&
+        loggingEvent.getThrowableProxy.getMessage == "Houston we have a problem"
+      })
 
-    loggingEvents(4).getLoggerName shouldBe "AllTestLogger"
-    loggingEvents(4).getLevel shouldBe Level.TRACE
-    loggingEvents(4).getMessage shouldBe "Here are all the details"
-    loggingEvents(4).getThrowableProxy.getClassName shouldBe "java.lang.RuntimeException"
-    loggingEvents(4).getThrowableProxy.getMessage shouldBe "Houston we have a problem"
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "AllTestLogger" &&
+        loggingEvent.getLevel == Level.TRACE &&
+        loggingEvent.getMessage == "Here are all the details" &&
+        loggingEvent.getThrowableProxy.getClassName == "java.lang.RuntimeException" &&
+        loggingEvent.getThrowableProxy.getMessage == "Houston we have a problem"
+      })
+
+    }
 
   }
 
   "A Logger with marker filter and level set to info" should
       "log a message with marker for level Trace, Debug and Info only if the marker contains the filtered marker" in
-      withCapturingAppender { (mockAppender, captorLoggingEvent) =>
+      withMockAppender { (mockAppender) =>
 
     val log = Logger("MarkerTestLogger")
     log.setLevel(Level.INFO)
@@ -539,28 +639,35 @@ class LoggerSpec extends FlatSpec with Matchers with LogbackHelper {
     log.debug(otherMarker, "I did it")
     log.trace(otherMarker, "Here are all the details")
 
-    verify(mockAppender, times(3)).doAppend(captorLoggingEvent.capture())
-    val loggingEvents = captorLoggingEvent.getAllValues.asScala
+    inSequence {
 
-    loggingEvents(0).getLoggerName shouldBe "MarkerTestLogger"
-    loggingEvents(0).getLevel shouldBe Level.ERROR
-    loggingEvents(0).getMessage shouldBe "Oh what an error"
-    loggingEvents(0).getThrowableProxy shouldBe null
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "MarkerTestLogger" &&
+        loggingEvent.getLevel == Level.ERROR &&
+        loggingEvent.getMessage == "Oh what an error" &&
+        loggingEvent.getThrowableProxy == null
+      })
 
-    loggingEvents(1).getLoggerName shouldBe "MarkerTestLogger"
-    loggingEvents(1).getLevel shouldBe Level.WARN
-    loggingEvents(1).getMessage shouldBe "I've warned you"
-    loggingEvents(0).getThrowableProxy shouldBe null
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "MarkerTestLogger" &&
+        loggingEvent.getLevel == Level.WARN &&
+        loggingEvent.getMessage == "I've warned you" &&
+        loggingEvent.getThrowableProxy == null
+      })
 
-    loggingEvents(2).getLoggerName shouldBe "MarkerTestLogger"
-    loggingEvents(2).getLevel shouldBe Level.INFO
-    loggingEvents(2).getMessage shouldBe "Hello World"
-    loggingEvents(0).getThrowableProxy shouldBe null
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "MarkerTestLogger" &&
+        loggingEvent.getLevel == Level.INFO &&
+        loggingEvent.getMessage == "Hello World" &&
+        loggingEvent.getThrowableProxy == null
+      })
+
+    }
 
   }
 
   it should "log a message and an exception with marker for level Trace, Debug and Info only if the marker contains the filtered marker" in
-      withCapturingAppender { (mockAppender, captorLoggingEvent) =>
+      withMockAppender { (mockAppender) =>
 
     val log = Logger("MarkerTestLogger")
     log.setLevel(Level.INFO)
@@ -587,26 +694,33 @@ class LoggerSpec extends FlatSpec with Matchers with LogbackHelper {
     log.debug(otherMarker, "I did it", new RuntimeException("Houston we have a problem"))
     log.trace(otherMarker, "Here are all the details", new RuntimeException("Houston we have a problem"))
 
-    verify(mockAppender, times(3)).doAppend(captorLoggingEvent.capture())
-    val loggingEvents = captorLoggingEvent.getAllValues.asScala
+    inSequence {
 
-    loggingEvents(0).getLoggerName shouldBe "MarkerTestLogger"
-    loggingEvents(0).getLevel shouldBe Level.ERROR
-    loggingEvents(0).getMessage shouldBe "Oh what an error"
-    loggingEvents(0).getThrowableProxy.getClassName shouldBe "java.lang.RuntimeException"
-    loggingEvents(0).getThrowableProxy.getMessage shouldBe "Houston we have a problem"
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "MarkerTestLogger" &&
+        loggingEvent.getLevel == Level.ERROR &&
+        loggingEvent.getMessage == "Oh what an error" &&
+        loggingEvent.getThrowableProxy.getClassName == "java.lang.RuntimeException" &&
+        loggingEvent.getThrowableProxy.getMessage == "Houston we have a problem"
+      })
 
-    loggingEvents(1).getLoggerName shouldBe "MarkerTestLogger"
-    loggingEvents(1).getLevel shouldBe Level.WARN
-    loggingEvents(1).getMessage shouldBe "I've warned you"
-    loggingEvents(1).getThrowableProxy.getClassName shouldBe "java.lang.RuntimeException"
-    loggingEvents(1).getThrowableProxy.getMessage shouldBe "Houston we have a problem"
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "MarkerTestLogger" &&
+        loggingEvent.getLevel == Level.WARN &&
+        loggingEvent.getMessage == "I've warned you" &&
+        loggingEvent.getThrowableProxy.getClassName == "java.lang.RuntimeException" &&
+        loggingEvent.getThrowableProxy.getMessage == "Houston we have a problem"
+      })
 
-    loggingEvents(2).getLoggerName shouldBe "MarkerTestLogger"
-    loggingEvents(2).getLevel shouldBe Level.INFO
-    loggingEvents(2).getMessage shouldBe "Hello World"
-    loggingEvents(2).getThrowableProxy.getClassName shouldBe "java.lang.RuntimeException"
-    loggingEvents(2).getThrowableProxy.getMessage shouldBe "Houston we have a problem"
+      (mockAppender.doAppend _) verify (where { (loggingEvent: ILoggingEvent) =>
+        loggingEvent.getLoggerName == "MarkerTestLogger" &&
+        loggingEvent.getLevel == Level.INFO &&
+        loggingEvent.getMessage == "Hello World" &&
+        loggingEvent.getThrowableProxy.getClassName == "java.lang.RuntimeException" &&
+        loggingEvent.getThrowableProxy.getMessage == "Houston we have a problem"
+      })
+
+    }
 
   }
 
