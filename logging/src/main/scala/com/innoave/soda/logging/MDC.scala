@@ -23,8 +23,11 @@ object MDC {
   def mdcAdapter: org.slf4j.spi.MDCAdapter =
     SLF4JMDC.getMDCAdapter
 
-  def get(key: String): String =
-    SLF4JMDC.get(key)
+  def get(key: String): Option[String] =
+    Option(SLF4JMDC.get(key))
+
+  def getOrElse(key: String, default: => String) =
+    Option(SLF4JMDC.get(key)).getOrElse(default)
 
   def put(key: String, value: String): Unit =
     SLF4JMDC.put(key, value)
@@ -35,7 +38,7 @@ object MDC {
   def clear(): Unit =
     SLF4JMDC.clear()
 
-  def copyOfContextMap: Map[String, String] =
+  def contextMap: Map[String, String] =
     SLF4JMDC.getCopyOfContextMap.asScala.toMap
 
   def contextMap_=(value: Map[String, String]): Unit =
