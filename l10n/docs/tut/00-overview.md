@@ -10,7 +10,7 @@ The main goal of the Soda L10N is to provide type safe localization and minimize
 The user code references the messages in a typesafe way. Messages can have zero, one or several arguments. The arguments are replaced by their actual value at the time of rendering. The types of the arguments are defined with the message. When using a message with arguments also the number of arguments and the type of each argument is type checked by the Scala compiler.
 
 ##Features
-* Types for `Locale`, `Language`, `Country` and `Variant`. The `Locale` in Soda L10N is the Scala complement for the `java.util.Locale`.
+* Types for `Locale`, `Language`, `Country`, `Variant` and `Script`. The `Locale` in Soda L10N is a lightweight wrapper for the `java.util.Locale`.
 * Localization of strings. A string that should be localized is represented as `Message`.
 * Messages are defined and referenced in a typesafe way.
 * A `Message` can take several arguments.
@@ -44,7 +44,7 @@ object DemoMessages extends DefineMessage {
 ```
 
 Prepare the translations in UTF8 text files:
-file for default language: `l10n/DemoMessages.txt`
+file for fallback language: `l10n/DemoMessages.txt`
 ```
 #
 # Test Messages in English
