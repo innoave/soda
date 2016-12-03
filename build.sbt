@@ -39,14 +39,12 @@ lazy val sodaL10n = Project(
       enumeratum
     )
   )
-).enablePlugins(
-  SiteScaladocPlugin
 )
 
 lazy val sodaLogging = Project(
   id = "soda-logging",
   base = file("logging"),
-  settings = commonSettings ++ ghpages.settings ++ publishSettings ++ Seq(
+  settings = commonSettings ++ publishSettings ++ Seq(
     description := "Soda Logging",
     fork in Test := true,
     libraryDependencies ++= Seq(
@@ -56,14 +54,12 @@ lazy val sodaLogging = Project(
       slf4jApi
     )
   )
-).enablePlugins(
-  SiteScaladocPlugin
 )
 
 lazy val sodaDesktop = Project(
   id = "soda-desktop",
   base = file("desktop"),
-  settings = commonSettings ++ ghpages.settings ++ publishSettings ++ Seq(
+  settings = commonSettings ++ publishSettings ++ Seq(
     description := "Soda Desktop",
     libraryDependencies ++= Seq(
       scalatest % "test"
@@ -72,14 +68,29 @@ lazy val sodaDesktop = Project(
 )
 
 lazy val sodaMvvm = Project(
-  id ="soda-mvvm",
+  id = "soda-mvvm",
   base = file("mvvm"),
-  settings = commonSettings ++ ghpages.settings ++ publishSettings ++ Seq(
+  settings = commonSettings ++ publishSettings ++ Seq(
     description := "Soda MVVM",
     libraryDependencies ++= Seq(
       scalatest % "test"
     )
   )
+)
+
+lazy val sodaDocs = Project(
+  id = "soda-docs",
+  base = file("docs"),
+  settings = commonSettings ++ ghpages.settings ++ Seq(
+    siteSourceDirectory :=  baseDirectory.value / "site",
+    git.remoteRepo := "git@github.com:innoave/soda.git",
+    publishArtifact := false
+  )
+).dependsOn(
+  sodaL10n,
+  sodaLogging,
+  sodaDesktop,
+  sodaMvvm
 )
 
 //
@@ -114,8 +125,7 @@ lazy val commonSettings = projectSettings ++ buildSettings
 lazy val projectSettings = Seq(
   organization := "com.innoave.soda",
   homepage := Some(url("https://github.com/innoave/soda")),
-  startYear := Some(2016),
-  git.remoteRepo := "git@github.com:innoave/soda.git"
+  startYear := Some(2016)
 )
 
 //
@@ -125,43 +135,35 @@ lazy val buildSettings = Seq(
   crossScalaVersions := Seq("2.11.8", "2.12.0"),
   scalaVersion := crossScalaVersions.value.head,
   scalacOptions ++= { CrossVersion.partialVersion(scalaVersion.value) match {
-    case Some((2, 12)) => Seq(
-      "-target:jvm-1.8",
-      "-encoding", "utf8",
-      "-unchecked",
-      "-deprecation",
-//      "-optimise",
-      "-feature",
-      "-language:_",
-      "-Xfatal-warnings",
-      "-Xlint:_",
-      "-Yno-adapted-args",
-//      "-Yinline-warnings",       // seems to be not supported in 2.12
-      "-Ywarn-dead-code",        // N.B. doesn't work well with the ??? hole
-      "-Ywarn-numeric-widen",
-//      "-Ywarn-value-discard",
-      "-Ywarn-unused",
+    case Some((2, 10)) => Seq(
+      "-target:jvm-1.6",
+      "-Yinline-warnings"
+      )
+    case Some((2, 11)) => Seq(
+      "-target:jvm-1.6",
+      "-Yinline-warnings",
       "-Ywarn-unused-import"     // 2.11+ only      
       )
     case _ => Seq(
-      "-target:jvm-1.6",
-      "-encoding", "utf8",
-      "-unchecked",
-      "-deprecation",
-//      "-optimise",
-      "-feature",
-      "-language:_",
-      "-Xfatal-warnings",
-      "-Xlint:_",
-      "-Yno-adapted-args",
-      "-Yinline-warnings",
-      "-Ywarn-dead-code",        // N.B. doesn't work well with the ??? hole
-      "-Ywarn-numeric-widen",
-//      "-Ywarn-value-discard",
-      "-Ywarn-unused",
+      "-target:jvm-1.8",
+//      "-Yinline-warnings",       // seems to be not supported in 2.12
       "-Ywarn-unused-import"     // 2.11+ only      
       )
-  }},
+  }} ++ Seq(
+    "-encoding", "utf8",
+    "-unchecked",
+    "-deprecation",
+//      "-optimise",
+    "-feature",
+    "-language:_",
+    "-Xfatal-warnings",
+    "-Xlint:_",
+    "-Yno-adapted-args",
+    "-Ywarn-dead-code",        // N.B. doesn't work well with the ??? hole
+    "-Ywarn-numeric-widen",
+//      "-Ywarn-value-discard",
+    "-Ywarn-unused"
+  ),
   javacOptions ++= { CrossVersion.partialVersion(scalaVersion.value) match {
     case Some((2, 12)) => Seq(
       "-target", "1.8",
@@ -196,16 +198,6 @@ lazy val buildSettings = Seq(
   manifestSetting
 )
 
-lazy val docsSettings = commonSettings ++ tutDocsSettings ++ ghpages.settings
-
-lazy val docsMappingsTutDir = settingKey[String]("Name of subdirectory in site target directory for tut docs")
-
-lazy val tutDocsSettings = tutSettings ++ Seq(
-  tutSourceDirectory := baseDirectory.value / "docs" / "tut",
-  docsMappingsTutDir := "tut",
-  addMappingsToSiteDir(tut, docsMappingsTutDir)
-)
-
 lazy val manifestSetting = packageOptions += {
     Package.ManifestAttributes(
       "Created-By" -> "Simple Build Tool",
@@ -220,6 +212,50 @@ lazy val manifestSetting = packageOptions += {
       "Implementation-Vendor" -> organization.value
     )
 }
+
+lazy val docsSettings = commonSettings ++ tutDocsSettings ++ apiDocsSettings
+
+lazy val copyApiToSite = taskKey[Unit]("Copy api docs to project's site")
+
+lazy val apiDocsSettings = Seq(
+  copyApiToSite := {
+    val src = crossTarget.value / "api"
+    val dst = baseDirectory.value / ".." / "docs" / "target" / "site" / projectID.value.name / version.value / "api"
+    if (!src.isDirectory) {
+      println(s"Source directory $src not found.")
+    } else {
+      if (!dst.isDirectory) {
+        dst.mkdirs
+      }
+      println(s"Copying docs to ${dst.getPath}")
+      println(s"Source path is ${src.getPath}")
+      IO.copyDirectory(src, dst, overwrite = true, preserveLastModified = false)
+    }
+  }
+)
+
+lazy val docsMappingsTutDir = settingKey[String]("Name of subdirectory in site target directory for tut docs")
+lazy val copyTutToSite = taskKey[Unit]("Copy tut docs to project's site")
+
+lazy val tutDocsSettings = tutSettings ++ Seq(
+  tutSourceDirectory := baseDirectory.value / "docs" / "tut",
+  docsMappingsTutDir := "tut",
+  addMappingsToSiteDir(tut, docsMappingsTutDir),
+  copyTutToSite := {
+    val src = crossTarget.value / "tut"
+    val dst = baseDirectory.value / ".." / "docs" / "target" / "site" / projectID.value.name / version.value / "tut"
+    if (!src.isDirectory) {
+      println(s"Source directory $src not found.")
+    } else {
+      if (!dst.isDirectory) {
+        dst.mkdirs
+      }
+      println(s"Copying tut docs to ${dst.getPath}")
+      println(s"Source path is ${src.getPath}")
+      IO.copyDirectory(src, dst, overwrite = true, preserveLastModified = false)
+    }
+  }
+)
 
 //
 // Release Settings
