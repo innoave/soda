@@ -146,7 +146,7 @@ lazy val projectSettings = Seq(
 // Build Settings
 //
 lazy val buildSettings = Seq(
-  crossScalaVersions := Seq("2.11.8", "2.12.0"),
+  crossScalaVersions := Seq("2.11.8", "2.12.1"),
   scalaVersion := crossScalaVersions.value.head,
   scalacOptions ++= { CrossVersion.partialVersion(scalaVersion.value) match {
     case Some((2, 10)) => Seq(
