@@ -17,25 +17,32 @@ package com.innoave.soda.desktop
 
 import scala.util.Try
 
-object OS extends OS {
-
-  object Brand extends Enumeration {
-    type Brand = Value
-    val Linux = Value("Linux")
-    val MacOs = Value("MacOs")
-    val MsWin = Value("MsWin")
-    val Unknown = Value("Unknown")
-  }
-
-}
-
+/** Provides basic attributes about the operation system an application
+ *  is currently running on.
+ *
+ *  @since 0.1.0
+ */
 trait OS {
   import OS.Brand
 
+  /** Get the name of the OS.
+   *
+   *  @return the name of the OS.
+   */
   def name: Option[String] = sys.props.get("os.name")
 
+  /** Get the version of the OS.
+   *
+   *  @return the version of the OS or None if the version can not be
+   *          determined.
+   */
   def version: Option[String] = sys.props.get("os.version")
 
+  /** Get the brand of the OS.
+   *
+   *  @return the brand of the OS or Brand.Unknown if the brand can not be
+   *          determined.
+   */
   def brand: Brand.Brand = name match {
     case Some(osname) =>
       val lowername = osname.toLowerCase()
@@ -51,6 +58,15 @@ trait OS {
       Brand.Unknown
   }
 
+  /** Get the major version of the OS.
+   *
+   *  The major version is usually the version number before the first dot.
+   *  This assumes that the version string separates the major part and the
+   *  minor part of the version by a dot.
+   *
+   *  @return the major version of the OS or None of the major version can not
+   *          be determined.
+   */
   def majorVersion: Option[Int] = version flatMap { vers =>
     val versnum = if (vers.startsWith("v") || vers.startsWith("V")) vers.substring(1) else vers
     val majorIndex = versnum.indexOf('.')
@@ -59,6 +75,26 @@ trait OS {
     } else {
       Try(versnum.toInt).toOption
     }
+  }
+
+}
+
+/** Companion object of the OS trait.
+ * 
+ *  @since 0.1.0
+ */
+object OS extends OS {
+
+  /** Enumeration of supported brands of OSes.
+   * 
+   *  @since 0.1.0
+   */
+  object Brand extends Enumeration {
+    type Brand = Value
+    val Linux = Value("Linux")
+    val MacOs = Value("MacOs")
+    val MsWin = Value("MsWin")
+    val Unknown = Value("Unknown")
   }
 
 }

@@ -17,219 +17,190 @@ package com.innoave.soda.desktop
 
 import OS.Brand._
 
+/** Represents a file system of the operation system an application is
+ *  running on. It provides functions to retrieve attributes of the file
+ *  system defined by the underlying OS.
+ *
+ *  @since 0.1.0
+ */
 trait FileSystem {
 
-  /**
-   * <p>
-   * Gets the reserved characters of the file system.
-   * </p>
+  /** Gets the reserved characters of the file system.
    *
-   * @return the set of reserved characters
+   *  @return the set of reserved characters
    */
   def reservedCharacters: Set[Char]
 
-  val fileSeparator: String = java.io.File.separator
+  def fileSeparator: String = java.io.File.separator
 
-  val pathSeparator: String = java.io.File.pathSeparator
+  def pathSeparator: String = java.io.File.pathSeparator
 
-  /**
-   * <p>
-   * Gets the system's directory for temporary files.
-   * </p>
+  /** Gets the system's directory for temporary files.
    *
-   * @return the system's directory for temporary files
+   *  @return the system's directory for temporary files
    */
   def tempDir: String = System.getProperty("java.io.tmpdir")
 
-  /**
-   * <p>
-   * Gets the home directory of the current user.
-   * </p>
+  /** Gets the home directory of the current user.
    *
-   * @return the current users home directory
+   *  @return the current users home directory
    */
   def userHomeDir: String = System.getProperty("user.home")
 
-  /**
-   * <p>
-   * Gets the special folder path for user application settings.
-   * </p>
+  /** Gets the special folder path for user application settings.
    *
-   * <p>For users on Windows XP, this will (likely) be:</p>
-   * <pre>
-   * C:\Documents and Settings\[USERNAME]\Application Data\[APPNAME]
-   * </pre>
+   *  For users on Windows XP, this will (likely) be:
    *
-   * <p>For users on Windows Vista, this will (likely) be:</p>
-   * <pre>
-   * C:\Users\[USERNAME]\AppData\Roaming\[APPNAME]
-   * </pre>
+   *  `C:\Documents and Settings\[USERNAME]\Application Data\[APPNAME]`
    *
-   * <p>For users on Mac OS X, this will (likely) be:</p>
-   * <pre>
-   * ~/Libary/Application Support/[APPNAME]
-   * </pre>
+   *  For users on Windows Vista, this will (likely) be:
    *
-   * <p>For users on a *nix based OS, this will (likely) be:</p>
-   * <pre>
-   * /home/[USERNAME]/.[APPNAME]
-   * </pre>
+   *  `C:\Users\[USERNAME]\AppData\Roaming\[APPNAME]`
    *
-   * @param appName name of the application
-   * @return user specific application data directory
+   *  For users on Mac OS X, this will (likely) be:
+   *
+   *  `~/Libary/Application Support/[APPNAME]`
+   *
+   *  For users on a *nix based OS, this will (likely) be:
+   *
+   *  `/home/[USERNAME]/.[APPNAME]`
+   *
+   *  @param appName name of the application
+   *  @return user specific application data directory
    */
   def userAppDataDir(appName: String): String
 
-  /**
-   * <p>
-   * Gets the special folder path for local user application settings.
-   * </p>
+  /** Gets the special folder path for local user application settings.
    *
-   * <p>For users on Windows XP, this will (likely) be:</p>
-   * <pre>
-   * C:\Documents and Settings\[USERNAME]\Local Settings\Application Data\[APPNAME]
-   * </pre>
+   *  For users on Windows XP, this will (likely) be:
    *
-   * <p>For users on Windows Vista, this will (likely) be:</p>
-   * <pre>
-   * C:\Users\[USERNAME]\AppData\Local\[APPNAME]
-   * </pre>
+   *  `C:\Documents and Settings\[USERNAME]\Local Settings\Application Data\[APPNAME]`
    *
-   * <p>For users on Mac OS X, this will (likely) be:</p>
-   * <pre>
-   * ~/Libary/Caches/[APPNAME]
-   * </pre>
+   *  `For users on Windows Vista, this will (likely) be:`
    *
-   * <p>For users on a *nix based OS, this will (likely) be:</p>
-   * <pre>
-   * /home/[USERNAME]/.[APPNAME]
-   * </pre>
+   *  `C:\Users\[USERNAME]\AppData\Local\[APPNAME]`
    *
-   * @param appName name of the application
-   * @return user specific local application data directory
+   *  For users on Mac OS X, this will (likely) be:
+   *
+   *  `~/Libary/Caches/[APPNAME]`
+   *
+   *  For users on a *nix based OS, this will (likely) be:
+   *
+   *  `/home/[USERNAME]/.[APPNAME]`
+   *
+   *  @param appName name of the application
+   *  @return user specific local application data directory
    */
   def userLocalAppDataDir(appName: String): String
 
-  /**
-   * <p>
-   * Gets the special folder path for user documents directory.
-   * </p>
+  /** Gets the special folder path for user documents directory.
    *
-   * <p>For users on Windows XP, this will (likely) be:</p>
-   * <pre>
-   * C:\Documents and Settings\[USERNAME]\My Documents
-   * </pre>
+   *  For users on Windows XP, this will (likely) be:
    *
-   * <p>For users on Windows Vista, this will (likely) be:</p>
-   * <pre>
-   * C:\Users\[USERNAME]\Documents
-   * </pre>
+   *  `C:\Documents and Settings\[USERNAME]\My Documents`
    *
-   * <p>For users on Mac OS X, this will (likely) be:</p>
-   * <pre>
-   * ~
-   * </pre>
+   *  For users on Windows Vista, this will (likely) be:
    *
-   * <p>For users on a *nix based OS, this will (likely) be:</p>
-   * <pre>
-   * /home/[USERNAME]
-   * </pre>
+   *  `C:\Users\[USERNAME]\Documents`
    *
-   * @return user document directory
+   *  For users on Mac OS X, this will (likely) be:
+   *
+   *  `~`
+   *
+   *  For users on a *nix based OS, this will (likely) be:
+   *
+   *  `/home/[USERNAME]`
+   *
+   *  @return user document directory
    */
   def userDocumentsDir: String
 
-  /**
-   * <p>
-   * Gets the special folder path for user pictures directory.
-   * </p>
+  /** Gets the special folder path for user pictures directory.
    *
-   * <p>For users on Windows XP, this will (likely) be:</p>
-   * <pre>
-   * C:\Documents and Settings\[USERNAME]\My Documents\My Pictures
-   * </pre>
+   *  For users on Windows XP, this will (likely) be:
    *
-   * <p>For users on Windows Vista, this will (likely) be:</p>
-   * <pre>
-   * C:\Users\[USERNAME]\Pictures
-   * </pre>
+   *  `C:\Documents and Settings\[USERNAME]\My Documents\My Pictures`
    *
-   * <p>For users on Mac OS X, this will (likely) be:</p>
-   * <pre>
-   * ~/Pictures
-   * </pre>
+   *  For users on Windows Vista, this will (likely) be:
    *
-   * <p>For users on a *nix based OS, this will (likely) be:</p>
-   * <pre>
-   * /home/[USERNAME]/Pictures
-   * </pre>
+   *  `C:\Users\[USERNAME]\Pictures`
    *
-   * @return user pictures directory
+   *  For users on Mac OS X, this will (likely) be:
+   *
+   *  `~/Pictures`
+   *
+   *  For users on a *nix based OS, this will (likely) be:
+   *
+   *  `/home/[USERNAME]/Pictures`
+   *
+   *  @return user pictures directory
    */
   def userPicturesDir: String
 
-  /**
-   * <p>
-   * Gets the special folder path for user music directory.
-   * </p>
+  /** Gets the special folder path for user music directory.
    *
-   * <p>For users on Windows XP, this will (likely) be:</p>
-   * <pre>
-   * C:\Documents and Settings\[USERNAME]\My Documents\My Music
-   * </pre>
+   *  For users on Windows XP, this will (likely) be:
    *
-   * <p>For users on Windows Vista, this will (likely) be:</p>
-   * <pre>
-   * C:\Users\[USERNAME]\Music
-   * </pre>
+   *  `C:\Documents and Settings\[USERNAME]\My Documents\My Music`
    *
-   * <p>For users on Mac OS X, this will (likely) be:</p>
-   * <pre>
-   * ~/Music
-   * </pre>
+   *  For users on Windows Vista, this will (likely) be:
    *
-   * <p>For users on a *nix based OS, this will (likely) be:</p>
-   * <pre>
-   * /home/[USERNAME]/Music
-   * </pre>
+   *  `C:\Users\[USERNAME]\Music`
    *
-   * @return user music directory
+   *  For users on Mac OS X, this will (likely) be:
+   *
+   *  `~/Music`
+   *
+   *  For users on a *nix based OS, this will (likely) be:
+   *
+   *  `/home/[USERNAME]/Music`
+   *
+   *  @return user music directory
    */
   def userMusicDir: String
 
-  /**
-   * <p>
-   * Gets the special folder path for user videos directory.
-   * </p>
+  /** Gets the special folder path for user videos directory.
    *
-   * <p>For users on Windows XP, this will (likely) be:</p>
-   * <pre>
-   * C:\Documents and Settings\[USERNAME]\My Documents\My Videos
-   * </pre>
+   *  For users on Windows XP, this will (likely) be:
    *
-   * <p>For users on Windows Vista, this will (likely) be:</p>
-   * <pre>
-   * C:\Users\[USERNAME]\Videos
-   * </pre>
+   *  `C:\Documents and Settings\[USERNAME]\My Documents\My Videos`
    *
-   * <p>For users on Mac OS X, this will (likely) be:</p>
-   * <pre>
-   * ~/Music
-   * </pre>
+   *  For users on Windows Vista, this will (likely) be:
    *
-   * <p>For users on a *nix based OS, this will (likely) be:</p>
-   * <pre>
-   * /home/[USERNAME]/Videos
-   * </pre>
+   *  `C:\Users\[USERNAME]\Videos`
    *
-   * @return user videos directory
+   *  For users on Mac OS X, this will (likely) be:
+   *
+   *  `~/Music`
+   *
+   *  For users on a *nix based OS, this will (likely) be:
+   *
+   *  `/home/[USERNAME]/Videos`
+   *
+   *  @return user videos directory
    */
   def userVideosDir: String
 
 }
 
+/** Factory object to get [[com.innoave.soda.desktop.FileSystem]]'s default
+ *  implementation that represents the file system of the OS the application
+ *  is currently running on.
+ *
+ *  @example Get the user's home directory on the current OS
+ *  {{{
+ *  FileSystem().userHomeDir
+ *  }}}
+ *
+ *  @since 0.1.0
+ */
 object FileSystem {
 
+  /** Returns a [[com.innoave.soda.desktop.FileSystem]] that represents the
+   *  file system of the OS the application is running on.
+   *
+   *  @return the [[FileSystem]] representing the current OS's file system.
+   */
   def apply(): FileSystem = OS.brand match {
     case MsWin =>
       MsWinFileSystem
@@ -245,6 +216,11 @@ object FileSystem {
 
 object UnknownFileSystem extends LinuxLikeFileSystem
 
+/** Default implementation of [[com.innoave.soda.desktop.FileSystem]] for
+ *  the file system usually used by Linux like OSes.
+ *
+ *  @since 0.1.0
+ */
 trait LinuxLikeFileSystem extends FileSystem {
 
   override def reservedCharacters: Set[Char] = Set(':')
@@ -271,6 +247,11 @@ trait LinuxLikeFileSystem extends FileSystem {
 
 object LinuxFileSystem extends LinuxLikeFileSystem
 
+/** Default implementation of [[com.innoave.soda.desktop.FileSystem]] for
+ *  the file system usually used by Apple Mac OS.
+ *
+ *  @since 0.1.0
+ */
 trait MacOsLikeFileSystem extends LinuxLikeFileSystem {
 
   override def userAppDataDir(appName: String): String =
@@ -283,6 +264,11 @@ trait MacOsLikeFileSystem extends LinuxLikeFileSystem {
 
 object MacOsFileSystem extends MacOsLikeFileSystem
 
+/** Default implementation of [[com.innoave.soda.desktop.FileSystem]] for
+ *  the file system usually used by Microsoft Windows OS.
+ *
+ *  @since 0.1.0
+ */
 trait MsWinLikeFileSystem extends FileSystem {
 
   override def reservedCharacters: Set[Char] = Set('<', '>', ':', '"', '/', '\\', '|', '?', '*')
