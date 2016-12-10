@@ -25,5 +25,8 @@ package com.innoave.soda
  *  of the file system and the path of the directories to store application
  *  settings, documents, music files and video files in user specific
  *  directories.
+ *
+ *  @since 0.1.0
+ *  @author haraldmaida
  */
 package object desktop

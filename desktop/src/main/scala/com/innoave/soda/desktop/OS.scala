@@ -21,6 +21,7 @@ import scala.util.Try
  *  is currently running on.
  *
  *  @since 0.1.0
+ *  @author haraldmaida
  */
 trait OS {
   import OS.Brand
@@ -83,12 +84,14 @@ trait OS {
  *  functions of the OS trait.
  *
  *  @since 0.1.0
+ *  @author haraldmaida
  */
 object OS extends OS {
 
   /** Enumeration of supported brands of OSes.
    *
    *  @since 0.1.0
+   *  @author haraldmaida
    */
   object Brand extends Enumeration {
     type Brand = Value
