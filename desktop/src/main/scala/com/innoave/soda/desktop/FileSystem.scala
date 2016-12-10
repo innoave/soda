@@ -22,17 +22,36 @@ import OS.Brand._
  *  system defined by the underlying OS.
  *
  *  @since 0.1.0
+ *  @author haraldmaida
  */
 trait FileSystem {
 
   /** Gets the reserved characters of the file system.
    *
+   *  Reserved characters may not be used in path or file names.
+   *
    *  @return the set of reserved characters
    */
   def reservedCharacters: Set[Char]
 
+  /** Gets the file system specific file separator.
+   *
+   *  On Linux and Mac OS typically this is the `/` character.
+   *
+   *  On Windows typically this is the `\` character.
+   *
+   *  @return the file separator of the underlying file system.
+   */
   def fileSeparator: String = java.io.File.separator
 
+  /** Gets the file system specific path separator.
+   *
+   *  On Linux and Mac OS typically this is the `:` character.
+   *
+   *  On Windows typically this is the `;` character.
+   *
+   *  @return the path separator of the underlying file system.
+   */
   def pathSeparator: String = java.io.File.pathSeparator
 
   /** Gets the system's directory for temporary files.
@@ -53,7 +72,7 @@ trait FileSystem {
    *
    *  `C:\Documents and Settings\[USERNAME]\Application Data\[APPNAME]`
    *
-   *  For users on Windows Vista, this will (likely) be:
+   *  For users on Windows Vista or later versions, this will (likely) be:
    *
    *  `C:\Users\[USERNAME]\AppData\Roaming\[APPNAME]`
    *
@@ -76,7 +95,7 @@ trait FileSystem {
    *
    *  `C:\Documents and Settings\[USERNAME]\Local Settings\Application Data\[APPNAME]`
    *
-   *  `For users on Windows Vista, this will (likely) be:`
+   *  `For users on Windows Vista or later versions, this will (likely) be:`
    *
    *  `C:\Users\[USERNAME]\AppData\Local\[APPNAME]`
    *
@@ -99,7 +118,7 @@ trait FileSystem {
    *
    *  `C:\Documents and Settings\[USERNAME]\My Documents`
    *
-   *  For users on Windows Vista, this will (likely) be:
+   *  For users on Windows Vista or later versions, this will (likely) be:
    *
    *  `C:\Users\[USERNAME]\Documents`
    *
@@ -121,7 +140,7 @@ trait FileSystem {
    *
    *  `C:\Documents and Settings\[USERNAME]\My Documents\My Pictures`
    *
-   *  For users on Windows Vista, this will (likely) be:
+   *  For users on Windows Vista or later versions, this will (likely) be:
    *
    *  `C:\Users\[USERNAME]\Pictures`
    *
@@ -143,7 +162,7 @@ trait FileSystem {
    *
    *  `C:\Documents and Settings\[USERNAME]\My Documents\My Music`
    *
-   *  For users on Windows Vista, this will (likely) be:
+   *  For users on Windows Vista or later versions, this will (likely) be:
    *
    *  `C:\Users\[USERNAME]\Music`
    *
@@ -165,7 +184,7 @@ trait FileSystem {
    *
    *  `C:\Documents and Settings\[USERNAME]\My Documents\My Videos`
    *
-   *  For users on Windows Vista, this will (likely) be:
+   *  For users on Windows Vista or later versions, this will (likely) be:
    *
    *  `C:\Users\[USERNAME]\Videos`
    *
@@ -193,6 +212,7 @@ trait FileSystem {
  *  }}}
  *
  *  @since 0.1.0
+ *  @author haraldmaida
  */
 object FileSystem {
 
@@ -214,12 +234,21 @@ object FileSystem {
 
 }
 
+/** Static access to [[com.innoave.soda.desktop.FileSystem]] functions for
+ *  an unknown file system.
+ *
+ *  This implementation behaves the same way as a Linux like file system.
+ *
+ *  @since 0.1.0
+ *  @author haraldmaida
+ */
 object UnknownFileSystem extends LinuxLikeFileSystem
 
 /** Default implementation of [[com.innoave.soda.desktop.FileSystem]] for
  *  the file system usually used by Linux like OSes.
  *
  *  @since 0.1.0
+ *  @author haraldmaida
  */
 trait LinuxLikeFileSystem extends FileSystem {
 
@@ -245,12 +274,19 @@ trait LinuxLikeFileSystem extends FileSystem {
 
 }
 
+/** Static access to [[com.innoave.soda.desktop.FileSystem]] functions for
+ *  the Linux file system.
+ *
+ *  @since 0.1.0
+ *  @author haraldmaida
+ */
 object LinuxFileSystem extends LinuxLikeFileSystem
 
 /** Default implementation of [[com.innoave.soda.desktop.FileSystem]] for
  *  the file system usually used by Apple Mac OS.
  *
  *  @since 0.1.0
+ *  @author haraldmaida
  */
 trait MacOsLikeFileSystem extends LinuxLikeFileSystem {
 
@@ -262,12 +298,24 @@ trait MacOsLikeFileSystem extends LinuxLikeFileSystem {
 
 }
 
+/** Static access to [[com.innoave.soda.desktop.FileSystem]] functions for
+ *  the Apple Mac OS file system.
+ *
+ *  This implementation supports Mac OS X.
+ *
+ *  @since 0.1.0
+ *  @author haraldmaida
+ */
 object MacOsFileSystem extends MacOsLikeFileSystem
 
 /** Default implementation of [[com.innoave.soda.desktop.FileSystem]] for
  *  the file system usually used by Microsoft Windows OS.
  *
+ *  This implementation supports Windows versions XP, Vista, 7, 8, 10.
+ *  Versions later than 10 are treated the same way as version 10.
+ *
  *  @since 0.1.0
+ *  @author haraldmaida
  */
 trait MsWinLikeFileSystem extends FileSystem {
 
@@ -363,4 +411,10 @@ trait MsWinLikeFileSystem extends FileSystem {
 
 }
 
+/** Static access to [[com.innoave.soda.desktop.FileSystem]] functions for
+ *  Microsoft Windows.
+ *
+ *  @since 0.1.0
+ *  @author haraldmaida
+ */
 object MsWinFileSystem extends MsWinLikeFileSystem

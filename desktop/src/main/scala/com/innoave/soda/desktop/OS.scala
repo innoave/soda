@@ -79,14 +79,15 @@ trait OS {
 
 }
 
-/** Companion object of the OS trait.
- * 
+/** Companion object of the OS trait. It provides static access to the
+ *  functions of the OS trait.
+ *
  *  @since 0.1.0
  */
 object OS extends OS {
 
   /** Enumeration of supported brands of OSes.
-   * 
+   *
    *  @since 0.1.0
    */
   object Brand extends Enumeration {
