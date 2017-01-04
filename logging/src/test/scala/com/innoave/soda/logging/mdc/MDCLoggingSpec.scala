@@ -33,14 +33,14 @@ class MDCLoggingSpec extends FlatSpec with Matchers with MockFactory with Logbac
 
   def withMockAppender(testCode: (Appender[ILoggingEvent]) => Any): Unit = {
     val mockAppender = stub[Appender[ILoggingEvent]]
-    val logger = Logger.rootLogger.underlying.asInstanceOf[LbLogger]
+    val logger = Logger.rootLogger.delegate.asInstanceOf[LbLogger]
     logger.addAppender(mockAppender)
     MDC.clear()
     try {
       testCode(mockAppender)
     }
     finally {
-      val logger = Logger.rootLogger.underlying.asInstanceOf[LbLogger]
+      val logger = Logger.rootLogger.delegate.asInstanceOf[LbLogger]
       logger.detachAppender(mockAppender)
     }
   }

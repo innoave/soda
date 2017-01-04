@@ -106,11 +106,11 @@ lazy val sodaDocs = Project(
 // Dependencies
 //
 lazy val scalatest = "org.scalatest" %% "scalatest" % "3.0.1"
-lazy val scalamock = "org.scalamock" %% "scalamock-scalatest-support" % "3.4.1"
-lazy val logback = "ch.qos.logback" % "logback-classic" % "1.1.7"
-val enumeratumVersion = "1.5.1"
+lazy val scalamock = "org.scalamock" %% "scalamock-scalatest-support" % "3.4.2"
+lazy val logback = "ch.qos.logback" % "logback-classic" % "1.1.8"
+val enumeratumVersion = "1.5.4"
 lazy val enumeratum = "com.beachape" %% "enumeratum" % enumeratumVersion
-lazy val slf4jApi = "org.slf4j" % "slf4j-api" % "1.7.21"
+lazy val slf4jApi = "org.slf4j" % "slf4j-api" % "1.7.22"
 
 //
 // Plugins
@@ -199,18 +199,6 @@ lazy val buildSettings = Seq(
   javaVersionPrefix in javaVersionCheck := Some("1.8"),
   sourcesInBase := false,
   parallelExecution := true,
-//  unmanagedSourceDirectories in Compile := List((scalaSource in Compile).value),
-//  unmanagedSourceDirectories in Test := List((scalaSource in Test).value),
-//  libraryDependencies <+= scalaVersion("org.scala-lang" % "scala-reflect" % _),
-//  libraryDependencies <+= scalaVersion("org.scala-lang" % "scalap" % _),
-  scalacOptions in (Compile, doc) := 
-    Opts.doc.title(description.value) ++
-    Opts.doc.version(version.value) ++
-    Seq(
-      "-doc-footer", s"${description.value} v.${version.value}, ${homepage.value.get}",
-      s"-doc-external-doc:${scalaInstance.value.libraryJar}#http://www.scala-lang.org/api/${scalaVersion.value}/"
-    ),
-  autoAPIMappings := true,
   resolvers ++= Seq(
     Resolver.sonatypeRepo("snapshots"),
     Resolver.bintrayRepo("innoave", "maven")
@@ -236,8 +224,15 @@ lazy val manifestSetting = packageOptions += {
 lazy val docsSettings = commonSettings ++ tutDocsSettings ++ apiDocsSettings ++ copyModuleSiteTask
 
 lazy val apiDocsSettings = Seq(
-  siteSubdirName in SiteScaladoc := "api"
-)
+  siteSubdirName in SiteScaladoc := "api",
+  apiURL := Some(url(homepage.value.get + "/" + name.value + "/" + version.value)),
+  scalacOptions in (Compile, doc) ++= Seq(
+    "-doc-title", description.value,
+    "-doc-version", version.value,
+    "-doc-footer", s"${description.value} v.${version.value}, ${homepage.value.get}"
+  ),
+  autoAPIMappings := true
+) ++ ScaladocMappings.externalMappings ++ ScaladocMappings.fixLinksToExternalJavadoc
 
 lazy val tutSiteTargetSubdir = settingKey[String]("Name of subdirectory in site target directory for tut docs")
 
@@ -251,7 +246,7 @@ lazy val copyModuleSite = taskKey[Unit]("Copy site of module to project's site")
 lazy val copyModuleSiteTask = Seq(
   copyModuleSite := {
     val src = baseDirectory.value / "target" / "site"
-    val dst = baseDirectory.value / ".." / "docs" / "target" / "site" / projectID.value.name / version.value
+    val dst = baseDirectory.value / ".." / "docs" / "target" / "site" / name.value / version.value
     if (!src.isDirectory) {
       println(s"Source directory $src not found.")
     } else {

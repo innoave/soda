@@ -32,13 +32,13 @@ class LoggerSpec extends FlatSpec with Matchers with MockFactory with LogbackHel
 
   def withMockAppender(testCode: (Appender[ILoggingEvent]) => Any): Unit = {
     val mockAppender = stub[Appender[ILoggingEvent]]
-    val logger = Logger.rootLogger.underlying.asInstanceOf[LbLogger]
+    val logger = Logger.rootLogger.delegate.asInstanceOf[LbLogger]
     logger.addAppender(mockAppender)
     try {
       testCode(mockAppender)
     }
     finally {
-      val logger = Logger.rootLogger.underlying.asInstanceOf[LbLogger]
+      val logger = Logger.rootLogger.delegate.asInstanceOf[LbLogger]
       logger.detachAppender(mockAppender)
     }
   }
@@ -53,7 +53,7 @@ class LoggerSpec extends FlatSpec with Matchers with MockFactory with LogbackHel
 
   "The Logger object" should "return the slf4j.ILoggerFactory instance in use" in {
 
-    Logger.underlying.getClass shouldBe classOf[ch.qos.logback.classic.LoggerContext]
+    Logger.underlyingFactory.getClass shouldBe classOf[ch.qos.logback.classic.LoggerContext]
 
   }
 

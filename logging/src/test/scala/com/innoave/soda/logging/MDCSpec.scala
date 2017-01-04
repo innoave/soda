@@ -66,11 +66,13 @@ class MDCSpec extends FlatSpec with Matchers {
 
   }
 
-  it should "return the given default if it does not contain the given key" in {
+  it should "return update the MDC with the given optional value if it does not contain the given key" in {
 
     MDC.clear()
 
-    MDC.getOrElse("clientId", "guest") shouldBe "guest"
+    MDC.get("clientId") shouldBe None
+    MDC.getOrElseUpdate("clientId", "guest") shouldBe "guest"
+    MDC.get("clientId") shouldBe Some("guest")
 
   }
 

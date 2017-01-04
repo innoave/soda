@@ -18,6 +18,15 @@ package com.innoave.soda.logging
 import scala.collection.JavaConverters._
 import org.slf4j.{MDC => SLF4JMDC}
 
+/** Scala wrapper object for `org.slf4j.MDC`.
+ *
+ *  Some method signatures are slightly different to the original SLF4J API
+ *  to provide a Scala idiomatic syntax. E.g. `MDC.get(key:String)` returns an
+ *  `Option[String]` instead of a `String` that may be `null`.
+ *
+ *  @since 0.1.0
+ *  @author haraldmaida
+ */
 object MDC {
 
   def mdcAdapter: org.slf4j.spi.MDCAdapter =
@@ -26,8 +35,15 @@ object MDC {
   def get(key: String): Option[String] =
     Option(SLF4JMDC.get(key))
 
-  def getOrElse(key: String, default: => String) =
-    Option(SLF4JMDC.get(key)).getOrElse(default)
+  def getOrElseUpdate(key: String, op: => String): String =
+    Option(SLF4JMDC.get(key)) match {
+      case Some(value) =>
+        value
+      case None =>
+        val value = op
+        SLF4JMDC.put(key, value)
+        value
+    }
 
   def put(key: String, value: String): Unit =
     SLF4JMDC.put(key, value)
@@ -47,6 +63,11 @@ object MDC {
   def putCloseable(key: String, value: String): MDCCloseable =
     new MDCCloseable(SLF4JMDC.putCloseable(key, value))
 
+  /** Scala wrapper class for `org.slf4j.MDC.MDCCloseable`.
+   *
+   *  @since 0.1.0
+   *  @author haraldmaida
+   */
   final class MDCCloseable(val underlying: SLF4JMDC.MDCCloseable) extends AnyVal {
 
     def close(): Unit = underlying.close()

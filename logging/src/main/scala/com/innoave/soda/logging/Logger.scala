@@ -21,69 +21,69 @@ import org.slf4j.{Logger => SLF4JLogger}
 import org.slf4j.{ILoggerFactory => SLF4JILoggerFactory}
 import org.slf4j.{LoggerFactory => SLF4JLoggerFactory}
 
-final class Logger private(val underlying: SLF4JLogger) extends AnyVal {
+final class Logger private(val delegate: SLF4JLogger) extends AnyVal {
 
-  @inline final def name(): String = underlying.getName
+  @inline final def name(): String = delegate.getName
 
   @inline final def trace(message: => String): Unit =
-    if (underlying.isTraceEnabled) underlying.trace(message)
+    if (delegate.isTraceEnabled) delegate.trace(message)
 
   @inline final def trace(message: => String, throwable: Throwable): Unit =
-    if (underlying.isTraceEnabled) underlying.trace(message, throwable)
+    if (delegate.isTraceEnabled) delegate.trace(message, throwable)
 
   @inline final def trace(marker: Marker, message: => String): Unit =
-    if (underlying.isTraceEnabled(marker.asSlf4j)) underlying.trace(marker.asSlf4j, message)
+    if (delegate.isTraceEnabled(marker.asSlf4j)) delegate.trace(marker.asSlf4j, message)
 
   @inline final def trace(marker: Marker, message: => String, throwable: Throwable): Unit =
-    if (underlying.isTraceEnabled(marker.asSlf4j)) underlying.trace(marker.asSlf4j, message, throwable)
+    if (delegate.isTraceEnabled(marker.asSlf4j)) delegate.trace(marker.asSlf4j, message, throwable)
 
   @inline final def debug(message: => String): Unit =
-    if (underlying.isDebugEnabled) underlying.debug(message)
+    if (delegate.isDebugEnabled) delegate.debug(message)
 
   @inline final def debug(message: => String, throwable: Throwable): Unit =
-    if (underlying.isDebugEnabled) underlying.debug(message, throwable)
+    if (delegate.isDebugEnabled) delegate.debug(message, throwable)
 
   @inline final def debug(marker: Marker, message: => String): Unit =
-    if (underlying.isDebugEnabled(marker.asSlf4j)) underlying.debug(marker.asSlf4j, message)
+    if (delegate.isDebugEnabled(marker.asSlf4j)) delegate.debug(marker.asSlf4j, message)
 
   @inline final def debug(marker: Marker, message: => String, throwable: Throwable): Unit =
-    if (underlying.isDebugEnabled(marker.asSlf4j)) underlying.debug(marker.asSlf4j, message, throwable)
+    if (delegate.isDebugEnabled(marker.asSlf4j)) delegate.debug(marker.asSlf4j, message, throwable)
 
   @inline final def info(message: => String): Unit =
-    if (underlying.isInfoEnabled) underlying.info(message)
+    if (delegate.isInfoEnabled) delegate.info(message)
 
   @inline final def info(message: => String, throwable: Throwable): Unit =
-    if (underlying.isInfoEnabled) underlying.info(message, throwable)
+    if (delegate.isInfoEnabled) delegate.info(message, throwable)
 
   @inline final def info(marker: Marker, message: => String): Unit =
-    if (underlying.isInfoEnabled(marker.asSlf4j)) underlying.info(marker.asSlf4j, message)
+    if (delegate.isInfoEnabled(marker.asSlf4j)) delegate.info(marker.asSlf4j, message)
 
   @inline final def info(marker: Marker, message: => String, throwable: Throwable): Unit =
-    if (underlying.isInfoEnabled(marker.asSlf4j)) underlying.info(marker.asSlf4j, message, throwable)
+    if (delegate.isInfoEnabled(marker.asSlf4j)) delegate.info(marker.asSlf4j, message, throwable)
 
   @inline final def warn(message: => String): Unit =
-    if (underlying.isWarnEnabled) underlying.warn(message)
+    if (delegate.isWarnEnabled) delegate.warn(message)
 
   @inline final def warn(message: => String, throwable: Throwable): Unit =
-    if (underlying.isWarnEnabled) underlying.warn(message, throwable)
+    if (delegate.isWarnEnabled) delegate.warn(message, throwable)
 
   @inline final def warn(marker: Marker, message: => String): Unit =
-    if (underlying.isWarnEnabled(marker.asSlf4j)) underlying.warn(marker.asSlf4j, message)
+    if (delegate.isWarnEnabled(marker.asSlf4j)) delegate.warn(marker.asSlf4j, message)
 
   @inline final def warn(marker: Marker, message: => String, throwable: Throwable): Unit =
-    if (underlying.isWarnEnabled(marker.asSlf4j)) underlying.warn(marker.asSlf4j, message, throwable)
+    if (delegate.isWarnEnabled(marker.asSlf4j)) delegate.warn(marker.asSlf4j, message, throwable)
 
   @inline final def error(message: => String): Unit =
-    if (underlying.isErrorEnabled) underlying.error(message)
+    if (delegate.isErrorEnabled) delegate.error(message)
 
   @inline final def error(message: => String, throwable: Throwable): Unit =
-    if (underlying.isErrorEnabled) underlying.error(message, throwable)
+    if (delegate.isErrorEnabled) delegate.error(message, throwable)
 
   @inline final def error(marker: Marker, message: => String): Unit =
-    if (underlying.isErrorEnabled(marker.asSlf4j)) underlying.error(marker.asSlf4j, message)
+    if (delegate.isErrorEnabled(marker.asSlf4j)) delegate.error(marker.asSlf4j, message)
 
   @inline final def error(marker: Marker, message: => String, throwable: Throwable): Unit =
-    if (underlying.isErrorEnabled(marker.asSlf4j)) underlying.error(marker.asSlf4j, message, throwable)
+    if (delegate.isErrorEnabled(marker.asSlf4j)) delegate.error(marker.asSlf4j, message, throwable)
 
 }
 
@@ -91,7 +91,7 @@ object Logger {
 
   val RootLoggerName = SLF4JLogger.ROOT_LOGGER_NAME
 
-  def underlying: SLF4JILoggerFactory =
+  def underlyingFactory: SLF4JILoggerFactory =
     SLF4JLoggerFactory.getILoggerFactory()
 
   def rootLogger(): Logger =

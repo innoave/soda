@@ -22,7 +22,7 @@ import ch.qos.logback.classic.turbo.TurboFilter
 trait LogbackHelper {
 
   implicit class LogbackLoggerSetter(logger: Logger) {
-    val lbl = logger.underlying.asInstanceOf[LbLogger]
+    val lbl = logger.delegate.asInstanceOf[LbLogger]
     def setLevel(level: Level): Unit =
       lbl.setLevel(level)
     def addTurboFilter(newFilter: TurboFilter): Unit = {

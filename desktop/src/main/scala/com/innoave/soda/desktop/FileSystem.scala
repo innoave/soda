@@ -202,7 +202,7 @@ trait FileSystem {
 
 }
 
-/** Factory object to get [[com.innoave.soda.desktop.FileSystem]]'s default
+/** Factory object to get [[FileSystem]]'s default
  *  implementation that represents the file system of the OS the application
  *  is currently running on.
  *
@@ -216,7 +216,7 @@ trait FileSystem {
  */
 object FileSystem {
 
-  /** Returns a [[com.innoave.soda.desktop.FileSystem]] that represents the
+  /** Returns a [[FileSystem]] that represents the
    *  file system of the OS the application is running on.
    *
    *  @return the [[FileSystem]] representing the current OS's file system.
@@ -234,7 +234,7 @@ object FileSystem {
 
 }
 
-/** Static access to [[com.innoave.soda.desktop.FileSystem]] functions for
+/** Static access to [[FileSystem]] functions for
  *  an unknown file system.
  *
  *  This implementation behaves the same way as a Linux like file system.
@@ -244,7 +244,7 @@ object FileSystem {
  */
 object UnknownFileSystem extends LinuxLikeFileSystem
 
-/** Default implementation of [[com.innoave.soda.desktop.FileSystem]] for
+/** Default implementation of [[FileSystem]] for
  *  the file system usually used by Linux like OSes.
  *
  *  @since 0.1.0
@@ -274,7 +274,7 @@ trait LinuxLikeFileSystem extends FileSystem {
 
 }
 
-/** Static access to [[com.innoave.soda.desktop.FileSystem]] functions for
+/** Static access to [[FileSystem]] functions for
  *  the Linux file system.
  *
  *  @since 0.1.0
@@ -282,7 +282,7 @@ trait LinuxLikeFileSystem extends FileSystem {
  */
 object LinuxFileSystem extends LinuxLikeFileSystem
 
-/** Default implementation of [[com.innoave.soda.desktop.FileSystem]] for
+/** Default implementation of [[FileSystem]] for
  *  the file system usually used by Apple Mac OS.
  *
  *  @since 0.1.0
@@ -298,7 +298,7 @@ trait MacOsLikeFileSystem extends LinuxLikeFileSystem {
 
 }
 
-/** Static access to [[com.innoave.soda.desktop.FileSystem]] functions for
+/** Static access to [[FileSystem]] functions for
  *  the Apple Mac OS file system.
  *
  *  This implementation supports Mac OS X.
@@ -308,7 +308,7 @@ trait MacOsLikeFileSystem extends LinuxLikeFileSystem {
  */
 object MacOsFileSystem extends MacOsLikeFileSystem
 
-/** Default implementation of [[com.innoave.soda.desktop.FileSystem]] for
+/** Default implementation of [[FileSystem]] for
  *  the file system usually used by Microsoft Windows OS.
  *
  *  This implementation supports Windows versions XP, Vista, 7, 8, 10.
@@ -411,7 +411,7 @@ trait MsWinLikeFileSystem extends FileSystem {
 
 }
 
-/** Static access to [[com.innoave.soda.desktop.FileSystem]] functions for
+/** Static access to [[FileSystem]] functions for
  *  Microsoft Windows.
  *
  *  @since 0.1.0

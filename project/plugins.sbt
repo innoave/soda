@@ -25,4 +25,4 @@ resolvers += "jgit-repo" at "http://download.eclipse.org/jgit/maven"
 addSbtPlugin("com.typesafe.sbt" % "sbt-ghpages" % "0.5.4")
 
 // [https://github.com/tpolecat/tut]
-addSbtPlugin("org.tpolecat" % "tut-plugin" % "0.4.7")
+addSbtPlugin("org.tpolecat" % "tut-plugin" % "0.4.8")
