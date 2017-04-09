@@ -18,7 +18,7 @@ import sbtrelease._
 
 //
 // Environment variables used by the build:
-// JAR_BUILT_BY      - Name to be added to Jar metadata field "Built-By" (defaults to System.getProperty("user.name"))
+// BUILT_BY      - Name to be added to Jar metadata field "Built-By" (defaults to System.getProperty("user.name"))
 //
 
 name := "build-soda"
@@ -138,7 +138,7 @@ lazy val projectSettings = Seq(
   licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html")),
   scmInfo := Some(ScmInfo(
     url("https://github.com/innoave/soda"),
-    "scm:git:git@github.com:innoave/soda.git")
+      "scm:git:git@github.com:innoave/soda.git")
   )
 )
 
@@ -209,7 +209,7 @@ lazy val buildSettings = Seq(
 lazy val manifestSetting = packageOptions += {
     Package.ManifestAttributes(
       "Created-By" -> "Simple Build Tool",
-      "Built-By" -> Option(System.getenv("JAR_BUILT_BY")).getOrElse(System.getProperty("user.name")),
+      "Built-By" -> Option(System.getenv("BUILT_BY")).getOrElse(System.getProperty("user.name")),
       "Build-Jdk" -> System.getProperty("java.version"),
       "Specification-Title" -> name.value,
       "Specification-Version" -> version.value,
@@ -264,7 +264,7 @@ lazy val copyModuleSiteTask = Seq(
 // Release Settings
 //
 releaseCrossBuild := true
-//releaseProcess := ReleaseProcess.steps 
+//releaseProcess := ReleaseProcess.steps
 releasePublishArtifactsAction := PgpKeys.publishSigned.value
 // use next version instead of current developer version
 releaseVersion := {

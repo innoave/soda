@@ -6,7 +6,7 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-javaversioncheck" % "0.1.0")
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.4.0")
 
 // [https://github.com/sbt/sbt-git]
-addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "0.8.5")
+addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "0.9.2")
 
 // [https://github.com/sbt/sbt-pgp]
 addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.0.1")
@@ -18,7 +18,7 @@ addSbtPlugin("com.github.gseitz" % "sbt-release" % "1.0.3")
 addSbtPlugin("me.lessis" % "bintray-sbt" % "0.3.0")
 
 // [https://github.com/sbt/sbt-site]
-addSbtPlugin("com.typesafe.sbt" % "sbt-site" % "1.1.0")
+addSbtPlugin("com.typesafe.sbt" % "sbt-site" % "1.2.0")
 
 // [https://github.com/sbt/sbt-ghpages]
 resolvers += "jgit-repo" at "http://download.eclipse.org/jgit/maven"
