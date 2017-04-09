@@ -106,11 +106,11 @@ lazy val sodaDocs = Project(
 // Dependencies
 //
 lazy val scalatest = "org.scalatest" %% "scalatest" % "3.0.1"
-lazy val scalamock = "org.scalamock" %% "scalamock-scalatest-support" % "3.4.2"
-lazy val logback = "ch.qos.logback" % "logback-classic" % "1.1.8"
-val enumeratumVersion = "1.5.4"
+lazy val scalamock = "org.scalamock" %% "scalamock-scalatest-support" % "3.5.0"
+lazy val logback = "ch.qos.logback" % "logback-classic" % "1.2.3"
+val enumeratumVersion = "1.5.10"
 lazy val enumeratum = "com.beachape" %% "enumeratum" % enumeratumVersion
-lazy val slf4jApi = "org.slf4j" % "slf4j-api" % "1.7.22"
+lazy val slf4jApi = "org.slf4j" % "slf4j-api" % "1.7.25"
 
 //
 // Plugins
@@ -146,7 +146,7 @@ lazy val projectSettings = Seq(
 // Build Settings
 //
 lazy val buildSettings = Seq(
-  crossScalaVersions := Seq("2.11.8", "2.12.1"),
+  crossScalaVersions := Seq("2.11.10", "2.12.1"),
   scalaVersion := crossScalaVersions.value.head,
   scalacOptions ++= { CrossVersion.partialVersion(scalaVersion.value) match {
     case Some((2, 10)) => Seq(
