@@ -21,8 +21,29 @@ import org.slf4j.{Logger => SLF4JLogger}
 import org.slf4j.{ILoggerFactory => SLF4JILoggerFactory}
 import org.slf4j.{LoggerFactory => SLF4JLoggerFactory}
 
-final class Logger private(val delegate: SLF4JLogger) extends AnyVal {
+/** The Logger is a Scala wrapper for the SLF4J Logger.
+ *
+ *  The exposed API is modified to be more ideomatic to Scala. Most notably the
+ *  message to be logged is passed as a call-by-name parameter. This allows to
+ *  compose complex messages on the caller side without impact performance
+ *  impact at runtime when a log level is not activated. Another advantage is
+ *  that the caller can choose how the log message is composed. It can compose
+ *  the message in a simple way using string interpolation or any more complex
+ *  concept such as providing localized messages.
+ *
+ *  Also the methods to checked for a log level like `isDebugEnabled` are
+ *  omitted due there is no longer a reason to do such checks in the
+ *  application code.
+ *
+ *  @since 0.1.0
+ *  @author haraldmaida
+ */
+final class Logger private (val delegate: SLF4JLogger) extends AnyVal {
 
+  /** Returns the name of this `Logger`.
+   *
+   *  @return name of this `Logger`
+   */
   @inline final def name(): String = delegate.getName
 
   @inline final def trace(message: => String): Unit =
@@ -87,23 +108,80 @@ final class Logger private(val delegate: SLF4JLogger) extends AnyVal {
 
 }
 
+/** Logger factory object.
+ *
+ *  The `Logger` companion object is used to obtain a `Logger` instance.
+ *
+ *  `Logger` instances can be obtained by name, by class tag or class.
+ *
+ *  @example Logger by name
+ *  {{{
+ *  val log = Logger("MyServiceClass")
+ *  }}}
+ *
+ *  @example Logger by class tag
+ *  {{{
+ *  val log = Logger[MyServiceClass]
+ *  }}}
+ *
+ *  @example Logger by actual class
+ *  {{{
+ *  val log = Logger(getClass)
+ *  }}}
+ */
 object Logger {
 
+  /** The name of the root logger. */
   val RootLoggerName = SLF4JLogger.ROOT_LOGGER_NAME
 
-  def underlyingFactory: SLF4JILoggerFactory =
+  /** Returns the underlying SLF4J `ILoggerFactory` that is actually used
+   *  to obtains instances of `Logger`.
+   */
+  def underlyingFactory(): SLF4JILoggerFactory =
     SLF4JLoggerFactory.getILoggerFactory()
 
+  /** Obtains the instance of the root `Logger`
+   */
   def rootLogger(): Logger =
     new Logger(SLF4JLoggerFactory.getLogger(RootLoggerName))
 
+  /** Obtains the instance of `Logger` for the given name
+   *
+   *  @example Logger by name
+   *  {{{
+   *  val log = Logger("MyServiceClass")
+   *  }}}
+   *
+   *  @param name a name for which a `Logger` should be obtained.
+   *  @return the `Logger` instance for the given name.
+   */
   def apply(name: String): Logger =
     new Logger(SLF4JLoggerFactory.getLogger(name))
 
-  def apply(clazz: Class[_]): Logger =
-    new Logger(SLF4JLoggerFactory.getLogger(clazz))
-
+  /** Obtains the instance of `Logger` for a class tag
+   *
+   *  @example Logger by class tag
+   *  {{{
+   *  val log = Logger[MyServiceClass]
+   *  }}}
+   *
+   *  @param C a class tag for which a `Logger` should be obtained.
+   *  @return the `Logger` instance for the given class tag.
+   */
   def apply[C: ClassTag](): Logger =
     new Logger(SLF4JLoggerFactory.getLogger(classTag[C].runtimeClass))
+
+  /** Obtains the instance of `Logger`
+   *
+   *  @example Logger by actual class
+   *  {{{
+   *  val log = Logger(getClass)
+   *  }}}
+   *
+   *  @param clazz a class for which a `Logger` should be obtained.
+   *  @return the `Logger` instance for the given class.
+   */
+  def apply(clazz: Class[_]): Logger =
+    new Logger(SLF4JLoggerFactory.getLogger(clazz))
 
 }
