@@ -39,3 +39,6 @@ atlassian-ide-plugin.xml
 ehthumbs.db
 Icon?
 Thumbs.db
+
+# Sublime Text
+*.sublime-workspace
