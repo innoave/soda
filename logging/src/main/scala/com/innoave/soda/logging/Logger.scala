@@ -35,6 +35,17 @@ import org.slf4j.{LoggerFactory => SLF4JLoggerFactory}
  *  omitted due there is no longer a reason to do such checks in the
  *  application code.
  *
+ *  @example log message with string interpolation at info level
+ *  {{{
+ *  val duration = 5
+ *  log.info(s"Computation completed in \$duration sec.")
+ *  }}}
+ *
+ *  @example log message at debug level with stacktrace
+ *  {{{
+ *  log.debug("An error occurred", error)
+ *  }}}
+ *
  *  @since 0.1.0
  *  @author haraldmaida
  */
@@ -128,6 +139,9 @@ final class Logger private (val delegate: SLF4JLogger) extends AnyVal {
  *  {{{
  *  val log = Logger(getClass)
  *  }}}
+ *
+ *  @since 0.1.0
+ *  @author haraldmaida
  */
 object Logger {
 
@@ -140,12 +154,12 @@ object Logger {
   def underlyingFactory(): SLF4JILoggerFactory =
     SLF4JLoggerFactory.getILoggerFactory()
 
-  /** Obtains the instance of the root `Logger`
+  /** Obtains the instance of the root `Logger`.
    */
   def rootLogger(): Logger =
     new Logger(SLF4JLoggerFactory.getLogger(RootLoggerName))
 
-  /** Obtains the instance of `Logger` for the given name
+  /** Obtains the instance of `Logger` for the given name.
    *
    *  @example Logger by name
    *  {{{
@@ -158,20 +172,20 @@ object Logger {
   def apply(name: String): Logger =
     new Logger(SLF4JLoggerFactory.getLogger(name))
 
-  /** Obtains the instance of `Logger` for a class tag
+  /** Obtains the instance of `Logger` for a class tag.
    *
    *  @example Logger by class tag
    *  {{{
    *  val log = Logger[MyServiceClass]
    *  }}}
    *
-   *  @param C a class tag for which a `Logger` should be obtained.
+   *  @tparam C a class tag for which a `Logger` should be obtained.
    *  @return the `Logger` instance for the given class tag.
    */
   def apply[C: ClassTag](): Logger =
     new Logger(SLF4JLoggerFactory.getLogger(classTag[C].runtimeClass))
 
-  /** Obtains the instance of `Logger`
+  /** Obtains the instance of `Logger` for a class.
    *
    *  @example Logger by actual class
    *  {{{

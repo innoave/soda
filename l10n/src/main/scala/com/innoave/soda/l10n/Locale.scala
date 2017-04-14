@@ -107,7 +107,7 @@ object Locale extends PredefinedLocales {
     new Locale(jLocale)
 
   def default: Locale =
-    new Locale(JLocale.getDefault);
+    new Locale(JLocale.getDefault)
 
   def default_=(locale: Locale): Unit =
     JLocale.setDefault(locale.asJavaLocale)
