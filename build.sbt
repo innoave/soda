@@ -13,7 +13,6 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import scala.xml._
 import sbtrelease._
 
 //
@@ -108,8 +107,7 @@ lazy val sodaDocs = Project(
 lazy val scalatest = "org.scalatest" %% "scalatest" % "3.0.1"
 lazy val scalamock = "org.scalamock" %% "scalamock-scalatest-support" % "3.5.0"
 lazy val logback = "ch.qos.logback" % "logback-classic" % "1.2.3"
-val enumeratumVersion = "1.5.10"
-lazy val enumeratum = "com.beachape" %% "enumeratum" % enumeratumVersion
+lazy val enumeratum = "com.beachape" %% "enumeratum" % "1.5.10"
 lazy val slf4jApi = "org.slf4j" % "slf4j-api" % "1.7.25"
 
 //
@@ -146,7 +144,7 @@ lazy val projectSettings = Seq(
 // Build Settings
 //
 lazy val buildSettings = Seq(
-  crossScalaVersions := Seq("2.11.10", "2.12.1"),
+  crossScalaVersions := Seq("2.12.1", "2.11.10"),
   scalaVersion := crossScalaVersions.value.head,
   scalacOptions ++= { CrossVersion.partialVersion(scalaVersion.value) match {
     case Some((2, 10)) => Seq(
