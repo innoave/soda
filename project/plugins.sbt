@@ -3,7 +3,7 @@
 addSbtPlugin("com.typesafe.sbt" % "sbt-javaversioncheck" % "0.1.0")
 
 // [https://github.com/scoverage/sbt-scoverage]
-addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.4.0")
+addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.5.0")
 
 // [https://github.com/sbt/sbt-git]
 addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "0.9.2")
